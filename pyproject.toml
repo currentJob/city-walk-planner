@@ -13,7 +13,7 @@ requires-python = ">=3.12,<3.14"
 # 버전을 바꾸려면 설계서 §3.1 표를 먼저 고쳐라 — 그 표가 SSoT 다.
 dependencies = [
   "fastapi==0.141.1",
-  "uvicorn[standard]==0.52.4",
+  "uvicorn[standard]==0.53.0",
   "pydantic==2.13.5",
   "httpx==0.28.1",
 ]
