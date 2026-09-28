@@ -1,0 +1,146 @@
+/* Mobile layout (≤760px). Loaded with media="(max-width: 760px)", so every rule here is phone-only.
+ * Uses the shared tokens from platform.css (--paper, --ink, --green, --muted, --line, --surface, --radius, --tap).
+ * Shape: compact top bar + fixed bottom tab bar; 16px gutters; primary controls ≥ 44px,
+ * inline secondary links ≥ 32px (WCAG 2.2 target size AA is 24px); body text ≥ 12px. */
+
+:root{--m-top:56px;--m-nav:62px;--m-gutter:16px;--m-safe:env(safe-area-inset-bottom,0px)}
+
+/* ── Frame ─────────────────────────────────────────────────────────── */
+body{padding-bottom:calc(var(--m-nav) + var(--m-safe))}
+.platform-main,.footer{width:calc(100% - 2 * var(--m-gutter))}
+.footer{padding:24px 0 20px}
+
+.platform-header{display:flex;flex-wrap:nowrap;align-items:center;gap:12px;min-height:var(--m-top);height:var(--m-top);padding:0 var(--m-gutter)}
+.platform-header .brand{font-size:17px;width:auto;gap:6px;white-space:nowrap}
+.brand-mark{font-size:26px}
+.shared-link{display:inline-flex;align-items:center;margin-left:auto;min-height:var(--tap);padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px;font-weight:600}
+
+/* Bottom tab bar: the same <nav> as desktop, pinned to the thumb zone. */
+.platform-header nav{position:fixed;left:0;right:0;bottom:0;z-index:1001;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;width:auto;margin:0;
+  height:calc(var(--m-nav) + var(--m-safe));padding:0 4px var(--m-safe);background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -6px 18px #203d3414;font-size:11px}
+.platform-header nav a{flex-direction:column;justify-content:center;gap:3px;min-height:var(--m-nav);min-width:var(--tap);padding:0 2px;font-weight:600;border-bottom:0;border-top:2px solid transparent}
+.platform-header nav a[aria-current=page]{border-top-color:var(--green);background:linear-gradient(var(--bg2),var(--surface))}
+.nav-icon{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-full{display:none}
+.nav-short{display:block}
+
+/* ── Type & targets ───────────────────────────────────────────────── */
+h1{letter-spacing:-.03em}
+.page-heading{padding:24px 0 8px}
+.page-heading h1{font-size:28px;line-height:1.2}
+.section{padding:28px 0}
+.section-head{display:block}
+.section-head h2{font-size:24px}
+.section-head .tools{margin-top:12px}
+.eyebrow,.hint,.source,.pill,.gradebadge,.gradenote,.missing,.day-head>span,.stop .pill,.stop .source,.stop .missing,.stop-controls label,.city-card .country,.city-card .photo-credit,.picker-help,.route-links{font-size:12px}
+button,select,input:not([type=checkbox]):not([type=radio]){min-height:var(--tap)}
+input[type=checkbox],input[type=radio]{width:24px;height:24px;min-height:24px}
+summary{min-height:var(--tap);display:flex;align-items:center}
+.links a,.source a,.stop .desc a,.place-card .source a,.city-card .photo-credit a,.route-links a,.city-cover a,.planner-intro>a{display:inline-flex;align-items:center;min-height:32px}
+/* Text links keep their line box; vertical padding only widens the hit area (≥ 28px). */
+:is(.platform-main,.footer) a:not(.city-image):not(.button-link):not([data-trend-tab]){padding-block:6px}
+.tools{flex-wrap:wrap;gap:10px}
+.tools>label{flex:1 1 140px}
+.tools>button{flex:1 1 100%}
+
+/* ── Discover ─────────────────────────────────────────────────────── */
+.discovery-hero{grid-template-columns:1fr;gap:20px;padding:20px 0 28px}
+.hero-copy h1{font-size:32px;margin:8px 0 12px}
+.hero-copy .intro{font-size:14px}
+.hero-photo img{height:200px;border-top-right-radius:40px}
+.hero-photo figcaption{font-size:18px}
+.catalogue-tools{grid-template-columns:1fr 1fr;gap:10px}
+.catalogue-search{grid-column:1/-1}
+.city-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}
+.city-card h3{font-size:18px}
+.city-facts{line-height:1.7;font-size:13px}
+
+/* ── City detail ──────────────────────────────────────────────────── */
+.city-cover{grid-template-columns:1fr;gap:18px}
+.city-cover h1{font-size:36px}
+.city-cover img{height:200px}
+.city-actions{display:grid;grid-template-columns:1fr;gap:8px}
+.city-toolbar{display:grid;grid-template-columns:1fr;gap:10px}
+.city-place-grid{grid-template-columns:1fr}
+
+/* ── Planner & itinerary ──────────────────────────────────────────── */
+.planner-layout{grid-template-columns:1fr;gap:18px;padding:20px 0}
+.planner-intro{padding:0}
+.planner-intro h1{font-size:30px}
+.planner-intro figure{display:none}
+.planner{padding:18px;border-radius:var(--radius)}
+.planner .hint{font-size:12px}
+.itinerary-workspace{display:flex;flex-direction:column;gap:16px}
+#planMapBlock{position:relative;top:auto;width:100%}
+#planMap{height:42vh;min-height:260px}
+.itinerary-list{width:100%}
+/* Day switcher stays reachable while scrolling a long day. */
+.day-tabs{position:sticky;top:var(--m-top);z-index:900;margin:12px calc(-1 * var(--m-gutter)) 12px;padding:8px var(--m-gutter);background:var(--paper);border-bottom:1px solid var(--line)}
+.day-tabs button{min-width:92px}
+.mapbar{gap:8px}
+.mapbar label{font-size:13px}
+.mapbar label,.mapbar button{flex:1 1 100%}
+.mapbar label{display:flex}
+.mapbar select{min-width:0;flex:1}
+.stop{grid-template-columns:48px minmax(0,1fr);gap:10px;padding:18px 0}
+.stop h3{font-size:17px}
+.stop .desc{font-size:14px}
+.stop-controls{gap:6px}
+.stop-controls button{min-width:var(--tap);min-height:var(--tap);padding:6px 10px;font-size:13px}
+.stop-controls select{min-height:var(--tap)}
+.day-head{gap:10px;align-items:start}
+.saved{grid-template-columns:1fr}
+
+/* ── Food ─────────────────────────────────────────────────────────── */
+.food-workspace{grid-template-columns:1fr;gap:16px}
+#foodMap{position:relative;top:auto;height:38vh;min-height:240px}
+.food-discovery-controls,.trend-controls{gap:12px;width:100%}
+.food-discovery-controls>label{width:100%}
+.trend-controls>label{flex:1}
+.trend-controls .hint{flex-basis:100%}
+
+/* ── Place picker dialog: full screen ─────────────────────────────── */
+.place-picker{width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:16px;border:0;border-radius:0}
+.picker-heading h2{font-size:20px}
+.picker-search label:first-child{flex-basis:100%}
+.picker-search label:last-child{flex:1;min-width:150px}
+.picker-workspace,.place-picker .picker-workspace{display:flex;flex-direction:column;height:auto;gap:16px}
+#placePickerMap{height:260px;min-height:260px;flex-shrink:0}
+.picker-side{overflow:visible}
+.picker-results{max-height:none;overflow:visible}
+.picker-detail{scroll-margin-top:15px}
+.picker-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.picker-filters label{min-width:0}
+.picker-filters select{min-width:0;font-size:13px}
+.place-picker .picker-search label:last-child{flex-basis:100%}
+
+/* ── Trend course: one section at a time ──────────────────────────── */
+.trend-tabs{position:sticky;top:var(--m-top);z-index:900;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;
+  margin:0 calc(-1 * var(--m-gutter)) 4px;padding:8px var(--m-gutter);background:var(--paper);border-bottom:1px solid var(--line)}
+.trend-tabs button{min-height:var(--tap);padding:0 4px;border-radius:8px;background:var(--bg2);color:var(--ink);font-size:13px;font-weight:650}
+.trend-tabs button[aria-pressed=true]{background:var(--green);color:#fff}
+#trendRoot .page-heading{padding-top:18px}
+#trendRoot:not([data-tab=plan]) .page-heading{display:none}
+#trendRoot .page-heading .hint{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#trendRoot[data-tab=plan] #trendMapBlock,
+#trendRoot:not([data-tab=plan]):not([data-tab=map]) [data-trend-section=plan],
+#trendRoot[data-tab=map] :is(#trendRange,#trendRange~.hint,#trendDays,[data-trend-section=plan]>h2),
+#trendRoot:not([data-tab=shops]) [data-trend-section=shops],
+#trendRoot:not([data-tab=places]) [data-trend-section=places],
+#trendRoot:not([data-tab=tips]) [data-trend-section=tips]{display:none}
+#trendRoot .section{padding:16px 0 24px}
+#trendMapBlock{position:relative;top:auto;width:100%}
+#trendMapBlock .mapbar{flex-wrap:nowrap}
+#trendMapBlock .mapbar label{flex:1 1 auto;min-width:0}
+#trendMapBlock .mapbar button{flex:0 0 auto}
+/* tabs (~61px) + map bar (~56px) + spacing: the map fills the rest of the screen */
+#trendMap{height:calc(100dvh - var(--m-top) - var(--m-nav) - var(--m-safe) - 150px);min-height:300px}
+.stay-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stay-row>label:nth-child(-n+2),.stay-row>button{grid-column:1/-1}
+.stay-box{padding:10px 12px 12px}
+.shop-more{margin-top:4px}
+.shop-more>summary{font-size:14px;font-weight:650;color:var(--green);cursor:pointer}
+
+/* ── Shared trip page (hongkong.html) ─────────────────────────────── */
+.shared-page .tabs{top:var(--m-top)}
+.shared-page .shared-trip-header{padding-top:18px}
