@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import pytest
 
-from harbor_lantern.config import nearby_tag_index
-from harbor_lantern.domain.models import LatLng
-from harbor_lantern.domain.places import (
+from city_walk_planner.config import nearby_tag_index
+from city_walk_planner.domain.models import LatLng
+from city_walk_planner.domain.places import (
     Place,
     dedupe_places,
     element_to_place,

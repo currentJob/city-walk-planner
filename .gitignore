@@ -1,5 +1,9 @@
 # ── 런타임 산출물 ────────────────────────────────────────────────────────
-# SQLite 파일과 WAL·SHM 동반 파일. 기본 경로는 ./harbor-lantern.db (설계서 §9).
+# SQLite 파일과 WAL·SHM 동반 파일. 기본 경로는 ./city-walk-planner.db (설계서 §9).
+city-walk-planner.db
+city-walk-planner.db-wal
+city-walk-planner.db-shm
+# 이름 변경 전 기본 DB 파일
 harbor-lantern.db
 harbor-lantern.db-wal
 harbor-lantern.db-shm

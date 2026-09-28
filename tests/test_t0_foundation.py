@@ -15,9 +15,9 @@ from typing import Any
 
 import pytest
 
-from harbor_lantern.clock import FixedClock, SystemClock
-from harbor_lantern.config import TIME_BANDS, load_settings
-from harbor_lantern.domain.util import (
+from city_walk_planner.clock import FixedClock, SystemClock
+from city_walk_planner.config import TIME_BANDS, load_settings
+from city_walk_planner.domain.util import (
     add_days,
     day_offset,
     format_hhmm,
@@ -200,14 +200,30 @@ class TestSettings:
         assert settings.join_rate_limit_n == 10
 
     def test_env_overrides_are_read_from_the_given_mapping_only(self) -> None:
-        settings = load_settings(env={"HL_PORT": "9999", "HL_TRAVEL_WALK_SPEED_KMH": "5.5"})
+        settings = load_settings(env={"CWP_PORT": "9999", "CWP_TRAVEL_WALK_SPEED_KMH": "5.5"})
         assert settings.port == 9999
         assert settings.travel.walk_speed_kmh == 5.5
         assert settings.travel.transit_speed_kmh == 22.0  # 나머지는 기본값 그대로
 
+    def test_pre_rename_hl_prefix_still_works_but_cwp_wins(self) -> None:
+        # Machines configured before the Harbor Lantern → City Walk Planner rename keep their settings.
+        assert load_settings(env={"HL_PORT": "9001"}).port == 9001
+        assert load_settings(env={"HL_PORT": "9001", "CWP_PORT": "9002"}).port == 9002
+        assert load_settings(env={"CWP_PORT": "", "HL_PORT": "9001"}).port == 9001
+
+    def test_existing_legacy_db_file_is_kept_as_default(self, tmp_path, monkeypatch) -> None:
+        monkeypatch.chdir(tmp_path)
+        for key in ("CWP_DB_PATH", "HL_DB_PATH"):
+            monkeypatch.delenv(key, raising=False)
+        assert load_settings().db_path.name == "city-walk-planner.db"
+        (tmp_path / "harbor-lantern.db").touch()
+        assert load_settings().db_path.name == "harbor-lantern.db"
+        (tmp_path / "city-walk-planner.db").touch()
+        assert load_settings().db_path.name == "city-walk-planner.db"
+
     def test_bad_env_value_says_which_key(self) -> None:
-        with pytest.raises(ValueError, match="HL_PORT"):
-            load_settings(env={"HL_PORT": "여덟천팔십"})
+        with pytest.raises(ValueError, match="CWP_PORT"):
+            load_settings(env={"CWP_PORT": "여덟천팔십"})
 
     def test_no_secret_looking_defaults(self) -> None:
         # 비밀값은 없다(§6.1). 기본 URL 에 키·토큰 쿼리가 붙어 있으면 그 자체가 사고다.

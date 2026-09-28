@@ -31,7 +31,7 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-WEB_JS = PROJECT_ROOT / "src" / "harbor_lantern" / "web" / "js"
+WEB_JS = PROJECT_ROOT / "src" / "city_walk_planner" / "web" / "js"
 FORMAT_JS = WEB_JS / "format.js"
 GEO_JS = WEB_JS / "geo.js"
 
@@ -179,7 +179,7 @@ def test_ac032_client_distance_format_matches_the_server() -> None:
     설계서 §6.3 — 현재 위치 기반 거리는 클라이언트가 계산하므로 표기 규칙이 두 벌 존재한다.
     한쪽만 고치면 화면과 API 가 조용히 어긋난다(`990m` vs `1.0km`).
     """
-    from harbor_lantern.domain.geo import format_distance
+    from city_walk_planner.domain.geo import format_distance
 
     result = _run_node(
         f"import {{ formatDistance }} from {FORMAT_JS.as_uri()!r};\n"
@@ -195,8 +195,8 @@ def test_ac032_client_distance_format_matches_the_server() -> None:
 
 def test_ac032_client_haversine_agrees_with_the_server() -> None:
     """AC-032 전제: 거리 자체도 같은 공식·같은 반지름이어야 한다(오차 1% 이내 — AC-019 규약)."""
-    from harbor_lantern.domain.geo import haversine_m
-    from harbor_lantern.domain.models import LatLng
+    from city_walk_planner.domain.geo import haversine_m
+    from city_walk_planner.domain.models import LatLng
 
     pairs = [
         ((22.2937, 114.1730), (22.2938, 114.1694)),  # 스타 애비뉴 ↔ 시계탑
@@ -272,7 +272,7 @@ def test_ac033_equal_distances_keep_the_original_order() -> None:
 
 def test_ac034_client_directions_url_matches_the_server() -> None:
     """AC-034: 길찾기 딥링크도 두 구현이 같은 문자열을 만든다(서버는 `spot.directions_url`)."""
-    from harbor_lantern.domain.geo import directions_url
+    from city_walk_planner.domain.geo import directions_url
 
     coords = [(22.2937, 114.1730), (22.2551, 113.8630), (22.3193, 114.1694)]
     result = _run_node(

@@ -4,11 +4,12 @@ import json
 
 import httpx
 
-from harbor_lantern.services.external.discovery import DiscoveryProvider
-from harbor_lantern.services.external.reviews import collect_reviews
+from city_walk_planner.services.external.discovery import DiscoveryProvider
+from city_walk_planner.services.external.reviews import collect_reviews
 
 
 def test_all_days_read_only_and_routes(trip, monkeypatch):
+    monkeypatch.delenv("CWP_GOOGLE_PLACES_API_KEY", raising=False)
     monkeypatch.delenv("HL_GOOGLE_PLACES_API_KEY", raising=False)
     before = trip.state().json()
     response = trip.client.post(f"{trip.base}/review-plan", headers=trip.headers, json={"use_reviews": True})
@@ -47,7 +48,7 @@ def test_auth_validation_and_stale_apply(trip):
 
 
 def test_live_review_attribution_failure_and_identity(monkeypatch):
-    monkeypatch.setenv("HL_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
+    monkeypatch.setenv("CWP_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
     calls = []
 
     def handler(request):
@@ -81,13 +82,14 @@ def test_live_review_attribution_failure_and_identity(monkeypatch):
 
 
 def test_lookup_bound_and_disabled(monkeypatch):
-    from harbor_lantern.services.external import reviews
+    from city_walk_planner.services.external import reviews
 
     provider = DiscoveryProvider()
     spots = [{"id": str(i), "name": "Spot", "lat": 22.3, "lng": 114.17} for i in range(45)]
+    monkeypatch.delenv("CWP_GOOGLE_PLACES_API_KEY", raising=False)
     monkeypatch.delenv("HL_GOOGLE_PLACES_API_KEY", raising=False)
     assert all(r["status"] == "disabled" for r in collect_reviews(provider, spots, True).values())
-    monkeypatch.setenv("HL_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
+    monkeypatch.setenv("CWP_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
     calls = []
     monkeypatch.setattr(reviews, "lookup", lambda p, s: calls.append(s["id"]) or {"status": "unmatched"})
     result = collect_reviews(provider, spots, True)
@@ -113,9 +115,9 @@ def test_empty_day_and_completed_prefix(trip):
 
 
 def test_reviews_change_real_proposal_and_apply(trip, monkeypatch):
-    from harbor_lantern.services.external import reviews
+    from city_walk_planner.services.external import reviews
 
-    monkeypatch.setenv("HL_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
+    monkeypatch.setenv("CWP_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
     monkeypatch.setattr(reviews, "lookup", lambda provider, spot: {
         "status": "matched", "rating": 5 if spot["name"] == "High" else 2, "review_count": 1000})
     for spot in trip.day(1)["spots"]:
@@ -139,6 +141,7 @@ def test_reviews_change_real_proposal_and_apply(trip, monkeypatch):
 def test_explore_review_option_without_key(app, client, monkeypatch):
     from tests.api.test_explore import FakeDiscovery
 
+    monkeypatch.delenv("CWP_GOOGLE_PLACES_API_KEY", raising=False)
     monkeypatch.delenv("HL_GOOGLE_PLACES_API_KEY", raising=False)
     app.state.discovery = FakeDiscovery()
     for target in [{"city_id": "hong-kong"}, {"destination": {"name": "HK", "lat": 22.3, "lng": 114.17}}]:

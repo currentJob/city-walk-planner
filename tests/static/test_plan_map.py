@@ -25,7 +25,7 @@ import pytest
 from tests.static.test_guide_frontend import baked_fixture  # noqa: F401  (pytest fixture)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-WEB = PROJECT_ROOT / "src" / "harbor_lantern" / "web"
+WEB = PROJECT_ROOT / "src" / "city_walk_planner" / "web"
 PLANMAP_JS = WEB / "js" / "render" / "planmap.js"
 GUIDE_JS = WEB / "js" / "render" / "guide.js"
 MAP_JS = WEB / "js" / "map.js"

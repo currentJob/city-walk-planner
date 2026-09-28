@@ -1,4 +1,4 @@
-# Harbor Lantern · 도시를 걷는 여행
+# City Walk Planner · 도시를 걷는 여행
 
 도시 탐색, 도시별 가이드, 일정 만들기, 주변 맛집, 내 여행을 독립 화면으로 제공합니다.
 29개 도시(완전 26 · 부분 3)에 동일한 지도·날짜 탭·방문 체크·장소 추가/제외·순서/날짜 이동·
@@ -29,7 +29,7 @@ Trip.com 조사 자료에서 도시와 Wikidata 이름/별칭이 정확히 일�
 현지 날짜·요일·공개 영업시간과 거리를 고려하며 최근 여행 10개를 브라우저에 보관합니다.
 현재 위치 주변 음식점 검색, 거리/평점 정렬, 제공되는 메뉴·업체 원문 링크도 지원합니다.
 
-실시간 음식점 평점·후기는 서버 환경변수 `HL_GOOGLE_PLACES_API_KEY`가 있을 때 Google Places에서 조회합니다.
+실시간 음식점 평점·후기는 서버 환경변수 `CWP_GOOGLE_PLACES_API_KEY`가 있을 때 Google Places에서 조회합니다.
 키는 PC에만 설정하고 Pages나 채팅에 넣지 마세요. Places API(New)와 결제가 활성화된 키가 필요합니다.
 키 없이도 OSM 검색이 동작하지만 평점·후기·업체별 추천 메뉴는 원천 데이터에 없으면 미제공으로 표시합니다.
 동선은 휴리스틱 추천이며 실제 교통망 최단 경로·공휴일·임시휴무를 보장하지 않습니다.
@@ -43,7 +43,7 @@ Trip.com 조사 자료에서 도시와 Wikidata 이름/별칭이 정확히 일�
 리뷰 포함 요청은 최대 40개 후보를 조회하며 실제 API 과금이 발생할 수 있습니다.
 계산 방식·제약·검증 범위: [리뷰 기반 일정 개선](docs/_change_review_planner.md).
 
-배포: https://currentjob.github.io/harbor-lantern/
+배포: https://currentjob.github.io/city-walk-planner/
 변경 설계·검증 범위: [지역 여행 확장](docs/_change_explore.md).
 
 홍콩 3박 4일 여행을 **동행 여럿이 같이 편집하는** 웹 앱. 정적 HTML 한 장짜리 가이드를
@@ -80,17 +80,17 @@ Python 3.12+ 와 [uv](https://docs.astral.sh/uv/) 가 필요하다. 그 밖의 �
 
 ```powershell
 uv sync --frozen
-uv run python -m harbor_lantern
+uv run python -m city_walk_planner
 ```
 
-`http://127.0.0.1:8080` 을 열면 된다. 여행은 SQLite 파일(`./harbor-lantern.db`)에 남는다.
+`http://127.0.0.1:8080` 을 열면 된다. 여행은 SQLite 파일(`./city-walk-planner.db`)에 남는다.
 
 | 환경변수 | 기본값 | 뜻 |
 |----------|--------|-----|
-| `HL_DB_PATH` | `harbor-lantern.db` | SQLite 파일 경로 |
-| `HL_HOST` · `HL_PORT` | `127.0.0.1` · `8080` | 바인딩 주소 |
-| `HL_ALLOWED_ORIGINS` | (비어 있음) | CORS 허용 출처. 화면을 다른 호스트에 올릴 때만 쓴다 |
-| `HL_TRAVEL_*` · `HL_EXTERNAL_*` | 설계서 §6.1 | 이동시간 계수·외부 API TTL (전부 추정치라 설정으로 열어 뒀다) |
+| `CWP_DB_PATH` | `city-walk-planner.db` | SQLite 파일 경로 |
+| `CWP_HOST` · `CWP_PORT` | `127.0.0.1` · `8080` | 바인딩 주소 |
+| `CWP_ALLOWED_ORIGINS` | (비어 있음) | CORS 허용 출처. 화면을 다른 호스트에 올릴 때만 쓴다 |
+| `CWP_TRAVEL_*` · `CWP_EXTERNAL_*` | 설계서 §6.1 | 이동시간 계수·외부 API TTL (전부 추정치라 설정으로 열어 뒀다) |
 
 ### 도시 가이드 쓰기
 
@@ -149,27 +149,27 @@ uv run python tools/vendor_check.py     # Leaflet 벤더 파일 SHA256 대조
 Pages 는 정적 파일만 준다.
 
 **화면 배포는 자동이다.** `main` 에 push 하면 `.github/workflows/pages.yml` 이
-`src/harbor_lantern/web` 을 그대로 올린다.
+`src/city_walk_planner/web` 을 그대로 올린다.
 
 **백엔드는 PC 에서 띄운다.**
 
 ```powershell
-uv run python -m harbor_lantern                                    # 로컬 API
+uv run python -m city_walk_planner                                    # 로컬 API
 powershell -ExecutionPolicy Bypass -File tools/start-tunnel.ps1    # .local/cloudflared.exe 필요
-$env:HL_ALLOWED_ORIGINS = "https://<사용자>.github.io"             # CORS 허용 (필수)
+$env:CWP_ALLOWED_ORIGINS = "https://<사용자>.github.io"             # CORS 허용 (필수)
 ```
 
 **터널을 띄우면 접속 링크가 Telegram 으로 온다.** `start-tunnel.ps1` 이 주소를 받은 뒤
 `tools/notify_tunnel.py` 로 `<Pages 주소>?api=<터널 주소>` 를 보낸다 — 휴대폰에서 링크 한 번이면
 주소가 그 브라우저에 저장된다. 토큰은 **복사하지 않는다**: `.env.local`(gitignore)의
-`HL_TELEGRAM_CONFIG` 가 설정 파일 **경로만** 가리킨다. 설정이 없으면 조용히 건너뛰고 터널은
+`CWP_TELEGRAM_CONFIG` 가 설정 파일 **경로만** 가리킨다. 설정이 없으면 조용히 건너뛰고 터널은
 그대로 동작한다. 링크만 보려면 `python tools/notify_tunnel.py --dry-run`.
 
 **주소는 화면에서 넣는다.** Pages 로 연 화면의 "여행 시작하기" 카드 아래 **백엔드 주소** 칸에
 터널 주소를 넣으면 이 기기에 저장된다. 페이지 주소 뒤에 `?api=` 로 붙여 열어도 같다.
 
 > 터널 주소는 재시작마다 바뀐다. 그래서 주소를 **배포 시점에 굽지 않는다** — 구우면 주소가 바뀔
-> 때마다 다시 배포해야 한다. 고정 주소가 있다면 저장소 변수 `HL_API_BASE` 에 넣어 기본값으로 쓸 수 있다.
+> 때마다 다시 배포해야 한다. 고정 주소가 있다면 저장소 변수 `CWP_API_BASE` 에 넣어 기본값으로 쓸 수 있다.
 
 PC 가 꺼지거나 절전으로 들어가면 조회·수정이 연결되지 않는다. 프로세스 ID·로그·실제 DB 는
 `.local/` 에 두고 Git 에 넣지 않는다. 변경 범위와 검증 결과는 `docs/_change_pages.md` 에 있다.
@@ -231,7 +231,7 @@ PC 가 꺼지거나 절전으로 들어가면 조회·수정이 연결되지 않
 목록과 지도는 같은 필터를 쓰며 `지도에서 보기`로 선택한 지점에 이동합니다.
 기사 출처·수정일·자료 확인일·추천 메뉴·방문 팁을 표시합니다. 미조사 도시는 빈 결과로 안내합니다.
 실시간 Instagram 순위나 방문객 연령 통계가 아니며, 없는 평점과 리뷰 수는 만들어 넣지 않습니다.
-정적 자료는 `src/harbor_lantern/web/data/trending-food.json`에 있으며 별도 유료 API를 호출하지 않습니다.
+정적 자료는 `src/city_walk_planner/web/data/trending-food.json`에 있으며 별도 유료 API를 호출하지 않습니다.
 
 브라우저 확인: 서버 실행 후 `uv run --no-project --with playwright --python .venv/Scripts/python.exe tools/check_trend_food.py`.
 `CHECK_URL`로 배포 주소, `CHROME_PATH`로 설치된 Chromium 실행 파일을 지정할 수 있습니다.

@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import pytest
 
-from harbor_lantern.config import DEFAULT_TIME_BAND, FIXED_TIME_BAND, TIME_BANDS, TravelConfig
-from harbor_lantern.domain.models import LatLng, SpotInput
-from harbor_lantern.domain.timeline import build_timeline, resolve_dwell, resolve_start_min
+from city_walk_planner.config import DEFAULT_TIME_BAND, FIXED_TIME_BAND, TIME_BANDS, TravelConfig
+from city_walk_planner.domain.models import LatLng, SpotInput
+from city_walk_planner.domain.timeline import build_timeline, resolve_dwell, resolve_start_min
 
 CFG = TravelConfig()
 

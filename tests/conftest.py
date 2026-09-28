@@ -3,7 +3,7 @@
 세 담당(IMP-A 도메인 / IMP-B API·저장소 / IMP-C 프론트)이 모두 이 파일을 읽는다.
 **여기서 픽스처 이름을 바꾸면 세 사람의 테스트가 동시에 깨진다.**
 
-이 파일은 아직 존재하지 않는 모듈(`harbor_lantern.api.app`)을 **import 하지 않는다**.
+이 파일은 아직 존재하지 않는 모듈(`city_walk_planner.api.app`)을 **import 하지 않는다**.
 T0 이 collect 에러를 내면 T1~T3 이 시작조차 못 한다 — 그래서 앱 관련 import 는 전부
 픽스처 안으로 미루고, 없으면 그 테스트만 skip 한다.
 """
@@ -21,11 +21,11 @@ from typing import Any
 
 import pytest
 
-from harbor_lantern.clock import FixedClock
-from harbor_lantern.config import Settings, load_settings
+from city_walk_planner.clock import FixedClock
+from city_walk_planner.config import Settings, load_settings
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_SQL = PROJECT_ROOT / "src" / "harbor_lantern" / "storage" / "schema.sql"
+SCHEMA_SQL = PROJECT_ROOT / "src" / "city_walk_planner" / "storage" / "schema.sql"
 SEED_JSON = PROJECT_ROOT / "seed" / "spots.json"
 
 # 고정 시각 = 2026-10-05 10:00 HKT (여행 1일차 오전). UTC 로는 02:00.
@@ -132,17 +132,17 @@ def fixed_clock() -> FixedClock:
 def db_path(tmp_path: Path) -> Path:
     """테스트마다 새 DB 파일. 파일 DB 인 이유는 WAL·`busy_timeout` 동작이
     `:memory:` 와 다르기 때문이다 — 잠금을 검증하려면 진짜 파일이어야 한다."""
-    return tmp_path / "harbor-lantern.db"
+    return tmp_path / "city-walk-planner.db"
 
 
 @pytest.fixture
 def settings(db_path: Path) -> Settings:
     """임시 DB 를 가리키는 기본 설정.
 
-    `env` 를 **명시적으로** 넘기므로 개발자 셸의 `HL_*` 가 테스트 결과를 바꾸지 못한다
+    `env` 를 **명시적으로** 넘기므로 개발자 셸의 `CWP_*`·`HL_*` 가 테스트 결과를 바꾸지 못한다
     (NFR-013). 계수를 바꿔 보려면 `dataclasses.replace(settings, travel=...)`.
     """
-    return load_settings(env={"HL_DB_PATH": str(db_path)})
+    return load_settings(env={"CWP_DB_PATH": str(db_path)})
 
 
 @pytest.fixture
@@ -188,9 +188,9 @@ def app(settings: Settings, fixed_clock: FixedClock) -> Any:
     import inspect
 
     try:
-        from harbor_lantern.api.app import create_app
+        from city_walk_planner.api.app import create_app
     except ImportError:
-        pytest.skip("harbor_lantern.api.app.create_app 이 아직 없다 (T2 · IMP-B)")
+        pytest.skip("city_walk_planner.api.app.create_app 이 아직 없다 (T2 · IMP-B)")
 
     params = inspect.signature(create_app).parameters
     kwargs: dict[str, Any] = {}

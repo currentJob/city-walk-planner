@@ -9,14 +9,14 @@ from __future__ import annotations
 
 import pytest
 
-from harbor_lantern.domain.guide_link import (
+from city_walk_planner.domain.guide_link import (
     LinkInput,
     apply_verdict,
     label_match,
     normalize_title,
     verify_link,
 )
-from harbor_lantern.domain.models import LatLng
+from city_walk_planner.domain.models import LatLng
 
 OSAKA_CASTLE = LatLng(34.6873, 135.5259)
 WINTER_PALACE = LatLng(59.9398, 30.3146)  # 상트페테르부르크 — 약 8,000km 떨어져 있다

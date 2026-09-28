@@ -13,8 +13,8 @@ from typing import Any
 
 import pytest
 
-from harbor_lantern.domain.hours import is_open_at, parse_closed, parse_hours
-from harbor_lantern.domain.models import HoursSpec
+from city_walk_planner.domain.hours import is_open_at, parse_closed, parse_hours
+from city_walk_planner.domain.models import HoursSpec
 
 # 설계서 §6.9 의 기대 분포를 스팟 단위로 편 표.
 # (status, pattern, open_min, close_min, approximate, crosses_midnight)

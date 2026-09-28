@@ -108,11 +108,11 @@ def test_no_secret_patterns_in_repository() -> None:
 
 def test_external_provider_settings_come_from_environment() -> None:
     """외부 공급자 설정이 환경변수에서만 로드되는지 (AC-046)."""
-    config = PROJECT_ROOT / "src" / "harbor_lantern" / "config.py"
+    config = PROJECT_ROOT / "src" / "city_walk_planner" / "config.py"
     if not config.is_file():
         pytest.skip("config.py 가 아직 없다")
     text = config.read_text(encoding="utf-8")
-    assert "HL_" in text, "설정이 HL_* 환경변수를 읽지 않는다"
+    assert "CWP_" in text, "설정이 CWP_* 환경변수를 읽지 않는다"
     assert not re.search(r"""(?i)(api_key|apikey|token)\s*=\s*["'][^"']+["']""", text), (
         "config.py 에 하드코딩된 키가 있다"
     )

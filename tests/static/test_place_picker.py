@@ -5,7 +5,7 @@ from tests.static.test_plan_map import PROJECT_ROOT, _run_node, node_only
 
 @node_only
 def test_viewport_filters_missing_ratings_and_dateline():
-    module = (PROJECT_ROOT / 'src/harbor_lantern/web/js/place-picker.js').as_uri()
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/place-picker.js').as_uri()
     result = _run_node(f"""
         import {{filterPlaces,withinBounds}} from {module!r};
         const box={{south:-1,west:179,north:1,east:-179}},origin={{lat:0,lng:180}};
@@ -30,7 +30,7 @@ def test_viewport_filters_missing_ratings_and_dateline():
 
 @node_only
 def test_map_rating_labels_distinguish_missing_data():
-    module = (PROJECT_ROOT / 'src/harbor_lantern/web/js/map.js').as_uri()
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/map.js').as_uri()
     result = _run_node(f"""
         import {{ratingLabel}} from {module!r};
         console.log(JSON.stringify([
@@ -44,7 +44,7 @@ def test_map_rating_labels_distinguish_missing_data():
 
 @node_only
 def test_picker_merges_verified_identity_preserves_sources_and_avoids_false_ratings():
-    module = (PROJECT_ROOT / 'src/harbor_lantern/web/js/place-picker.js').as_uri()
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/place-picker.js').as_uri()
     result = _run_node(f"""
         import {{mergePlaces,samePlace}} from {module!r};
         const source='https://www.trip.com/example?from=chatgpt&allianceid=123&sid=456';

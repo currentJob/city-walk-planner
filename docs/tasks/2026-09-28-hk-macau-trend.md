@@ -5,8 +5,8 @@
 ## 구현
 
 - 메뉴에 `#trend` "홍콩·마카오 트렌드"를 추가했다. `#trend-<가게 id>`로 해당 가게 카드에 바로 연결된다.
-- 자료: `src/harbor_lantern/web/data/hk-macau-trend.json` (2026-10-05~08, 4일, 방문지 30곳, 가게 15곳, 명소 15곳, 팁 8개).
-- 화면: `src/harbor_lantern/web/js/render/trend.js` (순수 함수 `trendHtml`, `positiveShare`). 기존 `.day`·`.stop`·`.place-card` 스타일을 재사용했고 새 CSS는 없다.
+- 자료: `src/city_walk_planner/web/data/hk-macau-trend.json` (2026-10-05~08, 4일, 방문지 30곳, 가게 15곳, 명소 15곳, 팁 8개).
+- 화면: `src/city_walk_planner/web/js/render/trend.js` (순수 함수 `trendHtml`, `positiveShare`). 기존 `.day`·`.stop`·`.place-card` 스타일을 재사용했고 새 CSS는 없다.
 - API·DB·의존성은 바뀌지 않았다. 정적 Pages 배포만으로 반영된다.
 
 ## 조사 근거 · 2026-09-28

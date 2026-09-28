@@ -1,7 +1,7 @@
 [project]
-name = "harbor-lantern"
+name = "city-walk-planner"
 version = "0.1.0"
-description = "홍콩 3박4일 동적 여행 가이드 — 일정 공유·이동시간·경비 정산 (FastAPI + SQLite + 바닐라 JS)"
+description = "도시를 걷는 여행 플래너 — 도시 가이드·일정 만들기·주변 맛집·홍콩/마카오 트렌드 코스·동행 일정 공유 (FastAPI + SQLite + 바닐라 JS)"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.14"
@@ -31,15 +31,15 @@ requires = ["hatchling==1.32.0"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/harbor_lantern"]
+packages = ["src/city_walk_planner"]
 
 [tool.hatch.build.targets.wheel.force-include]
 # 패키지 데이터(DDL · 프론트 자산)를 휠에 함께 싣는다.
 # schema.sql 이 빠지면 최초 기동이 조용히 실패한다 — 소스 트리에서만 돌려 보면 안 보인다.
-"src/harbor_lantern/storage/schema.sql" = "harbor_lantern/storage/schema.sql"
+"src/city_walk_planner/storage/schema.sql" = "city_walk_planner/storage/schema.sql"
 
 [tool.hatch.build.targets.sdist]
-include = ["src/harbor_lantern", "seed", "contracts", "tests"]
+include = ["src/city_walk_planner", "seed", "contracts", "tests"]
 
 [tool.ruff]
 line-length = 120
@@ -47,7 +47,7 @@ target-version = "py312"
 src = ["src", "tests", "tools"]
 # `.github/quality/**` 는 하네스가 빌드마다 덮어쓰는 생성물이다. 우리가 고칠 수 없는
 # 파일로 게이트를 빨갛게 만들면 아무도 게이트를 안 본다.
-extend-exclude = ["src/harbor_lantern/web/vendor", ".github"]
+extend-exclude = ["src/city_walk_planner/web/vendor", ".github"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "TID"]
@@ -55,10 +55,10 @@ select = ["E", "F", "W", "I", "B", "UP", "TID"]
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 # 설계서 §12 F10 — HKT 는 UTC+8 고정이다(§2.3). zoneinfo 는 Windows 에서 tzdata 를
 # 추가로 요구해 CI(리눅스)만 통과하고 개발자 PC 에서 터진다.
-"zoneinfo".msg = "HKT 는 UTC+8 고정이다. harbor_lantern.domain.util.HKT 를 쓸 것 (설계서 §2.3 · F10)"
+"zoneinfo".msg = "HKT 는 UTC+8 고정이다. city_walk_planner.domain.util.HKT 를 쓸 것 (설계서 §2.3 · F10)"
 
 [tool.ruff.lint.isort]
-known-first-party = ["harbor_lantern"]
+known-first-party = ["city_walk_planner"]
 
 [tool.pytest.ini_options]
 minversion = "9.0"

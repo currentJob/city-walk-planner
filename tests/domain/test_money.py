@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from harbor_lantern.domain.money import hkd_cent_to_krw, split_even
+from city_walk_planner.domain.money import hkd_cent_to_krw, split_even
 
 
 class TestSplitEven:

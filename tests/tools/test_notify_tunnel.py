@@ -18,7 +18,7 @@ if str(TOOLS_DIR) not in sys.path:
 
 from notify_tunnel import build_share_url, find_tunnel_url, load_config  # noqa: E402
 
-PAGES = "https://currentjob.github.io/harbor-lantern/"
+PAGES = "https://currentjob.github.io/city-walk-planner/"
 
 
 def test_the_share_link_carries_the_tunnel_address() -> None:
@@ -94,7 +94,7 @@ def test_a_complete_config_is_read(tmp_path: Path) -> None:
 def test_the_tool_does_not_carry_a_copy_of_the_secret() -> None:
     """토큰은 하네스의 설정 파일 한 곳에만 둔다 — 이 도구는 **경로만** 받는다."""
     source = (TOOLS_DIR / "notify_tunnel.py").read_text(encoding="utf-8")
-    assert "HL_TELEGRAM_CONFIG" in source
+    assert "CWP_" in source and "TELEGRAM_CONFIG" in source
     # 봇 토큰 모양(숫자:영숫자)이 소스에 박혀 있으면 안 된다.
     import re
     assert not re.search(r"\b\d{8,}:[A-Za-z0-9_-]{30,}\b", source)

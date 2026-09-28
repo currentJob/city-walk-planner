@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-from harbor_lantern.domain.guide_taxonomy import (
+from city_walk_planner.domain.guide_taxonomy import (
     DEFAULT_TAXONOMY,
     Taxonomy,
     classify,

@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-from harbor_lantern.clock import FixedClock
+from city_walk_planner.clock import FixedClock
 from tests.api.conftest import Actor, TripFixture
 
 

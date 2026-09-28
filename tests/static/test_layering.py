@@ -21,14 +21,14 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SRC = PROJECT_ROOT / "src" / "harbor_lantern"
+SRC = PROJECT_ROOT / "src" / "city_walk_planner"
 DOMAIN = SRC / "domain"
 
 # domain/ 이 손대면 안 되는 것들. 앞이 최상위 모듈명이다.
 FORBIDDEN_IN_DOMAIN = {
-    "harbor_lantern.storage": "저장소 계층 (도메인은 DB 를 모른다)",
-    "harbor_lantern.services": "서비스 계층 (의존 방향이 반대다)",
-    "harbor_lantern.api": "HTTP 표면 (의존 방향이 반대다)",
+    "city_walk_planner.storage": "저장소 계층 (도메인은 DB 를 모른다)",
+    "city_walk_planner.services": "서비스 계층 (의존 방향이 반대다)",
+    "city_walk_planner.api": "HTTP 표면 (의존 방향이 반대다)",
     "httpx": "아웃바운드 HTTP (services/external 에서만)",
     "sqlite3": "DB 드라이버 (storage 에서만)",
     "fastapi": "웹 프레임워크",
@@ -37,7 +37,7 @@ FORBIDDEN_IN_DOMAIN = {
     "zoneinfo": "HKT 는 UTC+8 고정 상수다 (설계서 §2.3 · §12 F10)",
 }
 
-# `harbor_lantern.config` 는 **금지 목록에 없다.** 설계서 §6.7·§6.8 의 시그니처가
+# `city_walk_planner.config` 는 **금지 목록에 없다.** 설계서 §6.7·§6.8 의 시그니처가
 # `leg(a, b, cfg: TravelConfig)` · `resolve_dwell(spot, cfg)` 이라, 도메인은 설정을
 # 인자로 받되 그 **타입**은 config.py 에서 가져온다. config.py 는 frozen dataclass 뿐이고
 # I/O 가 없다(§6.1). 이것까지 막으면 설계가 정한 계약을 구현할 수 없다.

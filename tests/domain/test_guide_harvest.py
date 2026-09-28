@@ -7,12 +7,12 @@
 
 from __future__ import annotations
 
-from harbor_lantern.domain.guide_harvest import (
+from city_walk_planner.domain.guide_harvest import (
     dedupe_by_name,
     fold_candidates,
     fold_rows,
 )
-from harbor_lantern.domain.models import LatLng
+from city_walk_planner.domain.models import LatLng
 
 TOKYO = LatLng(35.6762, 139.6503)
 DANANG = LatLng(16.0544, 108.2022)

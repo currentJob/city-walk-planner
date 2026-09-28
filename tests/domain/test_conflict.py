@@ -6,8 +6,8 @@ AC-025 의 수치를 그대로 쓴다: 20:00 시작 고정 일정 앞 스팟이 
 
 from __future__ import annotations
 
-from harbor_lantern.domain.conflict import find_conflicts
-from harbor_lantern.domain.models import ScheduledSpot
+from city_walk_planner.domain.conflict import find_conflicts
+from city_walk_planner.domain.models import ScheduledSpot
 
 SYMPHONY_START = 20 * 60  # 1200
 

@@ -2,8 +2,8 @@
 
 import httpx
 
-from harbor_lantern.services.external.discovery import DiscoveryProvider, safe_link
-from harbor_lantern.services.external.ports import ExternalUnavailable
+from city_walk_planner.services.external.discovery import DiscoveryProvider, safe_link
+from city_walk_planner.services.external.ports import ExternalUnavailable
 
 
 class FakeDiscovery:
@@ -67,7 +67,7 @@ def test_osm_metadata_is_preserved_without_fabricated_reviews():
 
 
 def test_optional_google_rating_and_review_attribution(monkeypatch):
-    monkeypatch.setenv("HL_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
+    monkeypatch.setenv("CWP_GOOGLE_PLACES_API_KEY", "test-only-not-a-real-credential")
     def handler(request):
         assert request.headers["X-Goog-Api-Key"] == "test-only-not-a-real-credential"
         return httpx.Response(200, json={"places": [{"id": "g1", "displayName": {"text": "Sample"},

@@ -4,7 +4,7 @@ from datetime import date
 
 import pytest
 
-from harbor_lantern.domain.planner import build_plan, opening_windows
+from city_walk_planner.domain.planner import build_plan, opening_windows
 
 
 @pytest.mark.parametrize(("text", "day", "expected"), [

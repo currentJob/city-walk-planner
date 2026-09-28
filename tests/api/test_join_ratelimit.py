@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from harbor_lantern.clock import FixedClock
+from city_walk_planner.clock import FixedClock
 from tests.api.conftest import TripFixture
 
 MALFORMED = "짧다"  # 정규화하면 12자가 안 된다 → normalize_code 가 None

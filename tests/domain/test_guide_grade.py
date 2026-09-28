@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-from harbor_lantern.domain.guide_grade import (
+from city_walk_planner.domain.guide_grade import (
     EXPORT_MAX,
     GRADE_WINDOW,
     grade,

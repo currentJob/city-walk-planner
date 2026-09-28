@@ -2,9 +2,9 @@
 import httpx
 import pytest
 
-from harbor_lantern.services import ratings
-from harbor_lantern.services.external.discovery import DiscoveryProvider
-from harbor_lantern.services.external.ports import ExternalUnavailable
+from city_walk_planner.services import ratings
+from city_walk_planner.services.external.discovery import DiscoveryProvider
+from city_walk_planner.services.external.ports import ExternalUnavailable
 
 
 def test_overpass_viewport_preserves_facts_caches_and_reports_limit():

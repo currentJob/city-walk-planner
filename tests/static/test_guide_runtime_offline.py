@@ -20,10 +20,10 @@ SRC = PROJECT_ROOT / "src"
 
 # 가이드 경로의 진입점들. 여기서 출발해 닿는 우리 모듈 전부를 검사한다.
 ENTRY_POINTS = (
-    SRC / "harbor_lantern" / "services" / "guides.py",
-    SRC / "harbor_lantern" / "domain" / "guide.py",
-    SRC / "harbor_lantern" / "domain" / "cluster.py",
-    SRC / "harbor_lantern" / "domain" / "guide_grade.py",
+    SRC / "city_walk_planner" / "services" / "guides.py",
+    SRC / "city_walk_planner" / "domain" / "guide.py",
+    SRC / "city_walk_planner" / "domain" / "cluster.py",
+    SRC / "city_walk_planner" / "domain" / "guide_grade.py",
 )
 
 # 네트워크를 열 수 있는 것들. 앞이 최상위 모듈명이다.
@@ -34,13 +34,13 @@ NETWORK_CAPABLE = {
     "http": "표준 HTTP 클라이언트",
     "socket": "소켓",
     "ssl": "TLS (소켓이 있다는 뜻)",
-    "harbor_lantern.services.external": "외부 공급자 어댑터 (조사는 빌드 타임에 끝났다)",
+    "city_walk_planner.services.external": "외부 공급자 어댑터 (조사는 빌드 타임에 끝났다)",
 }
 
 
 def _module_path(module: str) -> Path | None:
-    """`harbor_lantern.x.y` → 파일 경로. 우리 패키지가 아니면 `None`."""
-    if not module.startswith("harbor_lantern"):
+    """`city_walk_planner.x.y` → 파일 경로. 우리 패키지가 아니면 `None`."""
+    if not module.startswith("city_walk_planner"):
         return None
     base = SRC.joinpath(*module.split("."))
     for candidate in (base.with_suffix(".py"), base / "__init__.py"):
@@ -105,7 +105,7 @@ def test_guide_runtime_cannot_reach_the_network() -> None:
 
 def test_loader_reads_one_directory_and_nothing_else() -> None:
     """로더의 I/O 는 `seed/city-guides/` 읽기 하나다. 쓰기도 실행도 없다."""
-    source = (SRC / "harbor_lantern" / "services" / "guides.py").read_text(encoding="utf-8")
+    source = (SRC / "city_walk_planner" / "services" / "guides.py").read_text(encoding="utf-8")
     tree = ast.parse(source)
     calls = {
         node.func.attr
@@ -125,7 +125,7 @@ def test_baked_guides_are_optional_at_rest() -> None:
     directory = PROJECT_ROOT / "seed" / "city-guides"
     if not directory.is_dir():
         return
-    from harbor_lantern.services.guides import is_city_id
+    from city_walk_planner.services.guides import is_city_id
 
     bad = [
         path.name

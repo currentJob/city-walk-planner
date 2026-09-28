@@ -4,9 +4,9 @@ from datetime import date
 
 import pytest
 
-from harbor_lantern.domain.guide import build_guide_plan
-from harbor_lantern.domain.planner import build_plan
-from harbor_lantern.domain.review_plan import propose_order, review_score
+from city_walk_planner.domain.guide import build_guide_plan
+from city_walk_planner.domain.planner import build_plan
+from city_walk_planner.domain.review_plan import propose_order, review_score
 
 
 def evidence(rating, count):

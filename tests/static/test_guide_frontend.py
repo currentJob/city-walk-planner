@@ -22,7 +22,7 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-WEB = PROJECT_ROOT / "src" / "harbor_lantern" / "web"
+WEB = PROJECT_ROOT / "src" / "city_walk_planner" / "web"
 GUIDE_JS = WEB / "js" / "render" / "guide.js"
 EXPLORE_JS = WEB / "js" / "explore.js"
 INDEX_HTML = WEB / "index.html"
@@ -386,7 +386,7 @@ def _fixture_city() -> dict:
 
 @pytest.fixture
 def baked_fixture(tmp_path: Path):
-    from harbor_lantern.services import guides
+    from city_walk_planner.services import guides
 
     directory = tmp_path / "city-guides"
     directory.mkdir()
@@ -434,7 +434,7 @@ def test_the_real_plan_response_renders_with_descriptions_and_sources(app, clien
 
 def test_the_guide_list_response_renders_without_any_baked_city(app, client, tmp_path) -> None:
     """굽기 전(= 오늘)의 저장소에서도 목록 화면이 정상이다 — 빈 목록은 오류가 아니다(AC-076)."""
-    from harbor_lantern.services import guides
+    from city_walk_planner.services import guides
 
     guides.load_index.cache_clear()
     guides.load_city.cache_clear()

@@ -13,7 +13,7 @@
 **영어는 발견 경로일 뿐이다.** 싣는 것은 `kowiki` 문서가 있는 항목뿐이고 제목·설명은 언제나
 한국어 문서에서 온다 — "한국어 100%" 불변식은 1단계가 아니라 3단계가 지킨다.
 
-**판단은 전부 `harbor_lantern.domain` 이 한다.** 이 파일에 있는 것은 순서·I/O·보고서다.
+**판단은 전부 `city_walk_planner.domain` 이 한다.** 이 파일에 있는 것은 순서·I/O·보고서다.
 분류(`guide_taxonomy.classify`) · 중복 접기(`guide_harvest.fold_rows`) · 연결 검증
 (`guide_link.verify_link`) · 선별과 등급(`guide_grade.select_spots`/`grade_city`) 은 전부
 순수 함수이고 고정 입력으로 테스트된다 — 베이커 자신은 테스트에서 실행되지 않는다
@@ -46,11 +46,11 @@ if str(Path(__file__).resolve().parent) not in sys.path:
 
 from bakery import geosearch, io, osm, wikidata, wikipedia  # noqa: E402  (sys.path 조정 뒤에 와야 한다)
 from bakery.io import BakeError  # noqa: E402
-from harbor_lantern.domain.guide_grade import EXPORT_MAX, grade_city, select_spots  # noqa: E402
-from harbor_lantern.domain.guide_harvest import dedupe_by_name, fold_rows  # noqa: E402
-from harbor_lantern.domain.guide_link import LinkInput, apply_verdict, verify_link  # noqa: E402
-from harbor_lantern.domain.guide_taxonomy import MAX_PROMOTION_DEPTH, Taxonomy, classify  # noqa: E402
-from harbor_lantern.domain.models import LatLng  # noqa: E402
+from city_walk_planner.domain.guide_grade import EXPORT_MAX, grade_city, select_spots  # noqa: E402
+from city_walk_planner.domain.guide_harvest import dedupe_by_name, fold_rows  # noqa: E402
+from city_walk_planner.domain.guide_link import LinkInput, apply_verdict, verify_link  # noqa: E402
+from city_walk_planner.domain.guide_taxonomy import MAX_PROMOTION_DEPTH, Taxonomy, classify  # noqa: E402
+from city_walk_planner.domain.models import LatLng  # noqa: E402
 
 REGISTRY_PATH = ROOT / "tools" / "city-registry.json"
 DENYLIST_PATH = ROOT / "tools" / "city-denylist.json"
