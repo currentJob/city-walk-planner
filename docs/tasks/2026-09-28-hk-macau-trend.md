@@ -92,3 +92,5 @@
     - 다른 메뉴로 갔다 돌아온 뒤 지도 크기 복구, 2일 일정으로 다시 짜면 핀 16개로 갱신.
     - 390px: 지도 320px, 가로 넘침·콘솔 오류 없음.
   - NOT-RUN 실제 기기 GPS: 브라우저 위치 API를 가짜 위치로 대체해 확인했다.
+- 배포: `46d2b0a`를 main에 푸시했다. CI 성공([run 36376622880](https://github.com/currentJob/harbor-lantern/actions/runs/36376622880)), Pages 성공([run 36376622898](https://github.com/currentJob/harbor-lantern/actions/runs/36376622898)).
+- PASS https://currentjob.github.io/harbor-lantern/#trend: 핀 29개, 지도 타일 로드, 일정 4일, "내 위치 보기" 버튼, 마가렛 카페 주소 수정 반영, 콘솔 오류 없음.
