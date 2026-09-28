@@ -70,3 +70,25 @@
 
 - `8c24d66`을 main에 푸시했다. GitHub Actions: CI 성공([run 36369983805](https://github.com/currentJob/harbor-lantern/actions/runs/36369983805)), Pages 성공([run 36369983891](https://github.com/currentJob/harbor-lantern/actions/runs/36369983891)).
 - PASS https://currentjob.github.io/harbor-lantern/#trend: `data/hk-macau-trend.json` 응답 200, 메뉴 표시, 일정 4일·카드 38장 렌더링, 숙소 1곳을 추가해 일정을 다시 짜면 숙소가 표시됨, 콘솔 오류 없음.
+
+## 추가: 지도와 현위치 · 2026-09-28
+
+- 요청: 트렌드 화면에 지도와 현재 위치 표시를 추가한다.
+- 재사용: 지도는 기존 `TripMap`(날짜별 색 핀·방문 순서 번호·선택한 날짜 초점·점선 동선·내 위치 점), 위치는 `LocationTracker`를 쓴다. 두 클래스는 `platform.js`에서 주입받아 `trend.js`가 Node 테스트에서도 import되게 했다. 새 의존성은 없다.
+- 좌표: OpenStreetMap Nominatim에서 2026-09-28에 30곳을 조회했다(1초 간격, 가게는 노드 단위). 데이터 파일에 `lat`·`lng`·`osm`(요소 ID)을 넣었다.
+  - 페리 방문지는 출발 터미널 좌표를 쓴다(셩완 → 타이파, 돌아올 때는 타이파).
+  - 로드 스토우즈 베네시안점은 베네시안 건물 좌표를 쓴다.
+  - 숙소는 지역만 입력받으므로 지도에 올리지 않는다.
+- 정정: 마가렛 카페 주소를 OpenRice 중국어 원문(新馬路 馬統領圍 金利來大廈 17B)으로 바로잡았다. 앞서 적은 "Rua Alm. Costa Cabral 66"은 요약 과정에서 잘못 옮겨진 주소였다. OSM 좌표(17B)와 일치한다.
+- 화면:
+  - PC는 기존 일정 화면처럼 지도(고정)와 목록을 좌우로 배치한다. 모바일은 지도가 위, 목록이 아래다.
+  - 날짜 선택, 핀을 누르면 해당 방문지로 스크롤·강조, 일정을 다시 짜면 지도도 갱신된다.
+  - 위치 권한은 "내 위치 보기" 버튼을 누를 때만 요청한다.
+- 검증:
+  - PASS `PYTHONUTF8=1 uv run pytest -q`: 926 passed. `test_trend_map_pins_every_stop_with_matching_rows`는 숙소를 뺀 모든 방문지에 핀이 있는지, 핀 id와 목록 id가 일치하는지, 좌표가 홍콩·마카오 범위 안인지, 마카오 날이 셩완에서 출발해 타이파에서 끝나는지를 검사한다.
+  - PASS ruff, `.github/quality/gate.py` 4/4.
+  - PASS 브라우저:
+    - 1280px: 핀 29개, 날짜 4개, 마카오 날 선택 시 그날 핀 10개만 진하게 표시, 핀 클릭 시 해당 방문지 강조와 영업시간 팝업, 가짜 위치로 내 위치 점 표시.
+    - 다른 메뉴로 갔다 돌아온 뒤 지도 크기 복구, 2일 일정으로 다시 짜면 핀 16개로 갱신.
+    - 390px: 지도 320px, 가로 넘침·콘솔 오류 없음.
+  - NOT-RUN 실제 기기 GPS: 브라우저 위치 API를 가짜 위치로 대체해 확인했다.

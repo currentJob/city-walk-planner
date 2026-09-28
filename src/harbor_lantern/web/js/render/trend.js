@@ -147,19 +147,37 @@ function shopCard(s) {
     <p class="source">${link(s.source_url, 'OpenRice 원문')}</p></article>`;
 }
 
-function stopRow(stop, byId) {
+/** DOM id shared by a stop row and its map pin. */
+export const trendStopId = (dayIndex, stopIndex) => `trend-stop-${dayIndex}-${stopIndex}`;
+
+const DAY_COLORS = ['#22d3ee', '#f472b6', '#fbbf24', '#a78bfa'];
+
+/** Scheduled days → the `days[].spots[]` shape `TripMap.render` expects. Stops without coordinates (stays) are skipped. */
+export function trendMapDays(data, days) {
+  const byId = Object.fromEntries([...data.shops, ...data.places].map(x => [x.id, x]));
+  return days.map((d, dayIndex) => ({
+    day_index: dayIndex, color: DAY_COLORS[dayIndex % DAY_COLORS.length], title: `${d.label} · ${d.theme}`,
+    spots: d.stops.map((stop, stopIndex) => {
+      const ref = stop.ref && byId[stop.ref], lat = stop.lat ?? ref?.lat, lng = stop.lng ?? ref?.lng;
+      return Number.isFinite(lat) && Number.isFinite(lng) ? {id: trendStopId(dayIndex, stopIndex), lat, lng,
+        name: stop.name, name_original: d.theme, time_label: stop.time, hours_text: ref?.hours || '정보 없음'} : null;
+    }).filter(Boolean),
+  }));
+}
+
+function stopRow(stop, byId, id) {
   const ref = stop.ref && byId[stop.ref];
   const extra = ref?.hours ? `<p class="meta">🕒 ${esc(ref.hours)}</p>` : '';
   const target = stop.kind === 'food' && ref ? ` · <a href="#trend-${esc(ref.id)}">가게 요약 보기</a>` : '';
-  return `<div class="stop"><time>${esc(stop.time)}</time><div><h3>${esc(stop.name)}</h3><p class="desc">${esc(stop.note)}${target}</p>${extra}</div></div>`;
+  return `<div class="stop" id="${esc(id)}"><time>${esc(stop.time)}</time><div><h3>${esc(stop.name)}</h3><p class="desc">${esc(stop.note)}${target}</p>${extra}</div></div>`;
 }
 
 /** Day cards for a scheduled range (output of `schedule`). */
 export function daysHtml(data, days) {
   const byId = Object.fromEntries([...data.shops, ...data.places].map(x => [x.id, x]));
-  return days.map(d => `<article class="day"><div class="day-head"><div><h3>${esc(d.label)} · ${esc(d.date)}</h3><span class="daytheme">${esc(d.theme)}</span>${d.stay ? `<span class="hint">${esc(d.stay)}</span>` : ''}</div></div>
+  return days.map((d, i) => `<article class="day"><div class="day-head"><div><h3>${esc(d.label)} · ${esc(d.date)}</h3><span class="daytheme">${esc(d.theme)}</span>${d.stay ? `<span class="hint">${esc(d.stay)}</span>` : ''}</div></div>
     ${d.notes.length ? `<p class="dayexception">${d.notes.map(esc).join('<br>')}</p>` : ''}
-    ${d.stops.map(s => stopRow(s, byId)).join('')}</article>`).join('');
+    ${d.stops.map((s, j) => stopRow(s, byId, trendStopId(i, j))).join('')}</article>`).join('');
 }
 
 /** Whole page for the trend category; data comes from data/hk-macau-trend.json. */
@@ -175,7 +193,11 @@ export function trendHtml(data) {
         <button>이 기간으로 일정 짜기</button></form>
       <p class="hint">요일별 휴무를 피해 코스를 배치하고, 도착일과 출국일에는 되도록 마카오를 넣지 않습니다. 숙소를 넣으면 숙소 지역에서 가까운 코스를 우선하고 입실·퇴실을 일정에 표시합니다. 이동 시간은 지역 단위 추정치입니다(${esc(data.travel_minutes.note)}). 최대 ${MAX_DAYS}일까지 짤 수 있고, 공휴일과 임시 휴업은 반영하지 않습니다.</p>
       <p id="trendRangeError" class="message error" role="alert" hidden></p>
-      <div id="trendDays">${daysHtml(data, schedule(data, start, end))}</div></section>
+      <div class="itinerary-workspace"><div id="trendMapBlock"><div class="mapbar"><label>지도에 볼 날짜<select id="trendMapDay"></select></label>
+          <button type="button" class="secondary" id="trendLocate">내 위치 보기</button></div>
+        <div id="trendMap" aria-label="트렌드 코스 지도"></div><p class="mapmsg" id="trendMapMsg" role="status" hidden></p>
+        <p class="hint">핀 번호는 그날 방문 순서입니다. 숙소는 지역만 입력받아 지도에 표시하지 않습니다. 내 위치는 버튼을 누를 때만 요청하며 이 브라우저 밖으로 보내지 않습니다. ${esc(data.coord_note)}</p></div>
+        <div id="trendDays" class="itinerary-list">${daysHtml(data, schedule(data, start, end))}</div></div></section>
     <section class="section"><h2>가게별 평점·리뷰 요약</h2><p class="hint">일정에 넣은 곳과 대안으로 둔 곳입니다.</p>
       <div class="place-grid">${data.shops.map(shopCard).join('')}</div></section>
     <section class="section"><h2>명소 영업시간</h2><div class="place-grid">${data.places.map(p => `<article class="place-card"><h3>${esc(p.name)}</h3>
@@ -193,10 +215,43 @@ function stayRowHtml(data, s) {
     <button type="button" class="secondary" data-remove-stay aria-label="이 숙소 삭제">삭제</button></div>`;
 }
 
-/** Binds the date and stay form after `trendHtml` is in the DOM. */
-export function bindTrendRange(root, data) {
+/**
+ * Binds the date/stay form, the map and "my location" after `trendHtml` is in the DOM.
+ * `TripMap` and `LocationTracker` are injected so this module stays importable in Node tests.
+ * Returns `invalidate()` for when the hidden page becomes visible again.
+ */
+export function bindTrendRange(root, data, {TripMap, LocationTracker, notice = () => {}} = {}) {
   const form = root.querySelector('#trendRange'), error = root.querySelector('#trendRangeError');
-  const list = form.querySelector('.stay-list');
+  const list = form.querySelector('.stay-list'), daySelect = root.querySelector('#trendMapDay');
+  const mapMsg = text => { const el = root.querySelector('#trendMapMsg'); el.textContent = text; el.hidden = !text; };
+  let mapDays = [], me = null;
+  const map = TripMap ? new TripMap('trendMap', {onTileTrouble: mapMsg, onMarkerClick: (dayIndex, stopId) => {
+    daySelect.value = String(dayIndex); map.focusDay(mapDays[dayIndex]);
+    root.querySelectorAll('.stop.pinned').forEach(el => el.classList.remove('pinned'));
+    const row = root.querySelector('#' + CSS.escape(stopId));
+    row?.classList.add('pinned'); row?.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }}) : null;
+  const mapReady = Boolean(map?.init());
+  const tracker = LocationTracker && new LocationTracker({
+    onUpdate: position => { me = position; if (mapReady) map.showMe(position); },
+    onError: e => { tracker.stop(); notice(e.message, true); },
+  });
+  function showDays(days) {
+    root.querySelector('#trendDays').innerHTML = daysHtml(data, days);
+    mapDays = trendMapDays(data, days);
+    daySelect.innerHTML = mapDays.map(d => `<option value="${d.day_index}">${esc(d.title)}${d.spots.length ? '' : ' (지도에 표시할 곳 없음)'}</option>`).join('');
+    if (!mapReady) return;
+    map.render(mapDays); map.invalidate();
+    const first = mapDays.find(d => d.spots.length);
+    if (first) { daySelect.value = String(first.day_index); map.focusDay(first); }
+    if (me) map.showMe(me);
+  }
+  daySelect.addEventListener('change', () => { if (mapReady) map.focusDay(mapDays[Number(daySelect.value)]); });
+  root.querySelector('#trendLocate').addEventListener('click', () => {
+    if (!mapReady) return notice('지도를 사용할 수 없어 현재 위치를 표시할 수 없습니다. 일정은 그대로 확인할 수 있어요.', true);
+    if (me) { map.showMe(me); return map.flyToMe(me); }
+    if (tracker && (tracker.tracking || tracker.start())) notice('현재 위치를 확인하고 있어요…');
+  });
   const rows = () => [...list.querySelectorAll('.stay-row')].map(row =>
     Object.fromEntries([...row.querySelectorAll('[data-f]')].map(el => [el.dataset.f, el.value.trim()])));
   form.querySelector('[data-add-stay]').addEventListener('click', () => {
@@ -210,10 +265,13 @@ export function bindTrendRange(root, data) {
   form.addEventListener('submit', event => {
     event.preventDefault();
     try {
-      root.querySelector('#trendDays').innerHTML = daysHtml(data, schedule(data, form.start.value, form.end.value, rows()));
+      showDays(schedule(data, form.start.value, form.end.value, rows()));
       error.hidden = true;
     } catch (e) {
       error.textContent = e.message; error.hidden = false;
     }
   });
+  const {start, end} = data.default_range;
+  showDays(schedule(data, start, end));
+  return {invalidate: () => { if (mapReady) { map.invalidate(); map.focusDay(mapDays[Number(daySelect.value)]); } }};
 }

@@ -78,3 +78,31 @@ def test_trend_schedule_follows_stays():
     # Macau nights 10/9–10/10 pull the Macau course onto a day that starts and ends there.
     assert result['longMacau'] == '2026-10-10'
     assert result['bad'] == [True] * 6
+
+
+@node_only
+def test_trend_map_pins_every_stop_with_matching_rows():
+    module = (PROJECT_ROOT / 'src/harbor_lantern/web/js/render/trend.js').as_uri()
+    result = _run_node(f"""
+      import {{readFileSync}} from 'node:fs';
+      import {{schedule,daysHtml,trendMapDays}} from {module!r};
+      const data=JSON.parse(readFileSync('src/harbor_lantern/web/data/hk-macau-trend.json','utf8'));
+      const stay={{name:'K',area:'kowloon',checkin_date:'2026-10-05',checkin_time:'15:00',
+        checkout_date:'2026-10-08',checkout_time:'11:00'}};
+      const days=schedule(data,'2026-10-05','2026-10-08',[stay]);
+      const mapDays=trendMapDays(data,days), html=daysHtml(data,days);
+      const inArea=s=>s.lat>22.10&&s.lat<22.45&&s.lng>113.50&&s.lng<114.30;
+      const macau=mapDays.find(d=>days[d.day_index].blockId==='macau').spots;
+      console.log(JSON.stringify({{
+        counts:mapDays.map(d=>d.spots.length),
+        expected:days.map(d=>d.stops.filter(s=>s.kind!=='stay').length),
+        rows:mapDays.flatMap(d=>d.spots).every(s=>html.includes('id="'+s.id+'"')),
+        inArea:mapDays.flatMap(d=>d.spots).every(inArea),
+        ferryEnds:[macau[0].lng>114, macau.at(-1).lng<114]
+      }}));
+    """)
+    # Every visitable stop gets a pin; stay events have only an area, so they are left off the map.
+    assert result['counts'] == result['expected']
+    assert result['rows'] and result['inArea']
+    # The Macau day starts at the Sheung Wan terminal and ends at Taipa.
+    assert result['ferryEnds'] == [True, True]

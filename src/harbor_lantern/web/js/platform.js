@@ -1,6 +1,7 @@
 import { escapeHtml as esc, link } from './format.js';
 import { spotBody, gradeSummary } from './render/guide.js';
 import { TripMap } from './map.js';
+import { LocationTracker } from './geo.js';
 import { openPlacePicker } from './place-picker.js';
 import { excursionHtml } from './day-trip.js';
 import { trendHtml, bindTrendRange } from './render/trend.js';
@@ -24,6 +25,7 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
     $('savedEmpty').hidden = Boolean($('savedPlans').children.length);
     if (view === 'itinerary') requestAnimationFrame(() => map?.invalidate());
     if (view === 'food') requestAnimationFrame(() => foodMap?.invalidate());
+    if (view === 'trend') requestAnimationFrame(() => trendView?.invalidate());
   };
   const go = view => { show(view); if (location.hash !== '#'+view) location.hash = view; };
   function route() {
@@ -35,10 +37,10 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
     else if (hash === 'trend' || hash.startsWith('trend-')) { show('trend'); loadTrend().then(() => { if (hash !== 'trend') $(hash)?.scrollIntoView(); }); }
     else show(['discover','planner','food','saved','itinerary'].includes(hash) ? hash : 'discover');
   }
-  let trend = null;
+  let trend = null, trendView = null;
   function loadTrend() {
     trend ??= fetch('./data/hk-macau-trend.json').then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => { $('trendRoot').innerHTML = trendHtml(data); bindTrendRange($('trendRoot'), data); })
+      .then(data => { $('trendRoot').innerHTML = trendHtml(data); trendView = bindTrendRange($('trendRoot'), data, {TripMap, LocationTracker, notice}); })
       .catch(() => { trend = null; $('trendRoot').innerHTML = '<p class="empty" role="status">트렌드 코스를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.</p>'; });
     return trend;
   }
