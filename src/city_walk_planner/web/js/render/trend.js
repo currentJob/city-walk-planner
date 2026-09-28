@@ -141,10 +141,12 @@ function shopCard(s) {
   return `<article class="place-card" id="trend-${esc(s.id)}"><p class="eyebrow">${esc(s.city)} · ${esc(s.type)}</p>
     <h3>${esc(s.name)} <span class="orig">${esc(s.name_local)}</span></h3>${reactions(s.openrice)}
     <p>${s.must_try.map(m => `<span class="pill">${esc(m)}</span>`).join('')}</p>
+    <p class="meta">🕒 ${esc(s.hours)}</p>
+    <details class="shop-more" open><summary>리뷰 요약 · 결제 · 가는 길</summary>
     <ul class="tips"><li><b>좋은 점</b> ${esc(s.good)}</li><li><b>아쉬운 점</b> ${esc(s.bad)}</li></ul>
-    <p class="meta">🕒 ${esc(s.hours)}<br>💳 ${esc(s.payment)}<br>📍 ${esc(s.area)} · ${esc(s.access)}</p>
+    <p class="meta">💳 ${esc(s.payment)}<br>📍 ${esc(s.area)} · ${esc(s.access)}</p>
     ${s.day_hint ? `<p class="hint">${esc(s.day_hint)}</p>` : ''}
-    <p class="source">${link(s.source_url, 'OpenRice 원문')}</p></article>`;
+    <p class="source">${link(s.source_url, 'OpenRice 원문')}</p></details></article>`;
 }
 
 /** DOM id shared by a stop row and its map pin. */
@@ -180,12 +182,17 @@ export function daysHtml(data, days) {
     ${d.stops.map((s, j) => stopRow(s, byId, trendStopId(i, j))).join('')}</article>`).join('');
 }
 
+/** Phone-only section switcher (mobile.css hides the other sections; desktop shows everything). */
+const TREND_TABS = [['plan', '일정'], ['map', '지도'], ['shops', '가게'], ['places', '명소'], ['tips', '팁']];
+
 /** Whole page for the trend category; data comes from data/hk-macau-trend.json. */
 export function trendHtml(data) {
   const {start, end} = data.default_range;
   return `<div class="page-heading"><p class="eyebrow">HONG KONG · MACAO · TREND COURSE</p><h1>${esc(data.title)}</h1>
     <p>${esc(data.summary)}</p><p class="hint">조사일 ${esc(data.checked_at)}. ${esc(data.rating_note)}</p></div>
-    <section class="section"><h2>날짜별 일정</h2>
+    <nav class="trend-tabs" aria-label="트렌드 코스 보기">${TREND_TABS.map(([id, label]) =>
+      `<button type="button" data-trend-tab="${id}" aria-pressed="${id === 'plan'}">${label}</button>`).join('')}</nav>
+    <section class="section" data-trend-section="plan"><h2>날짜별 일정</h2>
       <form id="trendRange"><div class="tools"><label>방문 시작일<input type="date" name="start" value="${esc(start)}" required></label>
         <label>방문 종료일<input type="date" name="end" value="${esc(end)}" required></label></div>
         <fieldset class="stay-box"><legend>숙소 (선택 · 여러 곳 가능)</legend><div class="stay-list"></div>
@@ -198,11 +205,11 @@ export function trendHtml(data) {
         <div id="trendMap" aria-label="트렌드 코스 지도"></div><p class="mapmsg" id="trendMapMsg" role="status" hidden></p>
         <p class="hint">핀 번호는 그날 방문 순서입니다. 숙소는 지역만 입력받아 지도에 표시하지 않습니다. 내 위치는 버튼을 누를 때만 요청하며 이 브라우저 밖으로 보내지 않습니다. ${esc(data.coord_note)}</p></div>
         <div id="trendDays" class="itinerary-list">${daysHtml(data, schedule(data, start, end))}</div></div></section>
-    <section class="section"><h2>가게별 평점·리뷰 요약</h2><p class="hint">일정에 넣은 곳과 대안으로 둔 곳입니다.</p>
+    <section class="section" data-trend-section="shops"><h2>가게별 평점·리뷰 요약</h2><p class="hint">일정에 넣은 곳과 대안으로 둔 곳입니다.</p>
       <div class="place-grid">${data.shops.map(shopCard).join('')}</div></section>
-    <section class="section"><h2>명소 영업시간</h2><div class="place-grid">${data.places.map(p => `<article class="place-card"><h3>${esc(p.name)}</h3>
+    <section class="section" data-trend-section="places"><h2>명소 영업시간</h2><div class="place-grid">${data.places.map(p => `<article class="place-card"><h3>${esc(p.name)}</h3>
       <p class="meta">🕒 ${esc(p.hours)}<br>🎟 ${esc(p.fee)}</p><p class="source">${link(p.source_url, p.source_name)}</p></article>`).join('')}</div></section>
-    <section class="section"><h2>꿀팁</h2><div class="place-grid">${data.tips.map(t => `<article class="place-card"><h3>${esc(t.title)}</h3><p class="desc">${esc(t.body)}</p></article>`).join('')}</div></section>`;
+    <section class="section" data-trend-section="tips"><h2>꿀팁</h2><div class="place-grid">${data.tips.map(t => `<article class="place-card"><h3>${esc(t.title)}</h3><p class="desc">${esc(t.body)}</p></article>`).join('')}</div></section>`;
 }
 
 function stayRowHtml(data, s) {
@@ -225,8 +232,21 @@ export function bindTrendRange(root, data, {TripMap, LocationTracker, notice = (
   const list = form.querySelector('.stay-list'), daySelect = root.querySelector('#trendMapDay');
   const mapMsg = text => { const el = root.querySelector('#trendMapMsg'); el.textContent = text; el.hidden = !text; };
   let mapDays = [], me = null;
+  root.dataset.tab = 'plan';
+  if (matchMedia('(max-width: 760px)').matches) root.querySelectorAll('details.shop-more').forEach(d => { d.open = false; });
+  function showTab(tab) {
+    root.dataset.tab = tab;
+    root.querySelectorAll('[data-trend-tab]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.trendTab === tab)));
+    if (tab === 'map' && mapReady) requestAnimationFrame(() => { map.invalidate(); map.focusDay(mapDays[Number(daySelect.value)]); });
+  }
+  root.querySelector('.trend-tabs').addEventListener('click', event => {
+    const tab = event.target.closest('[data-trend-tab]')?.dataset.trendTab;
+    if (!tab) return;
+    showTab(tab);
+    window.scrollTo({top: 0});
+  });
   const map = TripMap ? new TripMap('trendMap', {onTileTrouble: mapMsg, onMarkerClick: (dayIndex, stopId) => {
-    daySelect.value = String(dayIndex); map.focusDay(mapDays[dayIndex]);
+    daySelect.value = String(dayIndex); map.focusDay(mapDays[dayIndex]); showTab('plan');
     root.querySelectorAll('.stop.pinned').forEach(el => el.classList.remove('pinned'));
     const row = root.querySelector('#' + CSS.escape(stopId));
     row?.classList.add('pinned'); row?.scrollIntoView({behavior: 'smooth', block: 'center'});
@@ -273,5 +293,5 @@ export function bindTrendRange(root, data, {TripMap, LocationTracker, notice = (
   });
   const {start, end} = data.default_range;
   showDays(schedule(data, start, end));
-  return {invalidate: () => { if (mapReady) { map.invalidate(); map.focusDay(mapDays[Number(daySelect.value)]); } }};
+  return {invalidate: () => { if (mapReady) { map.invalidate(); map.focusDay(mapDays[Number(daySelect.value)]); } }, showTab};
 }
