@@ -1,0 +1,856 @@
+{
+ "id": "hk-macau-trend-2026",
+ "title": "홍콩·마카오 트렌드 코스",
+ "checked_at": "2026-09-28",
+ "summary": "방문 기간을 고르면 요일별 휴무를 피해 센트럴·까우룽·마카오·완차이 코스를 날짜에 배치합니다. 인스타에서 자주 보이는 포토 스폿과 오래된 노포 위주입니다.",
+ "rating_note": "평점은 OpenRice 방문자 반응(좋아요·보통·별로)과 리뷰 수를 2026-09-28에 조회한 값입니다. 긍정 비율은 좋아요 ÷ (좋아요+보통+별로)로 계산했습니다. 리뷰 요약은 OpenRice 리뷰에서 반복되는 경향을 한국어로 정리한 것이고 원문 인용이 아닙니다. 실시간 평점이 아니므로 방문 전 원문을 확인하세요.",
+ "shops": [
+  {
+   "id": "sing-heung-yuen",
+   "city": "홍콩",
+   "name": "싱흥원",
+   "name_local": "勝香園",
+   "area": "센트럴 · 메이룬 거리",
+   "type": "다이파이동(노천식당)",
+   "must_try": [
+    "토마토 소고기 라면",
+    "레몬꿀 크리스피 번",
+    "땅콩버터 토스트"
+   ],
+   "openrice": {
+    "smile": 1105,
+    "ok": 254,
+    "cry": 85,
+    "reviews": 1616
+   },
+   "good": "간단하지만 맛이 한결같고, 레몬꿀 번의 새콤달콤함을 칭찬하는 리뷰가 많습니다.",
+   "bad": "줄이 길어서 정오 전에 가라는 조언이 반복됩니다. 야외 좌석입니다.",
+   "hours": "월–토 08:00–15:45 · 일·공휴일 휴무",
+   "payment": "현금만",
+   "access": "셩완역 A2 출구 도보 5분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-sing-heung-yuen-central-hong-kong-style-r10577",
+   "closed": [
+    6
+   ]
+  },
+  {
+   "id": "tai-cheong",
+   "city": "홍콩",
+   "name": "타이청 베이커리",
+   "name_local": "泰昌餅家",
+   "area": "센트럴 · 린드허스트 테라스",
+   "type": "홍콩식 베이커리 (1954년 개업)",
+   "must_try": [
+    "에그타르트",
+    "사옹(설탕 도넛)",
+    "쿠키 크러스트 에그타르트"
+   ],
+   "openrice": {
+    "smile": 276,
+    "ok": 105,
+    "cry": 36,
+    "reviews": 488
+   },
+   "good": "갓 구운 바삭한 페이스트리와 저렴한 가격(에그타르트 약 HK$10)이 가장 많이 언급됩니다.",
+   "bad": "인기가 많아 대기 줄이 생길 수 있습니다.",
+   "hours": "매일 09:30–19:30",
+   "payment": "Visa·Master·현금·옥토퍼스·UnionPay",
+   "access": "홍콩역 C 출구 도보 8분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-tai-cheong-bakery-central-hong-kong-style-bakery-r5522",
+   "closed": []
+  },
+  {
+   "id": "lan-fong-yuen",
+   "city": "홍콩",
+   "name": "란퐁유엔",
+   "name_local": "蘭芳園",
+   "area": "센트럴 · 게이지 거리",
+   "type": "차찬텡(홍콩식 카페)",
+   "must_try": [
+    "스타킹 밀크티",
+    "파기름 치킨 라면",
+    "포크찹 번"
+   ],
+   "openrice": {
+    "smile": 263,
+    "ok": 258,
+    "cry": 183,
+    "reviews": 819
+   },
+   "good": "밀크티의 원조로 불리는 역사적 의미가 있고 면 요리 평이 괜찮습니다.",
+   "bad": "관광지 가격이라는 평과 밀크티 맛이 기대보다 약하다는 평이 섞여 있습니다. 호불호가 큰 편입니다.",
+   "hours": "월–토 07:30–18:00 · 일 휴무",
+   "payment": "현금만",
+   "access": "홍콩역 C 출구 도보 7분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-lan-fong-yuen-central-hong-kong-style-noodles-rice-noodles-r1814",
+   "closed": [
+    6
+   ]
+  },
+  {
+   "id": "maks-noodle",
+   "city": "홍콩",
+   "name": "막스 누들 (웰링턴 거리)",
+   "name_local": "麥奀雲吞麵世家",
+   "area": "센트럴 · 웰링턴 거리",
+   "type": "광둥식 완탕면",
+   "must_try": [
+    "완탕면",
+    "소고기 양지 국수"
+   ],
+   "openrice": {
+    "smile": 125,
+    "ok": 44,
+    "cry": 47,
+    "reviews": 245
+   },
+   "good": "새우가 큼직한 완탕과 가는 면, 진한 국물을 칭찬합니다.",
+   "bad": "양이 적은데 비싸다는 평과 바쁜 시간에 재촉한다는 평이 있습니다.",
+   "hours": "매일 11:00–21:00",
+   "payment": "카드·AlipayHK·위챗페이·옥토퍼스·현금",
+   "access": "홍콩역 C 출구 도보 6분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-maks-noodle-central-guangdong-noodles-rice-noodles-r1998",
+   "closed": []
+  },
+  {
+   "id": "kau-kee",
+   "city": "홍콩",
+   "name": "카우키 (대안)",
+   "name_local": "九記牛腩",
+   "area": "센트럴 · 고프 거리",
+   "type": "소고기 양지 국수 (미쉐린 빕 구르망 2023–24)",
+   "must_try": [
+    "맑은 국물 양지 국수",
+    "카레 양지 국수"
+   ],
+   "openrice": {
+    "smile": 536,
+    "ok": 243,
+    "cry": 209,
+    "reviews": 1132
+   },
+   "good": "한약재 향이 나는 깊은 국물이 가장 큰 칭찬을 받습니다.",
+   "bad": "1시간 넘게 기다렸다는 리뷰가 있고, 양이 적고 응대가 급하다는 평이 있습니다.",
+   "hours": "월–토 12:30–22:30 · 일·공휴일 휴무",
+   "payment": "현금만",
+   "access": "셩완역 A2 출구 도보 6분",
+   "day_hint": "센트럴 코스의 저녁을 막스 누들 대신 여기로 바꿔도 됩니다. 일요일·공휴일 휴무.",
+   "source_url": "https://www.openrice.com/en/hongkong/r-kau-kee-restaurant-central-guangdong-noodles-rice-noodles-r1618",
+   "closed": [
+    6
+   ]
+  },
+  {
+   "id": "australia-dairy",
+   "city": "홍콩",
+   "name": "오스트레일리아 데어리 컴퍼니",
+   "name_local": "澳洲牛奶公司",
+   "area": "조던 · 파크스 거리",
+   "type": "차찬텡 (1970년 개업)",
+   "must_try": [
+    "스크램블 에그 토스트",
+    "스팀 밀크 푸딩",
+    "햄 마카로니"
+   ],
+   "openrice": {
+    "smile": 1903,
+    "ok": null,
+    "cry": 569,
+    "reviews": 3224
+   },
+   "good": "부드러운 스크램블 에그와 HK$60 안쪽의 저렴한 세트가 가장 많이 언급됩니다.",
+   "bad": "직원이 무뚝뚝하고 빠르게 회전시키는 곳으로 유명합니다. 합석은 기본입니다.",
+   "hours": "월–수·금–일 07:30–22:00 · 목 휴무",
+   "payment": "현금만",
+   "access": "조던역 C2 출구 도보 2분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-australia-dairy-company-jordan-hong-kong-style-dessert-r90",
+   "closed": [
+    3
+   ]
+  },
+  {
+   "id": "tim-ho-wan",
+   "city": "홍콩",
+   "name": "팀호완 (삼수이포)",
+   "name_local": "添好運點心專門店",
+   "area": "삼수이포 · 푹윙 거리",
+   "type": "딤섬 (미쉐린 빕 구르망 2023–24)",
+   "must_try": [
+    "차슈 파인애플 번",
+    "새우 하가우",
+    "창펀"
+   ],
+   "openrice": {
+    "smile": 251,
+    "ok": 129,
+    "cry": 61,
+    "reviews": 537
+   },
+   "good": "가격이 합리적이고 서비스 요금이 없다는 점, 바삭한 차슈 번을 칭찬합니다.",
+   "bad": "주말에는 대기가 생깁니다.",
+   "hours": "월–금 10:00–22:00 · 토·일·공휴일 09:00–22:00",
+   "payment": "카드·AlipayHK·옥토퍼스·현금 등",
+   "access": "프린스 에드워드역 E 출구 도보 9분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-tim-ho-wan-the-dim-sum-specialists-sham-shui-po-hong-kong-style-dim-sum-r45662",
+   "closed": []
+  },
+  {
+   "id": "kam-wah",
+   "city": "홍콩",
+   "name": "금화빙실",
+   "name_local": "金華冰廳",
+   "area": "프린스 에드워드 · 뷰트 거리",
+   "type": "빙실(홍콩식 카페)",
+   "must_try": [
+    "버터 파인애플 번(보로야우)",
+    "에그타르트",
+    "밀크티"
+   ],
+   "openrice": {
+    "smile": 649,
+    "ok": 227,
+    "cry": 155,
+    "reviews": 1297
+   },
+   "good": "파인애플 번을 먹으러 일부러 찾아간다는 리뷰가 많고, 붐비는 옛 홍콩 분위기도 좋다는 평입니다.",
+   "bad": "피크 시간에는 응대가 급하고, 버터 양이 들쭉날쭉하다는 평이 있습니다.",
+   "hours": "매일 06:30–23:30",
+   "payment": "현금·옥토퍼스·AlipayHK",
+   "access": "프린스 에드워드역 B2 출구 도보 3분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-kam-wah-cafe-prince-edward-hong-kong-style-r11293",
+   "closed": []
+  },
+  {
+   "id": "mido-cafe",
+   "city": "홍콩",
+   "name": "미도 카페",
+   "name_local": "美都餐室",
+   "area": "야우마테이 · 템플 거리",
+   "type": "빙실 (1950년 개업)",
+   "must_try": [
+    "팥 연자 빙수",
+    "베이크드 포크찹 라이스"
+   ],
+   "openrice": {
+    "smile": 170,
+    "ok": 165,
+    "cry": 132,
+    "reviews": 558
+   },
+   "good": "변하지 않은 레트로 인테리어가 이 집의 핵심이라는 평이 대부분입니다.",
+   "bad": "음식 맛이 예전만 못하고 값에 비해 아쉽다는 평이 꽤 있습니다. 음식보다는 분위기를 즐기러 가는 곳입니다. 촬영 제한이 있을 수 있습니다.",
+   "hours": "월–화·목–일 11:00–20:00 · 수 휴무",
+   "payment": "현금만",
+   "access": "야우마테이역 C 출구 도보 4분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-mido-cafe-yau-ma-tei-hong-kong-style-r2310",
+   "closed": [
+    2
+   ]
+  },
+  {
+   "id": "bakehouse",
+   "city": "홍콩",
+   "name": "베이크하우스 (완차이)",
+   "name_local": "Bakehouse",
+   "area": "완차이 · 타이웡 스트리트 이스트",
+   "type": "베이커리",
+   "must_try": [
+    "사워도우 에그타르트",
+    "크루아상"
+   ],
+   "openrice": {
+    "smile": 700,
+    "ok": 132,
+    "cry": 26,
+    "reviews": 1042
+   },
+   "good": "직접 만든 빵의 식감과 크렘 브륄레 같은 에그타르트를 칭찬하는 평이 압도적입니다.",
+   "bad": "줄이 길고, 매장에서 먹으면 서비스 요금 10%가 붙습니다.",
+   "hours": "매일 08:00–21:00 (매장 식사 18:00까지, 마지막 주문 17:30)",
+   "payment": "카드·Apple Pay·옥토퍼스·현금 등",
+   "access": "완차이역 B2 출구 도보 4분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-bakehouse-wan-chai-western-bakery-r558300",
+   "closed": []
+  },
+  {
+   "id": "kams-roast-goose",
+   "city": "홍콩",
+   "name": "캄스 로스트 구스",
+   "name_local": "甘牌燒鵝",
+   "area": "완차이 · 헤네시 로드",
+   "type": "광둥식 바비큐 (미쉐린 1스타)",
+   "must_try": [
+    "거위구이",
+    "거위구이 쌀국수",
+    "차슈"
+   ],
+   "openrice": {
+    "smile": 89,
+    "ok": 80,
+    "cry": 54,
+    "reviews": 334
+   },
+   "good": "껍질이 바삭하고 살이 부드러운 거위구이는 확실히 맛있다는 평입니다.",
+   "bad": "좌석이 36석뿐이라 30~90분 대기가 흔하고, 대기 시간과 가격만큼의 가치인지는 의견이 갈립니다.",
+   "hours": "매일 11:30–21:30",
+   "payment": "카드·AlipayHK·현금",
+   "access": "완차이역 A2 출구 도보 4분",
+   "source_url": "https://www.openrice.com/en/hongkong/r-kams-roast-goose-wan-chai-guangdong-chinese-bbq-r175339",
+   "closed": []
+  },
+  {
+   "id": "wong-chi-kei",
+   "city": "마카오",
+   "name": "웡치케이 (세나도 광장)",
+   "name_local": "黃枝記",
+   "area": "세나도 광장",
+   "type": "광둥식 면·죽",
+   "must_try": [
+    "새우알 비빔면",
+    "완탕면",
+    "숙주 볶음면"
+   ],
+   "openrice": {
+    "smile": 20,
+    "ok": 22,
+    "cry": 12,
+    "reviews": 58
+   },
+   "good": "50년 넘은 대나무 반죽 면과 1인 MOP 100 안쪽의 가격을 칭찬합니다.",
+   "bad": "리뷰 수가 적어 평가 편차가 큽니다. 긍정 비율은 참고만 하세요.",
+   "hours": "매일 11:00–21:00",
+   "payment": "현금만",
+   "access": "세나도 광장 17번지",
+   "source_url": "https://www.openrice.com/en/macau/r-%E9%BB%83%E6%9E%9D%E8%A8%98-avenida-de-almeida-ribeiro-guangdong-congee-r25018",
+   "closed": []
+  },
+  {
+   "id": "tai-lei-loi-kei",
+   "city": "마카오",
+   "name": "대리래기 (타이파)",
+   "name_local": "大利來記",
+   "area": "타이파 빌리지",
+   "type": "포크찹 번 (1968년 개업)",
+   "must_try": [
+    "포크찹 번",
+    "파인애플 포크찹 번"
+   ],
+   "openrice": {
+    "smile": 10,
+    "ok": 17,
+    "cry": 3,
+    "reviews": 43
+   },
+   "good": "겉은 바삭하고 속은 부드러운 번이 마카오 명물답다는 평입니다.",
+   "bad": "고기가 퍽퍽하니 음료를 꼭 곁들이라는 평이 반복됩니다. 이전하기 전의 옛 매장 페이지에는 예전만 못하다는 리뷰가 많습니다.",
+   "hours": "매일 08:00–18:00",
+   "payment": "현금만",
+   "access": "타이파 빌리지 Rua Correia da Silva 35",
+   "source_url": "https://www.openrice.com/en/macau/r-tai-lei-loi-kei-vila-de-taipa-hong-kong-style-r478775",
+   "closed": []
+  },
+  {
+   "id": "lord-stows",
+   "city": "마카오",
+   "name": "로드 스토우즈 베이커리 (베네시안점)",
+   "name_local": "安德魯餅店",
+   "area": "코타이 · 베네시안 그랜드 커낼 숍스 3층",
+   "type": "포르투갈식 에그타르트",
+   "must_try": [
+    "포르투갈식 에그타르트"
+   ],
+   "openrice": {
+    "smile": 49,
+    "ok": 14,
+    "cry": 1,
+    "reviews": 73
+   },
+   "good": "노릇하고 바삭한 페이스트리와 과하지 않은 단맛의 커스터드를 칭찬합니다. 줄이 길어도 금방 빠집니다.",
+   "bad": "직원 응대와 맛이 들쭉날쭉하다는 평이 일부 있습니다.",
+   "hours": "매일 10:00–20:00",
+   "payment": "Visa·Master·현금",
+   "access": "베네시안 마카오 Shop 870 (Mask Street)",
+   "source_url": "https://www.openrice.com/en/macau/r-lord-stows-bakery-coloane-taipa-portuguese-r48710",
+   "closed": []
+  },
+  {
+   "id": "margarets",
+   "city": "마카오",
+   "name": "마가렛 카페 이 나타 (대안)",
+   "name_local": "瑪嘉烈蛋撻",
+   "area": "세나도 광장 인근",
+   "type": "포르투갈식 에그타르트",
+   "must_try": [
+    "에그타르트",
+    "아이스 밀크티"
+   ],
+   "openrice": {
+    "smile": 139,
+    "ok": 76,
+    "cry": 28,
+    "reviews": 288
+   },
+   "good": "마카오 에그타르트의 대표 가게 중 하나로 꼽힙니다.",
+   "bad": "예전보다 바삭함이 덜하다는 평이 있고, 실내 좌석이 없으며 현금만 받습니다.",
+   "hours": "월–화·목–금 08:30–16:30 · 토–일 10:00–18:00 · 수 휴무",
+   "payment": "현금만",
+   "access": "Rua Alm. Costa Cabral 66",
+   "day_hint": "수요일 휴무입니다. 마카오 날이 수요일이 아니면 로드 스토우즈 대신 가도 좋습니다.",
+   "source_url": "https://www.openrice.com/en/macau/r-cafe-e-nata-margarets-avenida-de-almeida-ribeiro-portuguese-r23791",
+   "closed": [
+    2
+   ]
+  }
+ ],
+ "places": [
+  {
+   "id": "tai-kwun",
+   "name": "타이퀀",
+   "hours": "단지 08:00–23:00 · JC Contemporary 화–일 11:00–19:00 (월 휴관)",
+   "fee": "무료 (일부 전시 유료)",
+   "source_name": "Tai Kwun 방문 안내",
+   "source_url": "https://www.taikwun.hk/en/visit/visiting_information",
+   "closed": []
+  },
+  {
+   "id": "pmq",
+   "name": "PMQ",
+   "hours": "건물 07:00–23:00 · 숍 11:00–20:00 (가게마다 다름)",
+   "fee": "무료",
+   "source_name": "PMQ",
+   "source_url": "https://www.pmq.org.hk/tourist-information/explore-pmq/",
+   "closed": []
+  },
+  {
+   "id": "man-mo",
+   "name": "만모 사원",
+   "hours": "08:00–18:00 (음력 1일·15일 07:00부터)",
+   "fee": "무료",
+   "source_name": "Tung Wah Group of Hospitals",
+   "source_url": "https://www.tungwah.org.hk/en/heritage/historical-architecture/man-mo-temple/opening-and-address/",
+   "closed": []
+  },
+  {
+   "id": "peak",
+   "name": "피크 트램 · 스카이 테라스 428",
+   "hours": "트램 07:30–23:00 · 스카이 테라스 428 08:30–22:00 (2026-05-01부터)",
+   "fee": "왕복 HK$88(평일)/108(주말) · 스카이 패스 HK$149부터 (온라인)",
+   "source_name": "The Peak (보조 자료로 교차 확인)",
+   "source_url": "https://www.thepeak.com.hk/en/faq",
+   "closed": []
+  },
+  {
+   "id": "choi-hung",
+   "name": "초이훙 에스테이트",
+   "hours": "주거 단지로 공식 개방 시간이 없습니다",
+   "fee": "무료",
+   "source_name": "Time Out Hong Kong",
+   "source_url": "https://www.timeout.com/hong-kong/things-to-do/hong-kongs-most-photogenic-housing-estates",
+   "closed": []
+  },
+  {
+   "id": "m-plus",
+   "name": "M+ 뮤지엄",
+   "hours": "화–일 10:00–18:00 · 금 22:00까지 · 월 휴관 (입장 마감 30분 전)",
+   "fee": "일반 HK$190",
+   "source_name": "M+ Plan Your Visit",
+   "source_url": "https://www.mplus.org.hk/en/plan-your-visit/",
+   "closed": [
+    0
+   ]
+  },
+  {
+   "id": "symphony",
+   "name": "심포니 오브 라이트",
+   "hours": "매일 20:00, 약 10분 · 2026년 하반기 종료 예정, 종료일 미발표",
+   "fee": "무료",
+   "source_name": "Tourism Commission 공지",
+   "source_url": "https://www.tourism.gov.hk/symphony/english/SpecialAnnouncements/SpecialAnnouncements.html",
+   "closed": []
+  },
+  {
+   "id": "temple-street",
+   "name": "템플 스트리트 야시장",
+   "hours": "대략 18:00–24:00 (노점은 16시 무렵부터 엶)",
+   "fee": "무료",
+   "source_name": "보조 자료",
+   "source_url": "https://en.wikipedia.org/wiki/Night_markets_in_Hong_Kong",
+   "closed": []
+  },
+  {
+   "id": "ferry",
+   "name": "코타이 워터젯 셩완 ↔ 타이파",
+   "hours": "셩완 출발 07:30–22:30 · 타이파 출발 09:00–23:59 (+02:00)",
+   "fee": "코타이 클래스 편도 HK$192–242",
+   "source_name": "Cotai Water Jet 시간표",
+   "source_url": "https://www.cotaiwaterjet.com/ferry-schedule/hongkong-macau-taipa.html",
+   "closed": []
+  },
+  {
+   "id": "senado",
+   "name": "세나도 광장 · 성 도밍고 성당",
+   "hours": "광장은 상시 개방",
+   "fee": "무료",
+   "source_name": "Macao Government Tourism Office",
+   "source_url": "https://www.macaotourism.gov.mo/en/",
+   "closed": []
+  },
+  {
+   "id": "st-pauls",
+   "name": "성 바울 성당 유적",
+   "hours": "광장 24시간 · 전망대 09:00–18:00 · 성미술관·지하묘소 09:00–18:00 (화 14:00까지)",
+   "fee": "무료",
+   "source_name": "Macao Government Tourism Office",
+   "source_url": "https://www.macaotourism.gov.mo/en/",
+   "closed": []
+  },
+  {
+   "id": "taipa-village",
+   "name": "타이파 빌리지 · 쿤하 거리",
+   "hours": "거리 상시 · 가게는 대체로 오전 10시 무렵부터",
+   "fee": "무료",
+   "source_name": "Macao Government Tourism Office",
+   "source_url": "https://www.macaotourism.gov.mo/en/",
+   "closed": []
+  },
+  {
+   "id": "wynn-palace",
+   "name": "윈 팰리스 퍼포먼스 레이크",
+   "hours": "월–수 12:00–22:00 30분 간격 · 목–일 12:00–19:00 30분 간격, 19:00–22:00 20분 간격",
+   "fee": "무료",
+   "source_name": "Wynn Resorts Macau",
+   "source_url": "https://www.wynnresortsmacau.com/en/wynn-palace/experiences/entertainment/performance-lake-wp",
+   "closed": []
+  },
+  {
+   "id": "londoner",
+   "name": "런더너 마카오 라이트 쇼",
+   "hours": "화–목 19:30·21:30 · 금–일 16:00·19:30·21:30 · 월 없음",
+   "fee": "무료",
+   "source_name": "The Londoner Macao",
+   "source_url": "https://www.londonermacao.com/macau-attractions.html",
+   "closed": [
+    0
+   ]
+  },
+  {
+   "id": "monster-building",
+   "name": "몬스터 빌딩 (익청 빌딩)",
+   "hours": "주거 단지로 공식 개방 시간이 없습니다 · 안뜰 촬영 제한",
+   "fee": "무료",
+   "source_name": "SCMP",
+   "source_url": "https://www.scmp.com/photos/hong-kong/2131892/photo-ban-one-hong-kongs-most-unconventional-tourist-hotspots",
+   "closed": []
+  }
+ ],
+ "tips": [
+  {
+   "title": "휴무일에 맞춘 순서",
+   "body": "오스트레일리아 데어리는 목요일, 미도 카페와 마가렛 카페는 수요일, M+는 월요일, 싱흥원·란퐁유엔·카우키는 일요일에 쉽니다. 일정 짜기는 이 요일 휴무를 반영하지만 공휴일 휴무와 임시 휴업은 반영하지 않습니다."
+  },
+  {
+   "title": "현금을 꼭 준비",
+   "body": "노포 대부분(싱흥원·란퐁유엔·카우키·오스트레일리아 데어리·미도 카페·마카오 가게 전부)이 현금만 받습니다. 마카오에서는 홍콩달러가 대체로 1:1로 통용되지만 거스름돈은 파타카로 받는 경우가 많습니다."
+  },
+  {
+   "title": "옥토퍼스 카드",
+   "body": "MTR·버스·트램·스타페리와 편의점, 일부 식당에서 씁니다. 마카오에서는 쓸 수 없습니다."
+  },
+  {
+   "title": "마카오 페리",
+   "body": "마카오 외항 터미널 노선이 2026-06-15부터 타이파 터미널로 옮겨졌다는 보도가 있지만, 이번 조사에서 운항사 공지 원문은 확인하지 못했습니다. 그래서 이 코스는 공식 시간표를 확인한 타이파 노선으로 짰습니다. 표를 살 때 도착 터미널을 꼭 확인하고 여권을 챙기세요. 한국 여권은 마카오에 무비자로 최대 90일 체류할 수 있습니다."
+  },
+  {
+   "title": "심포니 오브 라이트는 곧 종료",
+   "body": "2026년 하반기에 종료될 예정이고 마지막 날짜는 아직 발표되지 않았습니다. 태풍 3호 이상이나 적색·흑색 호우 경보가 15시 이후에 발령되면 그날 쇼는 취소됩니다."
+  },
+  {
+   "title": "10월 날씨",
+   "body": "10월 초도 덥고 습하며 태풍이 올 수 있습니다. 태풍 8호 이상이 발령되면 페리·박물관·트램이 멈출 수 있으니 마카오 일정은 예비일을 두고 판단하세요."
+  },
+  {
+   "title": "주거지 포토 스폿 예절",
+   "body": "초이훙 에스테이트와 몬스터 빌딩은 실제 주민이 사는 곳입니다. 이른 시간에 조용히 짧게 머물고, 농구 경기나 통행을 막지 말고, 촬영 금지 안내문을 따르세요."
+  },
+  {
+   "title": "줄 서는 요령",
+   "body": "팀호완·카우키·캄스 로스트 구스·베이크하우스는 문 여는 시간에 맞추거나 14–17시 사이에 가면 대기가 짧습니다. 합석과 빠른 회전은 홍콩 노포의 기본이라 불친절로 받아들이지 않아도 됩니다."
+  }
+ ],
+ "blocks": [
+  {
+   "id": "central",
+   "theme": "센트럴·셩완 골목과 피크 야경",
+   "stops": [
+    {
+     "time": "10:30",
+     "name": "싱흥원 (勝香園)",
+     "kind": "food",
+     "ref": "sing-heung-yuen",
+     "note": "토마토 라면·레몬꿀 크리스피 번으로 브런치. 정오 전에 가야 줄이 짧습니다."
+    },
+    {
+     "time": "11:30",
+     "name": "타이퀀 (大館)",
+     "kind": "place",
+     "ref": "tai-kwun",
+     "note": "옛 경찰서·감옥을 재생한 복합문화공간. 중정 계단과 붉은 벽돌이 대표 포토 스폿입니다. JC Contemporary 전시관은 월요일 휴관입니다."
+    },
+    {
+     "time": "12:45",
+     "name": "PMQ (元創方)",
+     "kind": "place",
+     "ref": "pmq",
+     "note": "옛 경찰 기숙사에 들어선 로컬 디자인 숍 거리입니다."
+    },
+    {
+     "time": "13:45",
+     "name": "타이청 베이커리 (泰昌餅家)",
+     "kind": "food",
+     "ref": "tai-cheong",
+     "note": "에그타르트를 들고 그래함 스트리트 벽화와 미드레벨 에스컬레이터 쪽으로 걷습니다."
+    },
+    {
+     "time": "14:30",
+     "name": "만모 사원 (文武廟)",
+     "kind": "place",
+     "ref": "man-mo",
+     "note": "천장에 매달린 나선형 향 사진이 유명합니다."
+    },
+    {
+     "time": "15:30",
+     "name": "란퐁유엔 (蘭芳園)",
+     "kind": "food",
+     "ref": "lan-fong-yuen",
+     "note": "원조 스타킹 밀크티로 오후 휴식. 18:00에 닫습니다."
+    },
+    {
+     "time": "17:15",
+     "name": "피크 트램 → 스카이 테라스 428",
+     "kind": "place",
+     "ref": "peak",
+     "note": "10월 초 일몰은 18시 전후입니다. 해 지기 전에 올라가 야경까지 봅니다."
+    },
+    {
+     "time": "19:45",
+     "name": "막스 누들 (麥奀雲吞麵世家)",
+     "kind": "food",
+     "ref": "maks-noodle",
+     "note": "완탕면으로 저녁. 21:00에 닫으니 늦지 않게 내려옵니다."
+    }
+   ],
+   "start_area": "central",
+   "end_area": "central"
+  },
+  {
+   "id": "kowloon",
+   "theme": "까우룽 레트로와 빅토리아 하버",
+   "stops": [
+    {
+     "time": "08:00",
+     "name": "오스트레일리아 데어리 컴퍼니 (澳洲牛奶公司)",
+     "kind": "food",
+     "ref": "australia-dairy",
+     "note": "스크램블 에그 토스트와 우유 푸딩. 목요일에는 쉽니다."
+    },
+    {
+     "time": "09:30",
+     "name": "초이훙 에스테이트 (彩虹邨)",
+     "kind": "place",
+     "ref": "choi-hung",
+     "note": "무지개색 공공주택과 옥상 농구장. 실제 주민이 사는 곳이라 이른 시간에 조용히 짧게 찍고 나옵니다."
+    },
+    {
+     "time": "11:45",
+     "name": "팀호완 삼수이포 (添好運)",
+     "kind": "food",
+     "ref": "tim-ho-wan",
+     "note": "차슈 파인애플 번과 새우 하가우로 점심."
+    },
+    {
+     "time": "13:15",
+     "name": "금화빙실 (金華冰廳)",
+     "kind": "food",
+     "ref": "kam-wah",
+     "note": "버터 파인애플 번과 에그타르트로 디저트."
+    },
+    {
+     "time": "14:45",
+     "name": "M+ 뮤지엄",
+     "kind": "place",
+     "ref": "m-plus",
+     "note": "월요일 휴관. 옥상 정원과 서구룡 해변 산책로에서 섬 쪽 스카이라인이 잘 보입니다."
+    },
+    {
+     "time": "18:00",
+     "name": "미도 카페 (美都餐室)",
+     "kind": "food",
+     "ref": "mido-cafe",
+     "note": "1950년대 타일과 창가 자리가 인스타 명소입니다. 20:00에 닫고 수요일은 휴무입니다."
+    },
+    {
+     "time": "19:40",
+     "name": "스타의 거리 · 심포니 오브 라이트",
+     "kind": "place",
+     "ref": "symphony",
+     "note": "20:00 레이저 쇼. 2026년 하반기에 종료될 예정이라 방문 당일에도 운영하는지 확인하세요."
+    },
+    {
+     "time": "21:00",
+     "name": "템플 스트리트 야시장",
+     "kind": "place",
+     "ref": "temple-street",
+     "note": "노점과 포장마차 구경. 가장 붐비는 시간은 19~22시입니다."
+    }
+   ],
+   "start_area": "kowloon",
+   "end_area": "kowloon"
+  },
+  {
+   "id": "macau",
+   "theme": "마카오 당일치기: 구시가지 → 타이파 → 코타이",
+   "stops": [
+    {
+     "time": "08:30",
+     "name": "셩완 페리 → 마카오 타이파 터미널",
+     "kind": "move",
+     "ref": "ferry",
+     "note": "코타이 워터젯으로 약 1시간. 여권을 챙기고 출발 30분 전에 수속합니다."
+    },
+    {
+     "time": "10:15",
+     "name": "세나도 광장 · 성 도밍고 성당",
+     "kind": "place",
+     "ref": "senado",
+     "note": "물결무늬 포르투갈식 바닥과 노란 성당이 대표 포토 스폿입니다. 터미널에서 택시로 약 20분."
+    },
+    {
+     "time": "11:15",
+     "name": "성 바울 성당 유적",
+     "kind": "place",
+     "ref": "st-pauls",
+     "note": "계단 아래에서 정면을 올려다보는 구도가 정석입니다. 화요일만 지하 박물관이 14시에 닫습니다."
+    },
+    {
+     "time": "12:30",
+     "name": "웡치케이 (黃枝記)",
+     "kind": "food",
+     "ref": "wong-chi-kei",
+     "note": "세나도 광장 앞 완탕면·새우알 비빔면."
+    },
+    {
+     "time": "14:15",
+     "name": "타이파 빌리지 · 쿤하 거리",
+     "kind": "place",
+     "ref": "taipa-village",
+     "note": "파스텔 톤 골목과 간식 거리. 택시나 버스로 이동합니다."
+    },
+    {
+     "time": "15:00",
+     "name": "대리래기 (大利來記)",
+     "kind": "food",
+     "ref": "tai-lei-loi-kei",
+     "note": "마카오식 포크찹 번. 18:00에 닫습니다."
+    },
+    {
+     "time": "16:30",
+     "name": "로드 스토우즈 베이커리 · 베네시안점",
+     "kind": "food",
+     "ref": "lord-stows",
+     "note": "베네시안 운하 쇼핑몰 3층. 원조 콜로안 본점은 동선에서 멀어서 지점으로 대신했습니다."
+    },
+    {
+     "time": "17:30",
+     "name": "윈 팰리스 퍼포먼스 레이크",
+     "kind": "place",
+     "ref": "wynn-palace",
+     "note": "분수 쇼는 12:00–22:00 사이 30분 간격이고, 목–일요일 19시 이후에는 20분 간격입니다."
+    },
+    {
+     "time": "19:30",
+     "name": "런더너 마카오 빅벤 라이트 쇼",
+     "kind": "place",
+     "ref": "londoner",
+     "note": "라이트 쇼는 19:30·21:30 회차(금–일 16:00 추가)가 있고 월요일에는 없습니다."
+    },
+    {
+     "time": "20:45",
+     "name": "타이파 터미널 → 셩완",
+     "kind": "move",
+     "ref": "ferry",
+     "note": "막차는 자정 무렵까지 있지만 시간표는 바뀔 수 있으니 왕복 표를 미리 사 두세요."
+    }
+   ],
+   "start_area": "macau",
+   "end_area": "cotai"
+  },
+  {
+   "id": "wanchai",
+   "theme": "완차이 베이커리·몬스터 빌딩",
+   "stops": [
+    {
+     "time": "08:00",
+     "name": "베이크하우스 완차이 (Bakehouse)",
+     "kind": "food",
+     "ref": "bakehouse",
+     "note": "사워도우 에그타르트는 오픈 직후가 가장 덜 붐빕니다."
+    },
+    {
+     "time": "09:30",
+     "name": "몬스터 빌딩 (益昌大廈)",
+     "kind": "place",
+     "ref": "monster-building",
+     "note": "영화 속 빽빽한 고층 아파트. 안뜰은 촬영 제한이 있으니 안내문을 따르고 주민을 배려하세요."
+    },
+    {
+     "time": "11:30",
+     "name": "캄스 로스트 구스 (甘牌燒鵝)",
+     "kind": "food",
+     "ref": "kams-roast-goose",
+     "note": "미쉐린 1스타 거위구이. 문 여는 11:30에 맞춰 가야 대기가 짧습니다."
+    }
+   ],
+   "start_area": "wanchai",
+   "end_area": "wanchai"
+  }
+ ],
+ "default_range": {
+  "start": "2026-10-05",
+  "end": "2026-10-08"
+ },
+ "areas": [
+  {
+   "id": "central",
+   "label": "센트럴·셩완 (홍콩섬 서쪽)"
+  },
+  {
+   "id": "wanchai",
+   "label": "완차이·코즈웨이베이 (홍콩섬 동쪽)"
+  },
+  {
+   "id": "kowloon",
+   "label": "침사추이·조던·몽콕 (까우룽)"
+  },
+  {
+   "id": "macau",
+   "label": "마카오 반도"
+  },
+  {
+   "id": "cotai",
+   "label": "타이파·코타이 (마카오)"
+  }
+ ],
+ "travel_minutes": {
+  "note": "대중교통·택시 기준으로 어림한 값입니다. 홍콩↔마카오는 페리 약 1시간에 터미널 이동과 수속을 더했습니다.",
+  "central|wanchai": 15,
+  "central|kowloon": 20,
+  "kowloon|wanchai": 25,
+  "cotai|macau": 20,
+  "central|macau": 90,
+  "central|cotai": 90,
+  "macau|wanchai": 90,
+  "cotai|wanchai": 90,
+  "kowloon|macau": 90,
+  "cotai|kowloon": 90
+ }
+}
