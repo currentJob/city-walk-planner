@@ -28,3 +28,9 @@
   - hongkong.html: 헤더 56px, 하단 탭바 5개, 화면 내 탭이 56px 위치에 고정.
 - PASS PC 1280px: 헤더와 메뉴가 기존과 같고 아이콘·트렌드 탭·접기 제목이 숨겨지며 트렌드 네 영역이 모두 보임.
 - NOT-RUN 실제 기기(iOS Safari·Android Chrome)와 스크린샷 비교: 브라우저 창이 숨겨져 있어 스크린샷을 찍지 못했다. 수치로만 확인했다.
+
+## 배포 · 2026-09-28
+
+- `4b77699`을 main에 푸시했다. CI 성공([run 36394000576](https://github.com/currentJob/city-walk-planner/actions/runs/36394000576)), Pages 성공([run 36394000560](https://github.com/currentJob/city-walk-planner/actions/runs/36394000560)).
+- PASS https://currentjob.github.io/city-walk-planner/#trend 375×812: 헤더 56px, 하단 탭바 750px, 트렌드 탭 표시, 지도 탭 핀 29개, 지도 하단과 탭바 간격 11px, "동행" 버튼 표시, 가로 넘침 없음.
+
