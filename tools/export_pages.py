@@ -12,11 +12,11 @@ def export(destination: Path, api_base: str) -> None:
     if (url.scheme != "https" or not url.hostname or url.username or url.password
             or url.path not in ("", "/") or url.query or url.fragment):
         raise ValueError("API base must be a public HTTPS origin without credentials, path or query")
-    source = Path(__file__).resolve().parents[1] / "src" / "harbor_lantern" / "web"
+    source = Path(__file__).resolve().parents[1] / "src" / "city_walk_planner" / "web"
     shutil.copytree(source, destination)
     config = {"apiBase": api_base.rstrip("/")}
     (destination / "config.js").write_text(
-        "window.HARBOR_CONFIG = Object.freeze(" + json.dumps(config) + ");\n", encoding="utf-8")
+        "window.CWP_CONFIG = Object.freeze(" + json.dumps(config) + ");\n", encoding="utf-8")
     (destination / ".nojekyll").touch()
     shutil.copy2(source.parents[2] / "LICENSE", destination / "LICENSE")
 

@@ -11,10 +11,10 @@ from dataclasses import replace
 
 import pytest
 
-from harbor_lantern.config import TravelConfig
-from harbor_lantern.domain.geo import haversine_m
-from harbor_lantern.domain.models import LatLng
-from harbor_lantern.domain.travel import day_totals, leg
+from city_walk_planner.config import TravelConfig
+from city_walk_planner.domain.geo import haversine_m
+from city_walk_planner.domain.models import LatLng
+from city_walk_planner.domain.travel import day_totals, leg
 
 CFG = TravelConfig()
 

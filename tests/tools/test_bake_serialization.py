@@ -136,7 +136,7 @@ def test_batch_and_interval_constants_stay_within_provider_limits() -> None:
 
 def test_user_agent_carries_a_contact() -> None:
     """미인증 요청 상한은 10/분, 연락처를 밝힌 봇은 200/분이다(2026-09-15 조회)."""
-    assert "harbor-lantern" in bakery_io.USER_AGENT
+    assert "city-walk-planner" in bakery_io.USER_AGENT
     assert "https://" in bakery_io.USER_AGENT
 
 

@@ -34,9 +34,9 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-from harbor_lantern.api.app import create_app  # noqa: E402
-from harbor_lantern.clock import SystemClock  # noqa: E402
-from harbor_lantern.config import load_settings  # noqa: E402
+from city_walk_planner.api.app import create_app  # noqa: E402
+from city_walk_planner.clock import SystemClock  # noqa: E402
+from city_walk_planner.config import load_settings  # noqa: E402
 
 DEFAULT_SAMPLES = 200
 DEFAULT_WARMUP = 20
@@ -98,7 +98,7 @@ def measure(call: Callable[[], Any], samples: int, warmup: int) -> list[float]:
 
 
 def run(samples: int = DEFAULT_SAMPLES, warmup: int = DEFAULT_WARMUP) -> dict[str, Any]:
-    with tempfile.TemporaryDirectory(prefix="harbor-lantern-perf-") as workdir:
+    with tempfile.TemporaryDirectory(prefix="city-walk-planner-perf-") as workdir:
         settings = replace(load_settings(env={}), db_path=Path(workdir) / "perf.db")
         app = create_app(settings=settings, clock=SystemClock())
         with TestClient(app) as client:
@@ -175,7 +175,7 @@ def to_markdown(report: dict[str, Any]) -> str:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Harbor Lantern 성능 측정 (DSN-23)")
+    parser = argparse.ArgumentParser(description="City Walk Planner 성능 측정 (DSN-23)")
     parser.add_argument("--samples", type=int, default=DEFAULT_SAMPLES)
     parser.add_argument("--warmup", type=int, default=DEFAULT_WARMUP)
     parser.add_argument("--out", type=Path, default=PROJECT_ROOT / "reports")

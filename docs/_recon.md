@@ -230,11 +230,11 @@ geosearch 로 다시 잰 35개 도시(분류 전 원문 수, 2026-09-16):
 ### Write allowlist (이 밖은 수정 금지)
 
 ```
-src/harbor_lantern/domain/          planner.py · (신규) cluster.py · guide.py
-src/harbor_lantern/services/        (신규) guides.py — curated.py 와 같은 형태
-src/harbor_lantern/services/external/  discovery.py (질의·태그 보존 최소 수정)
-src/harbor_lantern/api/routes/explore.py
-src/harbor_lantern/web/             index.html · js/ · css/ (일정 표시)
+src/city_walk_planner/domain/          planner.py · (신규) cluster.py · guide.py
+src/city_walk_planner/services/        (신규) guides.py — curated.py 와 같은 형태
+src/city_walk_planner/services/external/  discovery.py (질의·태그 보존 최소 수정)
+src/city_walk_planner/api/routes/explore.py
+src/city_walk_planner/web/             index.html · js/ · css/ (일정 표시)
 seed/city-guides/                   (신규) 구운 도시 가이드
 tools/                              (신규) 베이커 스크립트
 contracts/openapi.yaml

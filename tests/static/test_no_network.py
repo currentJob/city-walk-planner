@@ -71,9 +71,9 @@ def test_external_adapters_are_not_called_at_import_time() -> None:
     import 시점 호출은 테스트 수집(collection) 단계에서 터진다 — 그 순간 실패 메시지가
     '어떤 테스트'가 아니라 '수집 실패'로 나와 원인을 찾기 어렵다.
     """
-    external = PROJECT_ROOT / "src" / "harbor_lantern" / "services" / "external"
+    external = PROJECT_ROOT / "src" / "city_walk_planner" / "services" / "external"
     if not external.is_dir():
         pytest.skip("services/external/ 이 아직 없다 (T2 · IMP-B 진행 중)")
-    pytest.importorskip("harbor_lantern.services.external.openmeteo")
-    pytest.importorskip("harbor_lantern.services.external.frankfurter")
+    pytest.importorskip("city_walk_planner.services.external.openmeteo")
+    pytest.importorskip("city_walk_planner.services.external.frankfurter")
     # 여기까지 예외 없이 왔다 = import 만으로는 아무 데도 접속하지 않았다.

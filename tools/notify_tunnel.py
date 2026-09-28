@@ -9,7 +9,7 @@
 이 도구가 새 링크를 보낸다 — 바뀌는 값을 사람이 따라다니지 않게 하는 것이 이 도구의 전부다.
 
 **비밀값을 복사하지 않는다.** 토큰은 하네스의 `.local/telegram/config.json` 한 곳에만 둔다는
-정책이 있으므로, 여기서는 **그 파일의 경로만** 받는다(`--config` 또는 `HL_TELEGRAM_CONFIG`).
+정책이 있으므로, 여기서는 **그 파일의 경로만** 받는다(`--config` 또는 `CWP_TELEGRAM_CONFIG`, 옛 `HL_TELEGRAM_CONFIG`).
 설정이 없으면 조용히 건너뛴다 — 알림이 없다고 터널이 실패한 것은 아니다.
 """
 
@@ -27,7 +27,7 @@ import httpx
 
 __all__ = ["build_share_url", "find_tunnel_url", "load_config", "send"]
 
-DEFAULT_PAGES = "https://currentjob.github.io/harbor-lantern/"
+DEFAULT_PAGES = "https://currentjob.github.io/city-walk-planner/"
 TUNNEL_PATTERN = re.compile(r"https://[a-z0-9][a-z0-9-]*\.trycloudflare\.com")
 TELEGRAM_API = "https://api.telegram.org/bot{token}/sendMessage"
 
@@ -88,8 +88,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="터널 접속 링크를 Telegram 으로 보낸다.")
     parser.add_argument("--url", help="터널 주소. 생략하면 --log 에서 찾는다")
     parser.add_argument("--log", default=".local/tunnel.stderr.log", help="cloudflared 로그")
-    parser.add_argument("--pages", default=os.environ.get("HL_PAGES_URL", DEFAULT_PAGES))
-    parser.add_argument("--config", default=os.environ.get("HL_TELEGRAM_CONFIG"),
+    env = lambda key: os.environ.get("CWP_" + key) or os.environ.get("HL_" + key)  # noqa: E731 — HL_ is the pre-rename prefix
+    parser.add_argument("--pages", default=env("PAGES_URL") or DEFAULT_PAGES)
+    parser.add_argument("--config", default=env("TELEGRAM_CONFIG"),
                         help="Telegram 설정 파일 경로(토큰을 복사하지 않고 가리킨다)")
     parser.add_argument("--dry-run", action="store_true", help="보내지 않고 링크만 출력한다")
     args = parser.parse_args(argv)
@@ -111,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
 
     share = build_share_url(args.pages, api_base)
     text = (
-        "Harbor Lantern 백엔드가 열렸습니다.\n\n"
+        "City Walk Planner 백엔드가 열렸습니다.\n\n"
         f"{share}\n\n"
         "이 링크로 열면 주소가 이 브라우저에 저장됩니다. "
         "터널 주소는 재시작마다 바뀌므로 그때마다 새 링크가 옵니다.\n"

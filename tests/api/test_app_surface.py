@@ -12,7 +12,7 @@ from typing import Any
 
 from fastapi.testclient import TestClient
 
-from harbor_lantern.api.app import create_app
+from city_walk_planner.api.app import create_app
 from tests.api.conftest import TripFixture
 
 PAGES_ORIGIN = "https://currentjob.github.io"
@@ -112,7 +112,7 @@ def test_missing_and_garbage_tokens_are_404(trip: TripFixture, client: Any) -> N
 def test_create_app_is_callable_without_arguments() -> None:
     """설계서 §9: `uvicorn ... --factory` 가 인자 없이 부른다.
 
-    시그니처가 바뀌면 원커맨드 실행(`python -m harbor_lantern`)이 그 자리에서 죽는다.
+    시그니처가 바뀌면 원커맨드 실행(`python -m city_walk_planner`)이 그 자리에서 죽는다.
     """
     import inspect
 

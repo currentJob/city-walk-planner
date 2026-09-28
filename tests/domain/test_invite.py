@@ -12,8 +12,8 @@ from typing import Any
 
 import pytest
 
-from harbor_lantern.domain import invite
-from harbor_lantern.domain.invite import (
+from city_walk_planner.domain import invite
+from city_walk_planner.domain.invite import (
     ALPHABET,
     CODE_LEN,
     entropy_bits,

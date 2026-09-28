@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://harbor-lantern.local/contracts/seed-spots.schema.json",
-  "title": "Harbor Lantern 시드 데이터 계약 (4일 27스팟)",
+  "$id": "https://city-walk-planner.local/contracts/seed-spots.schema.json",
+  "title": "City Walk Planner 시드 데이터 계약 (4일 27스팟)",
   "description": "`seed/spots.json` 의 형태를 강제한다. 원본은 `reference/original-static-page.html` 의 `DAYS` 배열이며, 이 스키마는 전사(轉寫) 실수를 로드 시점에 터뜨리는 것이 목적이다(AC-001). 일자 수 4와 일자별 스팟 수 6·9·8·4를 `prefixItems` 로 못박는다. 설계서: DOC-HKG-02 v1.0 §5.3 (DSN-06).",
 
   "type": "object",

@@ -14,9 +14,9 @@ import random
 
 import pytest
 
-from harbor_lantern.domain.geo import haversine_m
-from harbor_lantern.domain.models import LatLng
-from harbor_lantern.domain.route import EXACT_MAX_FREE, optimize_day
+from city_walk_planner.domain.geo import haversine_m
+from city_walk_planner.domain.models import LatLng
+from city_walk_planner.domain.route import EXACT_MAX_FREE, optimize_day
 
 # 일직선 위의 점들 — 최적 순서를 사람이 손으로 알 수 있다.
 LINE = {

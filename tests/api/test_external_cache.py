@@ -18,10 +18,10 @@ from typing import Any
 import httpx
 import pytest
 
-from harbor_lantern.services.external.cache import CachedProvider
-from harbor_lantern.services.external.frankfurter import FrankfurterFxAdapter
-from harbor_lantern.services.external.openmeteo import OpenMeteoWeatherAdapter
-from harbor_lantern.services.external.ports import ExternalUnavailable, FxSnapshot, WeatherSnapshot
+from city_walk_planner.services.external.cache import CachedProvider
+from city_walk_planner.services.external.frankfurter import FrankfurterFxAdapter
+from city_walk_planner.services.external.openmeteo import OpenMeteoWeatherAdapter
+from city_walk_planner.services.external.ports import ExternalUnavailable, FxSnapshot, WeatherSnapshot
 from tests.fakes import FX_SAMPLE, WEATHER_SAMPLE, FakeFxPort, FakeWeatherPort
 
 WEATHER_TTL = 900

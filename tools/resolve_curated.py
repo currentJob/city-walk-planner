@@ -51,7 +51,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SEED = ROOT / "seed" / "curated-places.json"
 CACHE = ROOT / ".local" / "geocode-cache.json"
 
-UA = "harbor-lantern/0.3 (+https://github.com/currentJob/harbor-lantern)"
+UA = "city-walk-planner/0.3 (+https://github.com/currentJob/city-walk-planner)"
 NOMINATIM = "https://nominatim.openstreetmap.org"
 OVERPASS = [
     "https://overpass.kumi.systems/api/interpreter",

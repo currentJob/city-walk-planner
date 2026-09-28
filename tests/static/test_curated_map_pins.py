@@ -18,7 +18,7 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-MAP_JS = PROJECT_ROOT / "src" / "harbor_lantern" / "web" / "js" / "map.js"
+MAP_JS = PROJECT_ROOT / "src" / "city_walk_planner" / "web" / "js" / "map.js"
 SEED = PROJECT_ROOT / "seed" / "curated-places.json"
 
 NODE = shutil.which("node")

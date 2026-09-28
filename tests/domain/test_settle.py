@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import pytest
 
-from harbor_lantern.domain.models import Transfer
-from harbor_lantern.domain.settle import balances, settle
+from city_walk_planner.domain.models import Transfer
+from city_walk_planner.domain.settle import balances, settle
 
 
 class TestBalances:
@@ -114,7 +114,7 @@ class TestEndToEnd:
     """AC-014 → AC-015 를 한 줄로 이어 본다 (경비 기록 → 잔액 → 송금)."""
 
     def test_ac014_ac015_pipeline(self) -> None:
-        from harbor_lantern.domain.money import split_even
+        from city_walk_planner.domain.money import split_even
 
         shares_a = split_even(3000, ["A", "B", "C"])  # A 가 3000 을 셋이서
         shares_b = split_even(600, ["B", "C"])  # B 가 600 을 둘이서

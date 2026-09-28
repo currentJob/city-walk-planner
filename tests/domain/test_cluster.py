@@ -6,8 +6,8 @@
 
 from __future__ import annotations
 
-from harbor_lantern.config import DEFAULT_GUIDE_CONFIG
-from harbor_lantern.domain.cluster import cluster_spots
+from city_walk_planner.config import DEFAULT_GUIDE_CONFIG
+from city_walk_planner.domain.cluster import cluster_spots
 
 # 서로 멀리 떨어진 세 구역. 좌표는 세 무리를 만들기 위한 고정 입력이다.
 NORTH = [

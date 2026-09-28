@@ -15,7 +15,7 @@ import json
 import sys
 from pathlib import Path
 
-from harbor_lantern.domain.guide_grade import GRADE_WINDOW, grade_city, select_spots
+from city_walk_planner.domain.guide_grade import GRADE_WINDOW, grade_city, select_spots
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TOOLS_DIR = PROJECT_ROOT / "tools"
@@ -116,7 +116,7 @@ def test_every_allow_root_is_classifiable_on_its_own() -> None:
     목록을 두 곳에 맞춰 둘 이유가 없다. 그래서 검사 대상을 **목록에서 동작으로** 옮긴다 —
     앞으로 뿌리를 추가하는 사람은 아무것도 기억하지 않아도 된다.
     """
-    from harbor_lantern.domain.guide_taxonomy import Taxonomy, classify
+    from city_walk_planner.domain.guide_taxonomy import Taxonomy, classify
 
     taxonomy = Taxonomy(
         exclude_flat=frozenset(CLASSES["exclude_flat"]),
@@ -132,7 +132,7 @@ def test_every_allow_root_is_classifiable_on_its_own() -> None:
 
 def test_classify_accepts_a_root_used_as_a_direct_class() -> None:
     """위 규칙을 규칙이 아니라 **판정으로** 확인한다 — 강(Q4022)이 직접 P31 인 항목."""
-    from harbor_lantern.domain.guide_taxonomy import Taxonomy, classify
+    from city_walk_planner.domain.guide_taxonomy import Taxonomy, classify
 
     taxonomy = Taxonomy(
         exclude_flat=frozenset(CLASSES["exclude_flat"]),
@@ -146,7 +146,7 @@ def test_classify_accepts_a_root_used_as_a_direct_class() -> None:
 
 def test_classes_file_is_the_single_source_of_truth() -> None:
     """도메인의 `DEFAULT_TAXONOMY` 는 예시다. 굽기가 읽는 것은 이 파일이고, 그래서 더 넓다."""
-    from harbor_lantern.domain.guide_taxonomy import DEFAULT_TAXONOMY
+    from city_walk_planner.domain.guide_taxonomy import DEFAULT_TAXONOMY
 
     assert set(DEFAULT_TAXONOMY.exclude_flat) <= set(CLASSES["exclude_flat"])
     assert set(DEFAULT_TAXONOMY.allow_root) <= set(CLASSES["allow_root"])
@@ -320,7 +320,7 @@ def test_excluding_stadiums_would_delete_the_colosseum() -> None:
 
     경기장 잡음 18건은 감수한다. 거슬리는 도시는 항목 단위로 `city-denylist.json` 에 적는다.
     """
-    from harbor_lantern.domain.guide_taxonomy import Taxonomy, classify
+    from city_walk_planner.domain.guide_taxonomy import Taxonomy, classify
 
     # 2026-09-16 굽기의 rome.json 이 실제로 기록한 콜로세움의 분류 집합.
     colosseum = ["Q124830411", "Q112132548", "Q133444874", "Q7362268",

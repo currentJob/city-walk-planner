@@ -6,9 +6,9 @@
 
 from __future__ import annotations
 
-from harbor_lantern.domain.hours import parse_closed, parse_hours
-from harbor_lantern.domain.models import ClosedSpec, HoursSpec, ScheduledSpot
-from harbor_lantern.domain.warn import KIND_CLOSED_DAY, KIND_CLOSED_ON_ARRIVAL, build_warnings
+from city_walk_planner.domain.hours import parse_closed, parse_hours
+from city_walk_planner.domain.models import ClosedSpec, HoursSpec, ScheduledSpot
+from city_walk_planner.domain.warn import KIND_CLOSED_DAY, KIND_CLOSED_ON_ARRIVAL, build_warnings
 
 MONDAY = 0
 SATURDAY = 5

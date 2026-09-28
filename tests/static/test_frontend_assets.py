@@ -16,7 +16,7 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-WEB = PROJECT_ROOT / "src" / "harbor_lantern" / "web"
+WEB = PROJECT_ROOT / "src" / "city_walk_planner" / "web"
 VENDOR = WEB / "vendor" / "leaflet-1.9.4"
 INDEX = WEB / "hongkong.html"
 CSS = WEB / "css" / "app.css"

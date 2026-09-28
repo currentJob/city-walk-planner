@@ -13,7 +13,7 @@ def test_review_renderer_navigation_and_storage():
     if node is None:
         pytest.skip("Node unavailable")
     root = Path(__file__).resolve().parents[2]
-    module = (root / "src/harbor_lantern/web/js/render/reviewplan.js").as_uri()
+    module = (root / "src/city_walk_planner/web/js/render/reviewplan.js").as_uri()
     script = "import {reviewHtml, routeHtml, withoutReviews, proposalHtml} from " + json.dumps(module) + ";\n" + """
 const malicious={status:'matched',rating:4.5,review_count:100,source_url:'javascript:alert(1)',
   reviews:[{author:'<img onerror=alert(1)>',text:'<script>bad()</script>',author_url:'javascript:bad()'}]};

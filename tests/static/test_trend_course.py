@@ -4,11 +4,11 @@ from tests.static.test_plan_map import PROJECT_ROOT, _run_node, node_only
 
 @node_only
 def test_trend_schedule_avoids_closures_and_escapes():
-    module = (PROJECT_ROOT / 'src/harbor_lantern/web/js/render/trend.js').as_uri()
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/render/trend.js').as_uri()
     result = _run_node(f"""
       import {{readFileSync}} from 'node:fs';
       import {{trendHtml,positiveShare,schedule,weekdayOf}} from {module!r};
-      const data=JSON.parse(readFileSync('src/harbor_lantern/web/data/hk-macau-trend.json','utf8'));
+      const data=JSON.parse(readFileSync('src/city_walk_planner/web/data/hk-macau-trend.json','utf8'));
       const byId=Object.fromEntries([...data.shops,...data.places].map(x=>[x.id,x]));
       const missing=data.blocks.flatMap(b=>b.stops).filter(s=>s.ref&&!byId[s.ref]).map(s=>s.ref);
       const closedVisits=[],shape=[];
@@ -43,11 +43,11 @@ def test_trend_schedule_avoids_closures_and_escapes():
 
 @node_only
 def test_trend_schedule_follows_stays():
-    module = (PROJECT_ROOT / 'src/harbor_lantern/web/js/render/trend.js').as_uri()
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/render/trend.js').as_uri()
     result = _run_node(f"""
       import {{readFileSync}} from 'node:fs';
       import {{schedule,daysHtml}} from {module!r};
-      const data=JSON.parse(readFileSync('src/harbor_lantern/web/data/hk-macau-trend.json','utf8'));
+      const data=JSON.parse(readFileSync('src/city_walk_planner/web/data/hk-macau-trend.json','utf8'));
       const stay=(name,area,a,b)=>({{name,area,checkin_date:a,checkin_time:'15:00',
         checkout_date:b,checkout_time:'11:00'}});
       const hk=stay('K','kowloon','2026-10-05','2026-10-07'), mo=stay('<b>M</b>','cotai','2026-10-07','2026-10-08');
@@ -82,11 +82,11 @@ def test_trend_schedule_follows_stays():
 
 @node_only
 def test_trend_map_pins_every_stop_with_matching_rows():
-    module = (PROJECT_ROOT / 'src/harbor_lantern/web/js/render/trend.js').as_uri()
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/render/trend.js').as_uri()
     result = _run_node(f"""
       import {{readFileSync}} from 'node:fs';
       import {{schedule,daysHtml,trendMapDays}} from {module!r};
-      const data=JSON.parse(readFileSync('src/harbor_lantern/web/data/hk-macau-trend.json','utf8'));
+      const data=JSON.parse(readFileSync('src/city_walk_planner/web/data/hk-macau-trend.json','utf8'));
       const stay={{name:'K',area:'kowloon',checkin_date:'2026-10-05',checkin_time:'15:00',
         checkout_date:'2026-10-08',checkout_time:'11:00'}};
       const days=schedule(data,'2026-10-05','2026-10-08',[stay]);

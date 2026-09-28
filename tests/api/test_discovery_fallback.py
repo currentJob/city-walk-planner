@@ -1,6 +1,6 @@
 import httpx
 
-from harbor_lantern.services.external.discovery import DiscoveryProvider
+from city_walk_planner.services.external.discovery import DiscoveryProvider
 
 
 def test_busy_primary_uses_fallback_and_cools_down():

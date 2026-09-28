@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-VENDOR_DIR = PROJECT_ROOT / "src" / "harbor_lantern" / "web" / "vendor" / "leaflet-1.9.4"
+VENDOR_DIR = PROJECT_ROOT / "src" / "city_walk_planner" / "web" / "vendor" / "leaflet-1.9.4"
 MANIFEST = VENDOR_DIR / "MANIFEST.sha256"
 
 # 매니페스트가 담아야 하는 파일 목록. 여기 없는 파일이 벤더 디렉터리에 있으면

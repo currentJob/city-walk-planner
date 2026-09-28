@@ -22,8 +22,8 @@ from typing import Any
 
 import pytest
 
-from harbor_lantern.domain.guide_harvest import fold_rows
-from harbor_lantern.domain.models import LatLng
+from city_walk_planner.domain.guide_harvest import fold_rows
+from city_walk_planner.domain.models import LatLng
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TOOLS_DIR = PROJECT_ROOT / "tools"

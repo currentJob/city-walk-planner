@@ -1,6 +1,6 @@
 """Offline rating evidence, conservative matching and explicit-order edits."""
 
-from harbor_lantern.services.ratings import city_ratings, rating_catalog
+from city_walk_planner.services.ratings import city_ratings, rating_catalog
 
 
 def test_all_catalogue_cities_have_traceable_ratings(client):

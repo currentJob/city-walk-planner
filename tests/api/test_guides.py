@@ -15,7 +15,7 @@ from typing import Any
 
 import pytest
 
-from harbor_lantern.services import guides
+from city_walk_planner.services import guides
 
 PARIS_SPOTS = [
     ("Q243", "에펠탑", 48.8584, 2.2945, "monument", 191, "7구", True),
@@ -322,7 +322,7 @@ def test_three_grades_say_three_different_things(guided: Any) -> None:
         guided.post("/api/explore/plan", json=_plan_body(city_id=city)).json()["guide_notice"]
         for city in ("paris", "kyoto")
     }
-    from harbor_lantern.api.routes.explore import GRADE_NOTICE
+    from city_walk_planner.api.routes.explore import GRADE_NOTICE
 
     notices.add(GRADE_NOTICE["heuristic"])
     assert len(notices) == 3

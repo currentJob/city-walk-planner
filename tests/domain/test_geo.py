@@ -15,14 +15,14 @@ from typing import Any
 
 import pytest
 
-from harbor_lantern.domain.geo import (
+from city_walk_planner.domain.geo import (
     EARTH_RADIUS_M,
     directions_url,
     format_distance,
     haversine_m,
     path_length_m,
 )
-from harbor_lantern.domain.models import LatLng
+from city_walk_planner.domain.models import LatLng
 
 # 시드에 실제로 들어 있는 좌표 (reference/original-static-page.html 원본 값).
 STAR_AVENUE = LatLng(22.2937, 114.1730)

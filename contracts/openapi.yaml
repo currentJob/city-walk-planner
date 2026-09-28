@@ -1,7 +1,7 @@
 openapi: 3.1.0
 
 # =============================================================================
-# Harbor Lantern — 브라우저 ↔ 서버 API 계약 (SSoT)
+# City Walk Planner — 브라우저 ↔ 서버 API 계약 (SSoT)
 #
 # 문서: docs/02_설계서.md (DOC-HKG-02 v1.0, 2026-09-13) §7
 # 소유: 백엔드(IMP-B) → 사용: 프론트(IMP-C)
@@ -21,7 +21,7 @@ openapi: 3.1.0
 # =============================================================================
 
 info:
-  title: Harbor Lantern API
+  title: City Walk Planner API
   version: "1.0.0"
   description: |
     홍콩 3박4일 동적 여행 가이드. 무계정(초대코드) 공유 모델.
@@ -34,7 +34,7 @@ info:
 
 servers:
   - url: http://127.0.0.1:8080
-    description: 로컬 실행 (`uv run python -m harbor_lantern`)
+    description: 로컬 실행 (`uv run python -m city_walk_planner`)
 
 tags:
   - name: trips

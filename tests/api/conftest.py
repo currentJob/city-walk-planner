@@ -91,8 +91,8 @@ def fx_port(app: Any) -> Any:
     기본 상태(진짜 어댑터)는 네트워크 차단에 걸려 `available:false` 가 되고, 그것도
     검증 대상이다 — 이 픽스처를 요청하지 않는 테스트가 그 경로를 본다.
     """
-    from harbor_lantern.services.external.cache import CachedProvider
-    from harbor_lantern.services.external.ports import FxSnapshot
+    from city_walk_planner.services.external.cache import CachedProvider
+    from city_walk_planner.services.external.ports import FxSnapshot
     from tests.fakes import FX_SAMPLE, FakeFxPort
 
     port = FakeFxPort(FxSnapshot(**FX_SAMPLE))
@@ -113,8 +113,8 @@ def nearby_port(app: Any) -> Any:
     `fx_port` 와 같은 이유로 둔다. 다만 캐시는 `CachedProvider` 가 아니라
     `NearbyProvider` 다 — 질의마다 키가 달라지기 때문이다(DSN-26).
     """
-    from harbor_lantern.services.external.nearby import NearbyProvider
-    from harbor_lantern.services.external.ports import PlaceSnapshot
+    from city_walk_planner.services.external.nearby import NearbyProvider
+    from city_walk_planner.services.external.ports import PlaceSnapshot
     from tests.fakes import PLACES_SAMPLE, FakeNearbyPort
 
     port = FakeNearbyPort(tuple(PlaceSnapshot(**item) for item in PLACES_SAMPLE))

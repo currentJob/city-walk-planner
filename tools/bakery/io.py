@@ -47,7 +47,7 @@ __all__ = [
 # 연락처를 포함한 고정 User-Agent. 미인증 요청 상한이 10/분인데 준수 UA 봇은 200/분이다
 # (https://www.mediawiki.org/wiki/Wikimedia_APIs/Rate_limits · 2026-09-15 조회).
 # 우리는 요청 간격 1.1초이므로 분당 최대 55 — 여유가 크다.
-USER_AGENT = "harbor-lantern-baker/1.0 (+https://github.com/currentJob/harbor-lantern)"
+USER_AGENT = "city-walk-planner-baker/1.0 (+https://github.com/currentJob/city-walk-planner)"
 
 # 요청 간 최소 간격. `tools/resolve_curated.py` 의 선례와 같은 값이다.
 MIN_REQUEST_INTERVAL_S = 1.1
