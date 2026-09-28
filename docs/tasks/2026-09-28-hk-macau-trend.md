@@ -28,7 +28,7 @@
 - 참고: `PYTHONUTF8` 없이 실행하면 cp949 로케일에서 `test_review_plan_ui.py`가 Node 출력 디코딩에 실패한다. 이번 변경과 무관한 환경 문제다.
 - PASS `uv run ruff check .`, `tools/vendor_check.py`, `.github/quality/gate.py` 4/4.
 - PASS 로컬 서버(HL_PORT=8093) 브라우저 확인: 1280px·390px에서 일정 4일·방문지 30곳·카드 38장이 렌더링되고, 메뉴 활성 표시, 가게 링크·딥 링크 이동, 다른 메뉴로 갔다 돌아오기, 가로 넘침 없음, 콘솔 오류 없음. 숨겨진 창에서는 부드러운 스크롤 애니메이션이 진행되지 않아 이동 확인은 `scroll-behavior:auto`로 했다.
-- NOT-RUN 배포 후 Pages 확인: 커밋·푸시하지 않았다.
+- 배포 후 Pages 확인: 아래 "배포" 절에 기록했다.
 
 ## 추가: 방문 기간 지정 일정 짜기 · 2026-09-28
 
@@ -65,3 +65,8 @@
   - PASS `PYTHONUTF8=1 uv run pytest -q`: 925 passed. `test_trend_schedule_follows_stays`는 까우룽 숙소만 있으면 기본 코스 유지, 10/7 마카오 숙박 시 그날 마카오 코스와 가는 페리만 남음, 퇴실이 맨 앞, 입실 표시, 마지막 날 밤 숙소 없음, 7일 중 마카오 숙박일로 마카오 코스 이동, 잘못된 입력 6종, 숙소 이름 이스케이프를 검사한다.
   - PASS ruff, `.github/quality/gate.py` 4/4.
   - PASS 브라우저(1280px·390px): 숙소 추가 시 앞 숙소 퇴실일로 자동 채움과 포커스 이동, 삭제, 두 숙소 일정 반영, 겹침 오류 표시, 가로 넘침·콘솔 오류 없음. 창이 숨겨져 있어 클릭은 스크립트로 대신했다.
+
+## 배포 · 2026-09-28
+
+- `8c24d66`을 main에 푸시했다. GitHub Actions: CI 성공([run 36369983805](https://github.com/currentJob/harbor-lantern/actions/runs/36369983805)), Pages 성공([run 36369983891](https://github.com/currentJob/harbor-lantern/actions/runs/36369983891)).
+- PASS https://currentjob.github.io/harbor-lantern/#trend: `data/hk-macau-trend.json` 응답 200, 메뉴 표시, 일정 4일·카드 38장 렌더링, 숙소 1곳을 추가해 일정을 다시 짜면 숙소가 표시됨, 콘솔 오류 없음.
