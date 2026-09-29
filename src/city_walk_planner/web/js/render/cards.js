@@ -13,12 +13,13 @@ import {
 import { haversineMeters, sortByDistance } from '../geo.js';
 import { warningBadges } from './warnings.js';
 import { routeHtml } from './reviewplan.js';
+import { icon } from '../icons.js';
 
 const MODE_LABEL = { walk: '도보', transit: '대중교통' };
 
 function hoursLine(spot) {
   const parts = [];
-  parts.push(`🕐 ${escapeHtml(spot.hours_text || '영업시간 정보 없음')}`);
+  parts.push(`${icon('clock')} ${escapeHtml(spot.hours_text || '영업시간 정보 없음')}`);
   if (spot.closed_text) parts.push(`<span class="cl">${escapeHtml(spot.closed_text)}</span>`);
   if (spot.hours && spot.hours.approximate) parts.push('<span class="approx">근사치</span>');
   // unknown 은 경고가 아니다. 조용한 회색 배지 하나로만 알린다(AC-024).
@@ -54,7 +55,7 @@ function editRow(spot, ctx, index, count) {
     + `<button class="mini" data-act="up" ${reorderable && index > 0 ? '' : 'disabled'}>▲ 위로</button>`
     + `<button class="mini" data-act="down" ${reorderable && index < count - 1 ? '' : 'disabled'}>▼ 아래로</button>`
     + '<button class="mini" data-act="edit">✎ 수정</button>'
-    + '<button class="mini danger" data-act="delete">🗑 삭제</button>'
+    + '<button class="mini danger" data-act="delete">' + icon('trash') + ' 삭제</button>'
     + `<select class="mini" data-act="move" aria-label="일자 이동">${dayOptions}</select>`
     + '</div>';
 }
@@ -108,7 +109,7 @@ export function renderCards(container, ctx) {
       + '</div>'
       + '<div class="foot">'
         + `<span class="dist${distance == null ? ' off' : ''}">`
-        + `${distance == null ? '· 위치 꺼짐' : `📍 ${escapeHtml(formatDistance(distance))}`}</span>`
+        + `${distance == null ? '· 위치 꺼짐' : `${icon('pin')} ${escapeHtml(formatDistance(distance))}`}</span>`
         + '<span class="spacer"></span>'
         + `<a class="go" href="${escapeHtml(spot.directions_url)}" target="_blank" rel="noopener">길찾기 ›</a>`
         + `<button class="chk${isDone ? ' done' : ''}" type="button" aria-label="완료 체크"`

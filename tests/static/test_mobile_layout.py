@@ -22,7 +22,7 @@ def test_pages_load_mobile_css_after_platform_css_only_on_phones():
 
 def test_mobile_rules_live_only_in_mobile_css():
     assert "@media(max-width:760px)" not in PLATFORM.replace(" ", "")
-    assert re.search(r"\.nav-icon,\.nav-short,\.trend-tabs,\.shop-more>summary\{display:none\}", PLATFORM)
+    assert re.search(r"\.nav-short,\.trend-tabs,\.shop-more>summary\{display:none\}", PLATFORM)
 
 
 def test_bottom_tab_bar_is_fixed_and_thumb_sized():

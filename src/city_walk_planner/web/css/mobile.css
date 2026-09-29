@@ -12,7 +12,7 @@ body{padding-bottom:calc(var(--m-nav) + var(--m-safe))}
 
 .platform-header{display:flex;flex-wrap:nowrap;align-items:center;gap:12px;min-height:var(--m-top);height:var(--m-top);padding:0 var(--m-gutter)}
 .platform-header .brand{font-size:17px;width:auto;gap:6px;white-space:nowrap}
-.brand-mark{font-size:26px}
+.brand-mark{width:28px;height:28px}
 .shared-link{display:inline-flex;align-items:center;margin-left:auto;min-height:var(--tap);padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px;font-weight:600}
 
 /* Bottom tab bar: the same <nav> as desktop, pinned to the thumb zone. */
@@ -20,7 +20,7 @@ body{padding-bottom:calc(var(--m-nav) + var(--m-safe))}
   height:calc(var(--m-nav) + var(--m-safe));padding:0 4px var(--m-safe);background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -6px 18px #203d3414;font-size:11px}
 .platform-header nav a{flex-direction:column;justify-content:center;gap:3px;min-height:var(--m-nav);min-width:var(--tap);padding:0 2px;font-weight:600;border-bottom:0;border-top:2px solid transparent}
 .platform-header nav a[aria-current=page]{border-top-color:var(--green);background:linear-gradient(var(--bg2),var(--surface))}
-.nav-icon{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.platform-header .nav-icon{display:block;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nav-full{display:none}
 .nav-short{display:block}
 
