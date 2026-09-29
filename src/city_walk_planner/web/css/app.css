@@ -202,16 +202,6 @@ select.mini{padding:8px 10px}
 .gerr{font-size:13px;color:#ffd9d9;background:rgba(255,107,107,.12);
   border:1px solid rgba(255,107,107,.35);border-radius:12px;padding:11px 12px;margin-top:12px}
 
-/* 백엔드 주소 (Pages + 로컬 백엔드 구성) */
-details.backend{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
-details.backend summary{list-style:none;cursor:pointer;font-size:12.5px;color:var(--muted);
-  min-height:var(--tap,44px);display:flex;align-items:center;gap:6px}
-details.backend summary::-webkit-details-marker{display:none}
-details.backend .bnow{color:var(--cyan)}
-details.backend .field{margin-top:10px}
-details.backend .gnote{margin:10px 0 0}
-details.backend code{background:rgba(255,255,255,.07);padding:1px 5px;border-radius:5px;font-size:11.5px}
-
 /* ── 근처 음식점·카페 (REQ-017 · DSN-27) ──────────────────────────────── */
 .nearpanel:empty{display:none}
 .nearpanel{margin:10px 0 2px}

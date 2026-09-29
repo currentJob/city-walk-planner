@@ -237,17 +237,10 @@ powershell -ExecutionPolicy Bypass -File tools/start-tunnel.ps1    # .local/clou
 $env:CWP_ALLOWED_ORIGINS = "https://<사용자>.github.io"             # CORS 허용 (필수)
 ```
 
-**터널을 띄우면 접속 링크가 Telegram 으로 온다.** `start-tunnel.ps1` 이 주소를 받은 뒤
-`tools/notify_tunnel.py` 로 `<Pages 주소>?api=<터널 주소>` 를 보낸다 — 휴대폰에서 링크 한 번이면
-주소가 그 브라우저에 저장된다. 토큰은 **복사하지 않는다**: `.env.local`(gitignore)의
-`CWP_TELEGRAM_CONFIG` 가 설정 파일 **경로만** 가리킨다. 설정이 없으면 조용히 건너뛰고 터널은
-그대로 동작한다. 링크만 보려면 `python tools/notify_tunnel.py --dry-run`.
-
-**주소는 화면에서 넣는다.** Pages 로 연 화면의 "여행 시작하기" 카드 아래 **백엔드 주소** 칸에
-터널 주소를 넣으면 이 기기에 저장된다. 페이지 주소 뒤에 `?api=` 로 붙여 열어도 같다.
-
-> 터널 주소는 재시작마다 바뀐다. 그래서 주소를 **배포 시점에 굽지 않는다** — 구우면 주소가 바뀔
-> 때마다 다시 배포해야 한다. 고정 주소가 있다면 저장소 변수 `CWP_API_BASE` 에 넣어 기본값으로 쓸 수 있다.
+**주소는 배포 설정으로 넣는다.** 화면에는 서버 주소를 바꾸는 칸이 없다(사용자에게 필요 없는 개발자
+설정이고, `?api=` 링크로 요청이 다른 서버로 새는 문제가 있어 없앴다). 터널 주소를 저장소 변수
+`CWP_API_BASE` 에 넣고 Pages 를 다시 배포한다. 터널 주소는 재시작마다 바뀌므로 그때마다 다시 넣어야
+한다 — 그래서 지금은 Cloudflare Worker 방식을 쓴다.
 
 PC 가 꺼지거나 절전으로 들어가면 조회·수정이 연결되지 않는다. 프로세스 ID·로그·실제 DB 는
 `.local/` 에 두고 Git 에 넣지 않는다. 변경 범위와 검증 결과는 `docs/_change_pages.md` 에 있다.
