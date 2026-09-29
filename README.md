@@ -172,7 +172,7 @@ docker compose up --build        # 처음은 이미지 빌드에 몇 분 걸린�
 
 ```powershell
 uv run python tools/build_worker.py            # 앱 코드·데이터를 worker/src 로 복사
-cd worker; uv sync                             # pywrangler 설치 (uv 0.12.3 이상 필요 — 없으면 .venv 에 설치)
+cd worker; npm ci; uv sync                     # 고정된 wrangler(package-lock) + pywrangler (uv 0.12.3 이상)
 uv run pywrangler deploy
 uv run python ../tools/smoke_api.py https://city-walk-planner-api.currentjob.workers.dev
 ```

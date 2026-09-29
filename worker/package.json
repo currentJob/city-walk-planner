@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "description": "Pins the wrangler CLI that pywrangler runs through npx (npx prefers this local copy).",
+  "devDependencies": {
+    "wrangler": "4.143.0"
+  }
+}
