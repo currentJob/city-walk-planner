@@ -62,6 +62,7 @@ Trip.com 조사 자료에서 도시와 Wikidata 이름/별칭이 정확히 일�
 | 일정 편집 | 스팟 추가·수정·삭제, 일자 내 순서 변경, 일자 간 이동 (낙관적 잠금 · 원자 트랜잭션) | REQ-004 · REQ-005 |
 | 완료 체크 공유 | 체크가 서버에 저장되어 **누가 언제 체크했는지** 동행 모두에게 보인다 | REQ-006 |
 | 경비 · 정산 | 지출을 기록하면 분담액이 기록 시점에 확정되고, 최소 송금으로 "누가 누구에게 얼마"를 낸다 | REQ-007 · REQ-008 |
+| **영수증으로 경비 입력** | 영수증 사진에서 금액·날짜·영문 상호를 읽어 경비 입력 칸을 채운다. 글자 인식은 작성자의 [OCR 프로젝트](https://github.com/currentJob/ocr-llm-page)가 배포한 모듈을 브라우저에서 불러 쓰며, 사진은 어디로도 보내지 않는다. 한자는 읽지 못한다. `CWP_CONFIG.ocrModule` 이 비면(셀프 호스팅 기본) 버튼이 나오지 않는다 | 플랫폼 확장 |
 | 동선 최적화 제안 | 현재 순서 대비 총 이동거리를 비교해 제안한다. 고정시각 스팟은 자리를 지키고, **적용 여부는 사용자가 고른다** | REQ-009 |
 | 이동시간 · 도착 예상시각 | 하버사인 거리 + 모드별 평균속도로 구간을 추정하고 하루 타임라인을 세운다(추정치임을 화면에 표시) | REQ-010 · REQ-011 |
 | 영업시간 · 충돌 경고 | 영업시간 원문을 파싱해 "도착 시각에 닫힘"·"휴무일"·고정시각 충돌을 알린다. **못 읽은 문자열은 경고를 만들지 않는다** | REQ-012 · REQ-013 |
@@ -203,6 +204,7 @@ docker compose -f docker-compose.selfhost.yml start app
 화면은 Pages, API·DB 는 **Cloudflare Worker** 에서 돈다. PC 가 꺼져도 동작한다.
 
 - 서버: https://city-walk-planner-api.currentjob.workers.dev (Pages 빌드의 기본 서버 주소)
+- 영수증 인식 모듈: 저장소 변수 `CWP_OCR_MODULE`(기본 `https://currentjob.github.io/ocr-llm-page/lib/korean-ocr.mjs`)을 `config.js` 의 `ocrModule` 로 굽는다.
 - 구성: Python Worker 하나 + SQLite 기반 Durable Object 하나(`AppDO`). 기존 FastAPI 앱을 그대로 실행하고,
   저장소만 `worker/src/do_sqlite.py` 어댑터로, 외부 HTTP 만 `worker/src/fetch_transport.py`(Workers `fetch`)로 바꾼다.
 - 배포(프로젝트 루트에서, 처음 한 번 `npx wrangler login`):

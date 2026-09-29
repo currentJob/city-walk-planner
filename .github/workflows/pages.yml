@@ -37,6 +37,8 @@ jobs:
         env:
           # 기본 백엔드는 Cloudflare Worker(worker/). 옛 HL_API_BASE 는 임시 터널 주소라 더 읽지 않는다.
           CWP_API_BASE: ${{ vars.CWP_API_BASE || 'https://city-walk-planner-api.currentjob.workers.dev' }}
+          # 영수증 인식: 작성자의 OCR 프로젝트가 배포한 모듈(브라우저에서만 실행). 비우면 기능이 숨는다.
+          CWP_OCR_MODULE: ${{ vars.CWP_OCR_MODULE || 'https://currentjob.github.io/ocr-llm-page/lib/korean-ocr.mjs' }}
         run: |
           set -euo pipefail
           cp -r src/city_walk_planner/web _site
@@ -52,7 +54,10 @@ jobs:
               url = urlsplit(base)
               if url.scheme != 'https' or not url.hostname or url.username or url.password or url.path or url.query or url.fragment:
                   raise SystemExit('CWP_API_BASE must be an HTTPS origin')
-          Path('_site/config.js').write_text('window.CWP_CONFIG = Object.freeze(' + json.dumps({'apiBase': base}) + ');\n')
+          ocr = os.environ.get('CWP_OCR_MODULE', '')
+          if ocr and (urlsplit(ocr).scheme != 'https' or not ocr.endswith('.mjs')):
+              raise SystemExit('CWP_OCR_MODULE must be an HTTPS .mjs URL')
+          Path('_site/config.js').write_text('window.CWP_CONFIG = Object.freeze(' + json.dumps({'apiBase': base, 'ocrModule': ocr}) + ');\n')
           PY
 
       - name: 외부 도메인 참조 재확인
