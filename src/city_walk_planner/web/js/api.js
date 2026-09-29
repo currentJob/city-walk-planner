@@ -8,60 +8,24 @@
  */
 
 const DEFAULT_TIMEOUT_MS = 10000;
-const API_BASE_KEY = 'hl_api_base';
+const LEGACY_API_BASE_KEY = 'hl_api_base';
 
-/* API 주소는 **런타임에 바뀔 수 있어야 한다.**
+/* API 주소는 **배포 설정으로만** 정한다: 빌드 때 `config.js` 에 구운 값(`CWP_API_BASE` 환경 변수,
+ * .github/workflows/pages.yml) → 없으면 동일 출처(Docker·셀프 호스팅).
  *
- * 화면을 GitHub Pages 에 올리고 백엔드는 PC 에서 도는 구성에서, 터널 주소는 재시작마다
- * 바뀐다. 주소를 내보내기 시점에 구워 버리면 그때마다 정적 파일을 다시 배포해야 한다.
- * 그래서 우선순위를 둔다: `?api=` 쿼리 → 이 브라우저에 저장된 값 → 빌드 시 config.js → 동일 출처.
- *
- * `?api=` 로 한 번 넣으면 저장되므로, 터널 주소가 바뀌어도 링크 한 번이면 된다.
- * https 만 받는다 — Pages 는 https 라 http 백엔드는 브라우저가 혼합 콘텐츠로 막는다.
+ * 예전에는 화면의 "연결 설정" 칸이나 `?api=` 링크로 바꿀 수 있었다. 사용자에게 필요 없는 개발자용
+ * 설정이고, 누군가 보낸 링크 하나로 요청(참여 토큰 포함)이 다른 서버로 가게 되는 문제도 있어 없앴다.
+ * 그때 이 브라우저에 저장된 주소는 지운다.
  */
-function normalizeBase(value) {
-  if (!value) return null;
-  let url;
-  try { url = new URL(value); } catch { return null; }
-  if (url.protocol !== 'https:' || url.username || url.password) return null;
-  return url.origin;
-}
-
-/** 재시작마다 사라지는 Cloudflare 임시 터널 주소인가. */
-export function isQuickTunnel(base) {
-  try { return new URL(base).hostname.endsWith('.trycloudflare.com'); } catch { return false; }
-}
-
 function resolveApiBase() {
-  let stored = null;
-  try { stored = localStorage.getItem(API_BASE_KEY); } catch { /* 저장소가 막힌 브라우저 */ }
-  // 고정 백엔드가 배포에 들어 있으면, 예전에 저장한 임시 터널 주소(이미 죽었을 가능성이 큼)가 그것을 가리지 않게 한다.
-  if (stored && isQuickTunnel(stored) && window.CWP_CONFIG?.apiBase && !isQuickTunnel(window.CWP_CONFIG.apiBase)) {
-    stored = null;
-    try { localStorage.removeItem(API_BASE_KEY); } catch { /* 무시 */ }
-  }
-
-  const fromQuery = normalizeBase(new URLSearchParams(location.search).get('api'));
-  if (fromQuery) {
-    try { localStorage.setItem(API_BASE_KEY, fromQuery); } catch { /* 저장 실패는 치명적이지 않다 */ }
-    return fromQuery;
-  }
-  return normalizeBase(stored)
-    || (window.CWP_CONFIG?.apiBase || '').replace(/\/$/, '');
+  try { localStorage.removeItem(LEGACY_API_BASE_KEY); } catch { /* 저장소가 막힌 브라우저 */ }
+  return (window.CWP_CONFIG?.apiBase || '').replace(/\/$/, '');
 }
 
 const API_BASE = resolveApiBase();
 
-/** 현재 쓰는 백엔드 주소(동일 출처면 빈 문자열). 화면이 안내에 쓴다. */
+/** 현재 쓰는 백엔드 주소(동일 출처면 빈 문자열). */
 export function apiBase() { return API_BASE; }
-
-/** 백엔드 주소를 바꾸고 저장한다. 잘못된 값이면 false. */
-export function setApiBase(value) {
-  const base = normalizeBase(value);
-  if (!base) return false;
-  try { localStorage.setItem(API_BASE_KEY, base); } catch { /* 저장 실패해도 새로고침 전까진 동작 */ }
-  return true;
-}
 
 export class ApiError extends Error {
   constructor(status, body, fallbackMessage) {

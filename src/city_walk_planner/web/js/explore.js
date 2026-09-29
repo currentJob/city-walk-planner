@@ -1,4 +1,4 @@
-import { apiBase, request, setApiBase } from './api.js';
+import { request } from './api.js';
 import { escapeHtml as esc, link } from './format.js';
 import { LocationTracker, directionsUrl, haversineMeters } from './geo.js';
 import { TripMap } from './map.js';
@@ -6,7 +6,6 @@ import { cityLabel, daysHtml, gradeBadgeHtml, gradeSummary, isGuidePlan, sources
 import { dayPickerLabel, planMapDays, planMapSpotCount, unmappedCount } from './render/planmap.js';
 import { reviewHtml, routeHtml, withoutReviews } from './render/reviewplan.js';
 import { initPlatform, confidence } from './platform.js';
-import { renderMacauOffer } from './day-trip.js';
 
 const $ = (id) => document.getElementById(id);
 let destination = null;
@@ -24,7 +23,23 @@ const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 const categories = {restaurant:'음식점', cafe:'카페', fast_food:'간편식', museum:'박물관', gallery:'갤러리', attraction:'명소', viewpoint:'전망', zoo:'동물원', park:'공원'};
 try { saved = JSON.parse(localStorage.getItem('hl_explore_plans') || '[]'); if (!Array.isArray(saved)) saved = []; } catch { saved = []; }
 
-function notice(text, error = false) { $('message').textContent = text; $('message').hidden = false; $('message').classList.toggle('error', error); }
+/* 상단 알림: 잠시 보였다가 저절로 사라진다(오류·되돌리기는 조금 더 길게). 마우스를 올려 두거나
+ * 알림 안에 포커스가 있으면 사라지지 않고 기다린다. */
+let noticeTimer = null;
+function hideNotice() { clearTimeout(noticeTimer); $('message').hidden = true; }
+function notice(text, error = false, {undo} = {}) {
+  const box = $('message');
+  clearTimeout(noticeTimer);
+  box.classList.toggle('error', error);
+  box.setAttribute('role', error ? 'alert' : 'status');
+  box.innerHTML = `<span class="message-text"></span>${undo ? '<button type="button" class="message-action">되돌리기</button>' : ''}<button type="button" class="message-close" aria-label="알림 닫기">×</button>`;
+  box.querySelector('.message-text').textContent = text;
+  if (undo) box.querySelector('.message-action').onclick = () => { hideNotice(); undo(); };
+  box.querySelector('.message-close').onclick = hideNotice;
+  box.hidden = false;
+  const later = () => { noticeTimer = setTimeout(() => box.matches(':hover,:focus-within') ? later() : hideNotice(), undo ? 8000 : error ? 7000 : 4500); };
+  later();
+}
 async function action(button, work) {
   button.disabled = true;
   try { await work(); } catch (error) { notice(error.message || '요청을 처리하지 못했습니다. 다시 시도해 주세요.', true); }
@@ -231,33 +246,69 @@ function renderPlan(plan) {
   $('planDays').innerHTML = plan.days.map((day,index) => `<article class="day"><div class="day-head"><h3>DAY ${index + 1} <span>${esc(day.date)} (${weekdays[day.weekday]})</span></h3><span>${(day.distance_m/1000).toFixed(1)}km · 이동 약 ${day.travel_minutes}분</span></div>${day.stops.length ? day.stops.map((stop,order) => `<div class="stop" id="${stopDomId(index,order)}"><time>${esc(stop.arrival)}<p class="meta">${esc(stop.departure)}</p></time><div><span class="pill ${stop.hours_status === 'unverified' ? 'unknown' : ''}">${stop.hours_status === 'unverified' ? '영업 여부 확인 필요' : '주간 영업시간 반영'}</span>${stop.travel_minutes ? `<span class="pill">이전 장소에서 약 ${stop.travel_minutes}분</span>` : ''}${placeBody(stop.place)}${order ? routeHtml(day.stops[order-1].place, stop.place) : ''}</div></div>`).join('') : '<p class="empty">남은 후보 중 영업시간과 일정에 맞는 장소가 없습니다. 자유시간으로 남겨 두었어요.</p>'}</article>`).join('');
   window.dispatchEvent(new CustomEvent('hl:plan',{detail:{plan,map:tripMap}}));
 }
+/** 내 여행 카드 한 장: 목적지, 기간, 일수·장소 수, 마지막 저장 시각. */
+function savedCardHtml(plan) {
+  const days = plan.days?.length || 0, places = plan.days?.reduce((n, d) => n + (d.stops?.length || 0), 0) || 0;
+  const updated = plan.saved_at ? new Date(plan.saved_at).toLocaleString('ko-KR', {dateStyle:'medium', timeStyle:'short'}) : '';
+  return `<article class="saved-card"><p class="eyebrow">${esc(plan.start_date)} — ${esc(plan.end_date)}</p>
+    <h3>${esc(plan.destination.name.split(',')[0])}${plan.days.some(d=>d.excursion) ? ' · 마카오 포함' : ''}</h3>
+    <p class="meta">${days}일 · ${places}곳${updated ? ` · 저장 ${esc(updated)}` : ''}</p>
+    <div class="saved-actions"><button type="button" data-open>여행 열기</button><button type="button" class="secondary" data-delete>삭제</button></div></article>`;
+}
+function writeSaved(next) {
+  try { localStorage.setItem('hl_explore_plans', JSON.stringify(next)); saved = next; renderSaved(); return true; }
+  catch { notice('저장 공간이 부족합니다. 일정 내려받기로 보관해 주세요.', true); return false; }
+}
+/** 삭제는 바로 하고 알림에서 되돌릴 수 있게 한다(확인 창보다 흐름을 덜 끊는다). 되돌리면 원래 자리로. */
+function deleteSaved(plan) {
+  const index = saved.indexOf(plan);
+  if (index < 0 || !writeSaved(saved.filter(p => p !== plan))) return;
+  notice(`'${plan.destination.name.split(',')[0]}' 여행을 삭제했습니다.`, false, {undo: () => {
+    const next = saved.filter(p => p.local_id !== plan.local_id); next.splice(Math.min(index, next.length), 0, plan);
+    if (writeSaved(next.slice(0, 10))) notice('삭제한 여행을 되살렸습니다.');
+  }});
+}
 function renderSaved() {
-  const offer = $('macauTripOffer');
-  renderMacauOffer({root:offer,plans:saved,savePlan,renderPlan,action,notice});
   $('savedSection').hidden = !saved.length; $('savedPlans').replaceChildren();
+  $('savedEmpty').hidden = Boolean(saved.length);
   saved.forEach(plan => {
-    const button = document.createElement('button'); button.textContent = `${plan.destination.name.split(',')[0]} · ${plan.start_date}${plan.days.some(d=>d.excursion) ? ' · 마카오 포함' : ''}`;
-    button.addEventListener('click', () => {
+    const wrap = document.createElement('div'); wrap.innerHTML = savedCardHtml(plan);
+    const card = wrap.firstElementChild;
+    card.querySelector('[data-delete]').addEventListener('click', () => deleteSaved(plan));
+    card.querySelector('[data-open]').addEventListener('click', () => {
       destination = plan.destination;
       // 저장된 일정이 가이드로 만든 것이면 도시 선택도 되살린다 — 안 되살리면 같은 화면에서
       // 다시 만들기를 눌렀을 때 조용히 폴백 일정이 나온다.
       city = isGuidePlan(plan) ? {city_id:plan.guide_city.city_id, name_ko:plan.guide_city.name_ko, grade:plan.guide_city.grade, center:{lat:plan.destination.lat, lng:plan.destination.lng}} : null;
       renderPlan(plan); $('planSection').scrollIntoView({behavior:'smooth'});
     });
-    $('savedPlans').appendChild(button);
+    $('savedPlans').appendChild(card);
   });
 }
 function savePlan(plan) {
   plan.local_id ||= `trip-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
-  const next = [withoutReviews(plan), ...saved.filter(p => p.local_id !== plan.local_id)].slice(0,10);
-  try { localStorage.setItem('hl_explore_plans',JSON.stringify(next)); saved=next; renderSaved(); return true; }
-  catch { notice('저장 공간이 부족합니다. 일정 내려받기로 보관해 주세요.',true); return false; }
+  plan.saved_at = new Date().toISOString();
+  return writeSaved([withoutReviews(plan), ...saved.filter(p => p.local_id !== plan.local_id)].slice(0,10));
 }
+/** 내려받은 일정 파일(.json)을 다시 내 여행에 넣는다. 모양이 맞지 않는 파일은 거절한다. */
+$('importPlan').addEventListener('change', async event => {
+  const file = event.target.files[0]; event.target.value = '';
+  if (!file) return;
+  try {
+    if (file.size > 2_000_000) throw new Error();
+    const plan = JSON.parse(await file.text());
+    const ok = plan && typeof plan.destination?.name === 'string' && Array.isArray(plan.days) && plan.days.every(d => Array.isArray(d.stops))
+      && /^\d{4}-\d{2}-\d{2}$/.test(plan.start_date) && /^\d{4}-\d{2}-\d{2}$/.test(plan.end_date);
+    if (!ok) throw new Error();
+    delete plan.local_id;  // 같은 파일을 두 번 불러와도 기존 여행을 덮지 않고 따로 들어간다
+    if (savePlan(plan)) notice(`'${plan.destination.name.split(',')[0]}' 여행을 불러왔습니다.`);
+  } catch { notice('이 파일은 불러올 수 없습니다. City Walk Planner에서 내려받은 일정 파일(.json)을 선택해 주세요.', true); }
+});
 $('downloadPlan').addEventListener('click', () => {
   if (!activePlan) return;
   const blob = new Blob([JSON.stringify(withoutReviews(activePlan),null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url;
-  a.download = `travel-${activePlan.start_date}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(url),1000);
+  a.download = `travel-${activePlan.destination.name.split(',')[0].trim().replace(/[\/:*?"<>|\s]+/g,'-')}-${activePlan.start_date}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(url),1000);
 });
 async function findFood(origin) {
   const token = ++foodSequence;
@@ -329,8 +380,9 @@ $('findDestinationFood').addEventListener('click', event => action(event.current
   await findFood(destination);
 }));
 $('foodSort').addEventListener('change', renderFoods);
-$('backendInput').value = apiBase();
-$('backendSave').addEventListener('click', () => { if (setApiBase($('backendInput').value)) location.reload(); else notice('올바른 HTTPS 주소를 입력해 주세요.', true); });
+// 네트워크가 끊기거나 돌아오면 알린다(조회·저장이 실패하는 이유를 먼저 말해 준다).
+window.addEventListener('offline', () => notice('인터넷 연결이 끊겼습니다. 저장한 여행은 계속 볼 수 있어요.', true));
+window.addEventListener('online', () => notice('인터넷에 다시 연결되었습니다.'));
 $('policyLinks').innerHTML = link('https://www.google.com/intl/ko/policies/terms/','Google 이용약관') + ' · ' + link('https://www.google.com/intl/ko/policies/privacy/','Google 개인정보처리방침');
 const today = new Date();
 const dateText = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;

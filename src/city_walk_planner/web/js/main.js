@@ -7,7 +7,7 @@
  * 지도 역시 없어도 되는 부품이라 목록·계산은 그대로 돈다(NFR-015 · R4).
  */
 
-import { ApiError, api, apiBase, readLocal, session, setApiBase, writeLocal } from './api.js';
+import { ApiError, api, readLocal, session, writeLocal } from './api.js';
 import { escapeHtml, formatDistance, formatHktDate } from './format.js';
 import { LocationTracker } from './geo.js';
 import { TripMap, scrollToItem } from './map.js';
@@ -94,33 +94,7 @@ function showGate(message) {
   }
 }
 
-/* 백엔드 주소 입력 — Pages + 로컬 백엔드 구성에서 터널 주소가 바뀔 때 쓴다.
-   같은 출처에서 서빙되는 평소에는 접혀 있고 "이 사이트"라고만 알린다. */
-function wireBackendBox() {
-  const base = apiBase();
-  const now = el('backendNow');
-  const box = el('backendBox');
-  now.textContent = base ? `· ${base.replace(/^https:\/\//, '')}` : '· 이 사이트';
-  el('backendInput').value = base;
-
-  // 동일 출처가 아닌데 아직 주소가 없으면(= Pages 에 그냥 올라온 경우) 펼쳐서 먼저 묻는다.
-  if (!base && location.protocol === 'https:' && !location.hostname.match(/^(localhost|127\.)/)) {
-    box.open = true;
-  }
-
-  el('backendBtn').addEventListener('click', () => {
-    const value = el('backendInput').value.trim();
-    if (!setApiBase(value)) {
-      toast('https:// 로 시작하는 서버 주소를 입력하세요.', true);
-      return;
-    }
-    location.reload();
-  });
-}
-
 function wireGate() {
-  wireBackendBox();
-
   el('createBtn').addEventListener('click', async () => {
     const name = el('displayName').value.trim();
     await run(async () => {

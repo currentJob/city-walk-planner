@@ -144,3 +144,7 @@ summary{min-height:var(--tap);display:flex;align-items:center}
 /* ── Shared trip page (hongkong.html) ─────────────────────────────── */
 .shared-page .tabs{top:var(--m-top)}
 .shared-page .shared-trip-header{padding-top:18px}
+
+/* Top notice sits just under the compact header. */
+#message{top:calc(var(--m-top) + 8px)}
+.saved-card{padding:18px}

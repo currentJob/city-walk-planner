@@ -2,7 +2,7 @@
 #
 # 백엔드는 Cloudflare Worker(`worker/`, FastAPI + Durable Object SQLite)에서 돈다 — PC 가 꺼져도 동작한다.
 # 여기서 올리는 것은 `src/city_walk_planner/web` 그대로이고, 기본 서버 주소만 `config.js` 에 굽는다.
-# 화면은 런타임에도 주소를 바꿀 수 있다(`?api=` 쿼리 또는 게이트의 "백엔드 주소" 칸, 기기에 저장).
+# 화면에는 주소를 바꾸는 칸이 없다 — 서버 주소는 이 빌드 설정으로만 정한다.
 #
 # 기본값은 Cloudflare Worker 주소다. 저장소 변수 `CWP_API_BASE` 를 설정하면 그 주소로 바꿔 굽는다(선택).
 

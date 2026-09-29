@@ -1,26 +1,25 @@
-"""A remembered quick-tunnel address must not shadow the fixed backend baked into the Pages build."""
+"""The backend address comes only from the build config (or same origin); nothing on the page can redirect it."""
 from tests.static.test_plan_map import PROJECT_ROOT, _run_node, node_only
 
 SCRIPT = """
   globalThis.window={{CWP_CONFIG:{{apiBase:{baked!r}}}}};
-  const store={{hl_api_base:{stored!r}}};
+  const store={{hl_api_base:'https://old.example.com'}};
   globalThis.localStorage={{getItem:k=>store[k]??null,setItem:(k,v)=>store[k]=v,removeItem:k=>delete store[k]}};
-  globalThis.location={{search:''}};
+  globalThis.location={{search:'?api=https://evil.example.com'}};
   const m=await import({module!r});
-  console.log(JSON.stringify({{base:m.apiBase(),stored:store.hl_api_base??null}}));
+  console.log(JSON.stringify({{base:m.apiBase(),stored:store.hl_api_base??null,setter:typeof m.setApiBase}}));
 """
 
 
-def _resolve(baked: str, stored: str, tag: str) -> dict:
+def _resolve(baked: str, tag: str) -> dict:
     module = (PROJECT_ROOT / "src/city_walk_planner/web/js/api.js").as_uri() + f"?{tag}"
-    return _run_node(SCRIPT.format(baked=baked, stored=stored, module=module))
+    return _run_node(SCRIPT.format(baked=baked, module=module))
 
 
 @node_only
-def test_dead_tunnel_is_dropped_but_custom_backend_is_kept():
-    worker = "https://city-walk-planner-api.example.workers.dev"
-    assert _resolve(worker, "https://old-words.trycloudflare.com", "a") == {"base": worker, "stored": None}
-    assert _resolve(worker, "https://my-server.example.com", "b")["base"] == "https://my-server.example.com"
-    # Without a fixed backend baked in, a remembered tunnel is still the only option — keep it.
-    tunnel = "https://old-words.trycloudflare.com"
-    assert _resolve("", tunnel, "c") == {"base": tunnel, "stored": tunnel}
+def test_only_the_baked_config_sets_the_backend():
+    worker = "https://city-walk-planner-api.example.workers.dev/"
+    # ?api= and a previously remembered address are ignored; the remembered one is cleared.
+    assert _resolve(worker, "a") == {"base": worker.rstrip("/"), "stored": None, "setter": "undefined"}
+    # No baked address = same origin (Docker, self-host).
+    assert _resolve("", "b")["base"] == ""
