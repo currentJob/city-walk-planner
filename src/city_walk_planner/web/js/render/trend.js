@@ -1,4 +1,5 @@
 import { escapeHtml as esc, link } from '../format.js';
+import { icon } from '../icons.js';
 
 const WEEKDAYS = '월화수목금토일';
 const MAX_DAYS = 14;
@@ -102,7 +103,7 @@ export function schedule(data, start, end, stays = []) {
   return dates.map((date, i) => {
     const wd = weekdayOf(date), block = assigned[date], notes = [], {morning, night} = ends[i];
     const label = `${i + 1}일차 · ${WEEKDAYS[wd]}`;
-    const stay = stays.length ? (nightStay(date) ? `🛏 ${nightStay(date).name || '숙소'} · ${areaLabel[nightStay(date).area]}` : '🛏 이날 밤 숙소 없음') : '';
+    const stay = stays.length ? (nightStay(date) ? `${nightStay(date).name || '숙소'} · ${areaLabel[nightStay(date).area]}` : '이날 밤 숙소 없음') : '';
     let stops = [];
     if (block) {
       const closed = closedStops(block, date);
@@ -138,13 +139,13 @@ function reactions(r) {
 }
 
 function shopCard(s) {
-  return `<article class="place-card" id="trend-${esc(s.id)}"><p class="eyebrow">${esc(s.city)} · ${esc(s.type)}</p>
+  return `<article class="place-card" id="trend-${esc(s.id)}" data-trend-ref="${esc(s.id)}"><p class="eyebrow">${esc(s.city)} · ${esc(s.type)}</p>
     <h3>${esc(s.name)} <span class="orig">${esc(s.name_local)}</span></h3>${reactions(s.openrice)}
     <p>${s.must_try.map(m => `<span class="pill">${esc(m)}</span>`).join('')}</p>
-    <p class="meta">🕒 ${esc(s.hours)}</p>
+    <p class="meta">${icon('clock')} ${esc(s.hours)}</p>
     <details class="shop-more" open><summary>리뷰 요약 · 결제 · 가는 길</summary>
     <ul class="tips"><li><b>좋은 점</b> ${esc(s.good)}</li><li><b>아쉬운 점</b> ${esc(s.bad)}</li></ul>
-    <p class="meta">💳 ${esc(s.payment)}<br>📍 ${esc(s.area)} · ${esc(s.access)}</p>
+    <p class="meta">${icon('card')} ${esc(s.payment)}<br>${icon('pin')} ${esc(s.area)} · ${esc(s.access)}</p>
     ${s.day_hint ? `<p class="hint">${esc(s.day_hint)}</p>` : ''}
     <p class="source">${link(s.source_url, 'OpenRice 원문')}</p></details></article>`;
 }
@@ -162,14 +163,15 @@ export function trendMapDays(data, days) {
     spots: d.stops.map((stop, stopIndex) => {
       const ref = stop.ref && byId[stop.ref], lat = stop.lat ?? ref?.lat, lng = stop.lng ?? ref?.lng;
       return Number.isFinite(lat) && Number.isFinite(lng) ? {id: trendStopId(dayIndex, stopIndex), lat, lng,
-        name: stop.name, name_original: d.theme, time_label: stop.time, hours_text: ref?.hours || '정보 없음'} : null;
+        name: stop.name, name_original: d.theme, time_label: stop.time, hours_text: ref?.hours || '정보 없음',
+        summary: stop.note, ref: ref?.id ?? null} : null;
     }).filter(Boolean),
   }));
 }
 
 function stopRow(stop, byId, id) {
   const ref = stop.ref && byId[stop.ref];
-  const extra = ref?.hours ? `<p class="meta">🕒 ${esc(ref.hours)}</p>` : '';
+  const extra = ref?.hours ? `<p class="meta">${icon('clock')} ${esc(ref.hours)}</p>` : '';
   const target = stop.kind === 'food' && ref ? ` · <a href="#trend-${esc(ref.id)}">가게 요약 보기</a>` : '';
   return `<div class="stop" id="${esc(id)}"><time>${esc(stop.time)}</time><div><h3>${esc(stop.name)}</h3><p class="desc">${esc(stop.note)}${target}</p>${extra}</div></div>`;
 }
@@ -177,7 +179,7 @@ function stopRow(stop, byId, id) {
 /** Day cards for a scheduled range (output of `schedule`). */
 export function daysHtml(data, days) {
   const byId = Object.fromEntries([...data.shops, ...data.places].map(x => [x.id, x]));
-  return days.map((d, i) => `<article class="day"><div class="day-head"><div><h3>${esc(d.label)} · ${esc(d.date)}</h3><span class="daytheme">${esc(d.theme)}</span>${d.stay ? `<span class="hint">${esc(d.stay)}</span>` : ''}</div></div>
+  return days.map((d, i) => `<article class="day"><div class="day-head"><div><h3>${esc(d.label)} · ${esc(d.date)}</h3><span class="daytheme">${esc(d.theme)}</span>${d.stay ? `<span class="hint">${icon('bed')} ${esc(d.stay)}</span>` : ''}</div></div>
     ${d.notes.length ? `<p class="dayexception">${d.notes.map(esc).join('<br>')}</p>` : ''}
     ${d.stops.map((s, j) => stopRow(s, byId, trendStopId(i, j))).join('')}</article>`).join('');
 }
@@ -188,11 +190,11 @@ const TREND_TABS = [['plan', '일정'], ['map', '지도'], ['shops', '가게'], 
 /** Whole page for the trend category; data comes from data/hk-macau-trend.json. */
 export function trendHtml(data) {
   const {start, end} = data.default_range;
-  return `<div class="page-heading"><p class="eyebrow">HONG KONG · MACAO · TREND COURSE</p><h1>${esc(data.title)}</h1>
+  return `<div class="page-heading"><p class="eyebrow">${icon('spark')} HONG KONG · MACAO · TREND COURSE</p><h1>${esc(data.title)}</h1>
     <p>${esc(data.summary)}</p><p class="hint">조사일 ${esc(data.checked_at)}. ${esc(data.rating_note)}</p></div>
     <nav class="trend-tabs" aria-label="트렌드 코스 보기">${TREND_TABS.map(([id, label]) =>
       `<button type="button" data-trend-tab="${id}" aria-pressed="${id === 'plan'}">${label}</button>`).join('')}</nav>
-    <section class="section" data-trend-section="plan"><h2>날짜별 일정</h2>
+    <section class="section" data-trend-section="plan"><h2>${icon('calendar', 'title-icon')}날짜별 일정</h2>
       <form id="trendRange"><div class="tools"><label>방문 시작일<input type="date" name="start" value="${esc(start)}" required></label>
         <label>방문 종료일<input type="date" name="end" value="${esc(end)}" required></label></div>
         <fieldset class="stay-box"><legend>숙소 (선택 · 여러 곳 가능)</legend><div class="stay-list"></div>
@@ -201,15 +203,15 @@ export function trendHtml(data) {
       <p class="hint">요일별 휴무를 피해 코스를 배치하고, 도착일과 출국일에는 되도록 마카오를 넣지 않습니다. 숙소를 넣으면 숙소 지역에서 가까운 코스를 우선하고 입실·퇴실을 일정에 표시합니다. 이동 시간은 지역 단위 추정치입니다(${esc(data.travel_minutes.note)}). 최대 ${MAX_DAYS}일까지 짤 수 있고, 공휴일과 임시 휴업은 반영하지 않습니다.</p>
       <p id="trendRangeError" class="message error" role="alert" hidden></p>
       <div class="itinerary-workspace"><div id="trendMapBlock"><div class="mapbar"><label>지도에 볼 날짜<select id="trendMapDay"></select></label>
-          <button type="button" class="secondary" id="trendLocate">내 위치 보기</button></div>
+          <button type="button" class="secondary" id="trendLocate">${icon('locate')} 내 위치 보기</button></div>
         <div id="trendMap" aria-label="트렌드 코스 지도"></div><p class="mapmsg" id="trendMapMsg" role="status" hidden></p>
         <p class="hint">핀 번호는 그날 방문 순서입니다. 숙소는 지역만 입력받아 지도에 표시하지 않습니다. 내 위치는 버튼을 누를 때만 요청하며 이 브라우저 밖으로 보내지 않습니다. ${esc(data.coord_note)}</p></div>
         <div id="trendDays" class="itinerary-list">${daysHtml(data, schedule(data, start, end))}</div></div></section>
-    <section class="section" data-trend-section="shops"><h2>가게별 평점·리뷰 요약</h2><p class="hint">일정에 넣은 곳과 대안으로 둔 곳입니다.</p>
+    <section class="section" data-trend-section="shops"><h2>${icon('store', 'title-icon')}가게별 평점·리뷰 요약</h2><p class="hint">일정에 넣은 곳과 대안으로 둔 곳입니다.</p>
       <div class="place-grid">${data.shops.map(shopCard).join('')}</div></section>
-    <section class="section" data-trend-section="places"><h2>명소 영업시간</h2><div class="place-grid">${data.places.map(p => `<article class="place-card"><h3>${esc(p.name)}</h3>
-      <p class="meta">🕒 ${esc(p.hours)}<br>🎟 ${esc(p.fee)}</p><p class="source">${link(p.source_url, p.source_name)}</p></article>`).join('')}</div></section>
-    <section class="section" data-trend-section="tips"><h2>꿀팁</h2><div class="place-grid">${data.tips.map(t => `<article class="place-card"><h3>${esc(t.title)}</h3><p class="desc">${esc(t.body)}</p></article>`).join('')}</div></section>`;
+    <section class="section" data-trend-section="places"><h2>${icon('landmark', 'title-icon')}명소 영업시간</h2><div class="place-grid">${data.places.map(p => `<article class="place-card" data-trend-ref="${esc(p.id)}"><h3>${esc(p.name)}</h3>
+      <p class="meta">${icon('clock')} ${esc(p.hours)}<br>${icon('ticket')} ${esc(p.fee)}</p><p class="source">${link(p.source_url, p.source_name)}</p></article>`).join('')}</div></section>
+    <section class="section" data-trend-section="tips"><h2>${icon('bulb', 'title-icon')}꿀팁</h2><div class="place-grid">${data.tips.map(t => `<article class="place-card"><h3>${esc(t.title)}</h3><p class="desc">${esc(t.body)}</p></article>`).join('')}</div></section>`;
 }
 
 function stayRowHtml(data, s) {
@@ -224,20 +226,20 @@ function stayRowHtml(data, s) {
 
 /**
  * Binds the date/stay form, the map and "my location" after `trendHtml` is in the DOM.
- * `TripMap` and `LocationTracker` are injected so this module stays importable in Node tests.
+ * `TripMap`, `LocationTracker` and `scrollToItem` are injected so this module stays importable in Node tests.
  * Returns `invalidate()` for when the hidden page becomes visible again.
  */
-export function bindTrendRange(root, data, {TripMap, LocationTracker, notice = () => {}} = {}) {
+export function bindTrendRange(root, data, {TripMap, LocationTracker, scrollToItem = node => node?.scrollIntoView({block: 'center'}), notice = () => {}} = {}) {
   const form = root.querySelector('#trendRange'), error = root.querySelector('#trendRangeError');
   const list = form.querySelector('.stay-list'), daySelect = root.querySelector('#trendMapDay');
   const mapMsg = text => { const el = root.querySelector('#trendMapMsg'); el.textContent = text; el.hidden = !text; };
   let mapDays = [], me = null;
   root.dataset.tab = 'plan';
   if (matchMedia('(max-width: 760px)').matches) root.querySelectorAll('details.shop-more').forEach(d => { d.open = false; });
-  function showTab(tab) {
+  function showTab(tab, refit = true) {
     root.dataset.tab = tab;
     root.querySelectorAll('[data-trend-tab]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.trendTab === tab)));
-    if (tab === 'map' && mapReady) requestAnimationFrame(() => { map.invalidate(); map.focusDay(mapDays[Number(daySelect.value)]); });
+    if (tab === 'map' && mapReady && refit) requestAnimationFrame(() => { map.invalidate(); map.focusDay(mapDays[Number(daySelect.value)]); });
   }
   root.querySelector('.trend-tabs').addEventListener('click', event => {
     const tab = event.target.closest('[data-trend-tab]')?.dataset.trendTab;
@@ -249,7 +251,7 @@ export function bindTrendRange(root, data, {TripMap, LocationTracker, notice = (
     daySelect.value = String(dayIndex); map.focusDay(mapDays[dayIndex]); showTab('plan');
     root.querySelectorAll('.stop.pinned').forEach(el => el.classList.remove('pinned'));
     const row = root.querySelector('#' + CSS.escape(stopId));
-    row?.classList.add('pinned'); row?.scrollIntoView({behavior: 'smooth', block: 'center'});
+    row?.classList.add('pinned'); scrollToItem(row);
   }}) : null;
   const mapReady = Boolean(map?.init());
   const tracker = LocationTracker && new LocationTracker({
@@ -267,6 +269,27 @@ export function bindTrendRange(root, data, {TripMap, LocationTracker, notice = (
     if (me) map.showMe(me);
   }
   daySelect.addEventListener('change', () => { if (mapReady) map.focusDay(mapDays[Number(daySelect.value)]); });
+  /** List → map. On phones the map is its own tab, so switch to it (without the tab's day refit) first. */
+  function showOnMap(spot, day) {
+    showTab('map', false);
+    if (String(day.day_index) !== daySelect.value) { daySelect.value = String(day.day_index); map.focusDay(day); }
+    map.focus(spot);
+  }
+  const findSpot = test => { for (const day of mapDays) { const spot = day.spots.find(test); if (spot) return {spot, day}; } return null; };
+  root.addEventListener('click', event => {
+    if (!mapReady || event.target.closest('a,button,input,select,label,summary')) return;
+    const row = event.target.closest('#trendDays .stop[id]');
+    const card = !row && event.target.closest('[data-trend-ref]');
+    const hit = row ? findSpot(s => s.id === row.id) : card && findSpot(s => s.ref === card.dataset.trendRef);
+    if (hit) return showOnMap(hit.spot, hit.day);
+    const ref = card && [...data.shops, ...data.places].find(x => x.id === card.dataset.trendRef);
+    if (!ref) return;
+    // Not in the current schedule (an alternative shop, or a day that was cut): show it on its own pin.
+    const tab = root.dataset.tab;
+    showTab('map', false);
+    map.showPoint({lat: ref.lat, lng: ref.lng, name: ref.name, lines: [esc(ref.hours || ''), '현재 일정에는 없는 곳입니다.']},
+      {go: () => { showTab(tab); scrollToItem(card); }});
+  });
   root.querySelector('#trendLocate').addEventListener('click', () => {
     if (!mapReady) return notice('지도를 사용할 수 없어 현재 위치를 표시할 수 없습니다. 일정은 그대로 확인할 수 있어요.', true);
     if (me) { map.showMe(me); return map.flyToMe(me); }

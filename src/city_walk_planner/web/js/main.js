@@ -10,7 +10,7 @@
 import { ApiError, api, apiBase, readLocal, session, setApiBase, writeLocal } from './api.js';
 import { escapeHtml, formatDistance, formatHktDate } from './format.js';
 import { LocationTracker } from './geo.js';
-import { TripMap } from './map.js';
+import { TripMap, scrollToItem } from './map.js';
 import { renderCards, renderSpotForm } from './render/cards.js';
 import { renderStatusStrip, renderTripDates, startClock } from './render/clock.js';
 import { renderExpenses } from './render/expenses.js';
@@ -175,7 +175,8 @@ function initMap() {
     onMarkerClick: (dayIndex, spotId) => {
       store.activeDay = dayIndex;
       store.openSpotIds.add(spotId);
-      emit();
+      emit();  // 동기 렌더라서 바로 아래에서 카드를 찾을 수 있다
+      scrollToItem(document.querySelector(`[data-spot-id="${CSS.escape(String(spotId))}"]`));
     },
     onTileTrouble: (message) => {
       const node = el('mapmsg');
@@ -525,7 +526,15 @@ function renderAll() {
   });
   if (tripMap) {
     tripMap.renderNearby((store.nearby && store.nearby.places) || [], {
-      onPick: (place) => { store.hint = `${place.name} · ${place.category_label}`; emit(); },
+      onGo: (place) => scrollToItem(el('nearby').querySelector(`[data-key="${CSS.escape(`${place.osm_type}/${place.osm_id}`)}"]`)),
+    });
+  }
+  // 목록 → 지도: 근처 장소 줄을 누르면 그 핀의 팝업을 연다(길찾기·일정에 버튼은 제외).
+  for (const item of el('nearby').querySelectorAll('.nearitem')) {
+    item.addEventListener('click', (event) => {
+      if (event.target.closest('a,button')) return;
+      const place = (store.nearby.places || []).find((p) => `${p.osm_type}/${p.osm_id}` === item.dataset.key);
+      if (place && tripMap) tripMap.focusNearby(place);
     });
   }
   for (const button of el('nearby').querySelectorAll('[data-add]')) {
@@ -541,7 +550,11 @@ function renderAll() {
   renderCurated(el('curated'), store.curated, {
     busy: store.curatedBusy, message: store.curatedMessage,
   });
-  if (tripMap) tripMap.renderCurated((store.curated && store.curated.places) || []);
+  if (tripMap) {
+    tripMap.renderCurated((store.curated && store.curated.places) || [], {
+      onGo: (place) => scrollToItem(el('curated').querySelector(`[data-focus="${CSS.escape(`${place.city}/${place.name}`)}"]`)),
+    });
+  }
   // 목록에서 고르면 지도가 그곳으로 간다. 좌표 없는 항목은 눌러도 조용하다 —
   // 그 경우 카드에 "위치 미확인"이 이미 적혀 있어 사용자가 이유를 안다.
   for (const item of el('curated').querySelectorAll('[data-focus]')) {

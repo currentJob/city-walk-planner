@@ -9,6 +9,7 @@
  */
 
 import { escapeHtml, link } from './format.js';
+import { icon } from './icons.js';
 
 export function ratingLabel(place) {
   const evidence = place.review || place;
@@ -43,6 +44,27 @@ export function groupByCoordinate(places, digits = 5) {
     groups.get(key).items.push(place);
   }
   return [...groups.values()];
+}
+
+/** 핀 팝업 본문. 팝업을 누르면 목록의 그 항목으로 간다(`_onPopupClick`). */
+export function popupHtml(title, lines = [], go = '목록에서 보기') {
+  const body = lines.filter(Boolean).map((line) => `<span class="map-pop-line">${line}</span>`).join('');
+  return `<div class="map-pop"><b>${title}</b>${body}${go ? `<button type="button" class="map-pop-go">${go} ›</button>` : ''}</div>`;
+}
+
+/** 지도 → 목록: 그 항목으로 스크롤하고 잠깐 강조한다. */
+export function scrollToItem(node) {
+  if (!node) return;
+  node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  node.classList.remove('map-hit');
+  void node.offsetWidth;  // 같은 항목을 연달아 눌러도 강조가 다시 보이게
+  node.classList.add('map-hit');
+}
+
+/** 긴 설명은 팝업에서 한두 줄로 자른다. */
+export function shortText(value, max = 70) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
 /** 묶인 핀에 찍을 라벨 — 여럿이면 개수, 하나면 별 개수. */
@@ -111,6 +133,58 @@ export class TripMap {
     if (this.map) this.map.invalidateSize();
   }
 
+  /** 팝업(링크 제외)을 누르면 `go` 를 부른다. Leaflet 은 팝업을 열 때마다 본문을 다시 그리므로
+   *  본문이 아니라 그대로 남는 바깥 틀(`getElement()`)에 묶는다. */
+  _onPopupClick(marker, go) {
+    if (!go) return marker;
+    return marker.on('popupopen', (event) => {
+      const frame = event.popup.getElement();
+      if (frame) frame.onclick = (click) => {
+        if (!click.target.closest('.map-pop') || click.target.closest('a')) return;
+        marker.closePopup(); go();
+      };
+    });
+  }
+
+  /** 지도가 화면 밖이면 지도로 스크롤한다(데스크톱처럼 목록 옆에 붙어 있으면 그대로 둔다). */
+  reveal() {
+    const node = document.getElementById(this.containerId);
+    if (!node) return;
+    const box = node.getBoundingClientRect();
+    if (box.top < 0 || box.bottom > window.innerHeight) node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /** 목록 항목 → 지도: 지도로 스크롤하고 그 핀으로 옮겨 팝업을 연다. */
+  _show(marker, zoom = 16) {
+    if (!this.map || !marker) return false;
+    this.reveal();
+    this.invalidate();
+    this.map.stop();
+    this.map.setView(marker.getLatLng(), Math.max(zoom, this.map.getZoom()), { animate: false });
+    // 핀이 가운데라 위로 뜨는 팝업이 지도 위쪽을 넘을 수 있다. Leaflet 의 autoPan 은 애니메이션이라
+    // 막 스크롤·탭 전환된 지도에서 밀릴 수 있으니, 여기서는 즉시 내려서 팝업 전체가 보이게 한다.
+    const popup = marker.getPopup();
+    const autoPan = popup?.options.autoPan;
+    if (popup) popup.options.autoPan = false;
+    marker.openPopup();
+    if (popup) popup.options.autoPan = autoPan;
+    const frame = document.getElementById(this.containerId).getBoundingClientRect();
+    const box = popup?.getElement()?.getBoundingClientRect();
+    const overflow = box ? box.top - frame.top - 16 : 0;
+    if (overflow < 0) this.map.panBy([0, overflow], { animate: false });
+    return true;
+  }
+
+  /** 지도에 핀이 없는 항목(예: 일정에 안 넣은 가게)을 임시 핀 하나로 보여 준다. */
+  showPoint(point, { go } = {}) {
+    if (!this.map || !point || !Number.isFinite(point.lat) || !Number.isFinite(point.lng)) return false;
+    if (this.pointMarker) this.pointMarker.remove();
+    this.pointMarker = this._onPopupClick(L.marker([point.lat, point.lng], {
+      icon: L.divIcon({ className: '', html: '<div class="nearpin"></div>', iconSize: [14, 14], iconAnchor: [7, 7] }),
+    }).addTo(this.map).bindPopup(popupHtml(escapeHtml(point.name), point.lines || []), { autoPanPadding: [16, 16] }), go);
+    return this._show(this.pointMarker);
+  }
+
   _pin(color, label) {
     color = ({'#22d3ee':'#28726d','#f472b6':'#a56a65','#ff2e88':'#a56a65',
       '#fbbf24':'#a58135','#f7b733':'#a58135','#a78bfa':'#7a7296'})[color] || color;
@@ -132,11 +206,12 @@ export class TripMap {
       day.spots.forEach((spot, index) => {
         const marker = L.marker([spot.lat, spot.lng], { icon: this._pin(day.color, index + 1) })
           .addTo(this.map)
-          .bindPopup(
-            `<b>${escapeHtml(spot.name)}</b><br>${escapeHtml(spot.time_label)} · `
-            + `${escapeHtml(spot.name_original || day.title)}<br>🕐 ${escapeHtml(spot.hours_text || '정보 없음')}`,
-          );
-        marker.on('click', () => this.onMarkerClick(day.day_index, spot.id));
+          .bindPopup(popupHtml(escapeHtml(spot.name), [
+            `${escapeHtml(spot.time_label)} · ${escapeHtml(spot.name_original || day.title)}`,
+            spot.summary ? escapeHtml(shortText(spot.summary)) : '',
+            `${icon('clock')} ${escapeHtml(spot.hours_text || '정보 없음')}`,
+          ]), { autoPanPadding: [16, 16] });
+        this._onPopupClick(marker, () => this.onMarkerClick(day.day_index, spot.id));
         this.markers.set(spot.id, marker);
       });
     }
@@ -147,7 +222,7 @@ export class TripMap {
    *  일정 스팟 핀과 **모양이 달라야 한다** — 같은 모양이면 "내 일정"과 "그냥 근처에 있는
    *  가게"가 지도에서 구분되지 않는다. 스팟은 번호가 박힌 물방울, 이것은 점이다.
    */
-  renderNearby(places, { onPick, numbered = false } = {}) {
+  renderNearby(places, { onPick, onGo, numbered = false } = {}) {
     this.clearNearby();
     if (!this.map) return;
     for (const [index, place] of (places || []).entries()) {
@@ -159,15 +234,24 @@ export class TripMap {
           popupAnchor: [0, -8],
           html: numbered ? `<div class="picker-pin">${index + 1}</div><span class="picker-rating">${escapeHtml(ratingLabel(place))}</span>` : '<div class="nearpin"></div>',
         }),
-      }).addTo(this.map).bindPopup(
-        `<b>${escapeHtml(place.name)}</b><br>${escapeHtml(place.category_label || place.area || place.category || '')}`
-        + (Number.isFinite(place.distance_m) ? ` · ${Math.round(place.distance_m)}m` : '')
-        + (numbered ? `<p class="map-rating">${escapeHtml(ratingLabel(place))}</p>${place.review ? `${link(place.review.source_url,place.review.source || '평가 출처')} · 조회 ${escapeHtml((place.review.fetched_at || '').slice(0,10))}` : ''}` : ''),
-        {autoPan: !numbered},
-      );
+      }).addTo(this.map).bindPopup(popupHtml(escapeHtml(place.name), [
+        escapeHtml(place.category_label || place.area || place.category || '')
+          + (Number.isFinite(place.distance_m) ? ` · ${Math.round(place.distance_m)}m` : ''),
+        numbered || place.review || Number.isFinite(place.rating) ? escapeHtml(ratingLabel(place)) : '',
+        numbered && place.review ? `${link(place.review.source_url,place.review.source || '평가 출처')} · 조회 ${escapeHtml((place.review.fetched_at || '').slice(0,10))}` : '',
+        place.trend_reason ? escapeHtml(shortText(place.trend_reason)) : '',
+      ], onGo ? '목록에서 보기' : ''), {autoPan: !numbered, autoPanPadding: [16, 16]});
       if (onPick) marker.on('click', () => onPick(place));
+      this._onPopupClick(marker, onGo && (() => onGo(place)));
+      marker.place = place;
       this.nearbyMarkers.push(marker);
     }
+  }
+
+  /** 목록의 근처 장소 하나 → 지도. 같은 객체나 같은 좌표의 핀을 찾는다. */
+  focusNearby(place) {
+    const same = (m) => m.place === place || (m.getLatLng().lat === place.lat && m.getLatLng().lng === place.lng);
+    return this._show(this.nearbyMarkers.find(same));
   }
 
   clearNearby() {
@@ -184,7 +268,7 @@ export class TripMap {
    *
    *  좌표가 없는 항목은 지도에 올릴 방법이 없다 — 목록에는 남아 있다.
    */
-  renderCurated(places) {
+  renderCurated(places, { onGo } = {}) {
     this.clearCurated();
     if (!this.map) return;
 
@@ -203,8 +287,10 @@ export class TripMap {
           html: `<div class="curpin"><i>${label}</i></div>`,
         }),
       }).addTo(this.map).bindPopup(
-        `${lines}${where ? `<br><span class="curpopaddr">${escapeHtml(where)}</span>` : ''}`,
+        popupHtml(lines, [where ? `<span class="curpopaddr">${escapeHtml(where)}</span>` : ''], onGo ? '목록에서 보기' : ''),
+        { autoPanPadding: [16, 16] },
       );
+      this._onPopupClick(marker, onGo && (() => onGo(group.items[0])));
       this.curatedMarkers.push(marker);
     }
   }
@@ -217,19 +303,17 @@ export class TripMap {
   /** 목록에서 고른 한 곳으로 지도를 옮긴다. 좌표가 없으면 아무것도 하지 않는다. */
   focusCurated(place) {
     if (!this.map || !place || place.lat == null) return;
-    this.map.flyTo([place.lat, place.lng], 16);
     const key = `${place.lat.toFixed(5)},${place.lng.toFixed(5)}`;
     const marker = this.curatedMarkers.find(
       (m) => `${m.getLatLng().lat.toFixed(5)},${m.getLatLng().lng.toFixed(5)}` === key,
     );
-    if (marker) marker.openPopup();
+    this._show(marker);
   }
 
+  /** 일정 항목 → 지도. 핀이 없으면(좌표 없음) false. */
   focus(spot, zoom = 15) {
-    if (!this.map || !spot) return;
-    this.map.flyTo([spot.lat, spot.lng], zoom);
-    const marker = this.markers.get(spot.id);
-    if (marker) marker.openPopup();
+    if (!this.map || !spot) return false;
+    return this._show(this.markers.get(spot.id), zoom);
   }
 
   focusDay(day) {

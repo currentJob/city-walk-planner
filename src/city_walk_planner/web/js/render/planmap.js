@@ -59,6 +59,7 @@ export function spotFromStop(stop, dayIndex, stopIndex) {
     name_original: text(place.name_original),
     time_label: span || '시각 미정',
     hours_text: text(place.hours_text) || text(place.opening_hours),
+    summary: text(place.description),
   };
 }
 

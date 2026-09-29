@@ -1,6 +1,6 @@
 import { escapeHtml as esc, link } from './format.js';
 import { spotBody, gradeSummary } from './render/guide.js';
-import { TripMap } from './map.js';
+import { TripMap, scrollToItem } from './map.js';
 import { LocationTracker } from './geo.js';
 import { openPlacePicker } from './place-picker.js';
 import { excursionHtml } from './day-trip.js';
@@ -40,7 +40,7 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
   let trend = null, trendView = null;
   function loadTrend() {
     trend ??= fetch('./data/hk-macau-trend.json').then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => { $('trendRoot').innerHTML = trendHtml(data); trendView = bindTrendRange($('trendRoot'), data, {TripMap, LocationTracker, notice}); })
+      .then(data => { $('trendRoot').innerHTML = trendHtml(data); trendView = bindTrendRange($('trendRoot'), data, {TripMap, LocationTracker, scrollToItem, notice}); })
       .catch(() => { trend = null; $('trendRoot').innerHTML = '<p class="empty" role="status">트렌드 코스를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.</p>'; });
     return trend;
   }
@@ -189,7 +189,7 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
   window.addEventListener('hl:food',event=>{
     const {places,origin,fit}=event.detail;
     if(!foodMap){foodMap=new TripMap('foodMap',{onTileTrouble:text=>notice(text,true)});foodMap.init();}
-    foodMap.renderNearby(places,{onPick:place=>document.querySelector(`[data-food="${CSS.escape(String(place.id))}"]`)?.scrollIntoView({block:'center',behavior:'smooth'})});
+    foodMap.renderNearby(places,{onGo:place=>scrollToItem(document.querySelector(`[data-food="${CSS.escape(String(place.id))}"]`))});
     foodMap.invalidate();
     if(foodMap.map) {
       if(fit && places.length) foodMap.map.fitBounds(places.map(p=>[p.lat,p.lng]),{padding:[35,35],maxZoom:16,animate:false});
@@ -197,14 +197,7 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
     }
   });
   window.addEventListener('hl:food-focus',event=>{
-    const place=event.detail;
-    if(foodMap?.map) {
-      foodMap.map.stop();
-      foodMap.map.setView([place.lat,place.lng],16,{animate:false});
-      const marker=foodMap.nearbyMarkers.find(marker=>marker.getLatLng().lat===place.lat && marker.getLatLng().lng===place.lng);
-      if(marker) { marker.getPopup().options.autoPan=false; marker.openPopup(); }
-    }
-    $('foodMap').scrollIntoView({block:'center',behavior:'smooth'});
+    if(!foodMap?.focusNearby(event.detail)) $('foodMap').scrollIntoView({block:'center',behavior:'smooth'});
   });
   $('foodCity').onchange=()=>{
     const c=cities.find(c=>c.city_id===$('foodCity').value);
