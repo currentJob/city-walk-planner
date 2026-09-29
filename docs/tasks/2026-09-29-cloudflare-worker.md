@@ -78,7 +78,7 @@
 - 원인 2 (느림): Cloudflare 서버에서 `overpass-api.de` 와 `overpass.private.coffee` 가 실패해 Nominatim 대체 검색(3회 × 1.1초 간격)으로 넘어갔다. 로컬 PC 에서는 overpass-api.de 가 2.3초에 응답했다.
 - 수정 2: `CWP_DISCOVERY_OVERPASS_URL` 에 쉼표로 미러 여러 개를 넣을 수 있게 했다. 기본 목록에 maps.mail.ru·overpass.kumi.systems 를 추가했고, Worker 설정은 mail.ru → kumi → overpass-api.de 순서다. 두 미러가 Cloudflare 에서 응답하는 것을 임시 배포로 확인했다.
 - 검증:
-  - PASS pytest 944. 신규 테스트: `tests/test_coop_sync.py` 3개, 미러 순서 1개.
+  - PASS pytest 943. 신규 테스트: `tests/test_coop_sync.py` 3개, 미러 순서 1개.
   - PASS 로컬 workerd 동시 3건: 200·200·429(설계된 동시 2건 제한, 0.2초).
   - PASS 운영 동시 3건: 200·200·429, 곧바로 다시 요청하면 캐시에서 3건 모두 200.
   - PASS 운영 단건: Overpass 로 바르셀로나 5.1초, 도쿄 2.5초, 홍콩 16.6초(대체 검색 아님).
