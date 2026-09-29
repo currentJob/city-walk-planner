@@ -14,6 +14,7 @@ import { TripMap, scrollToItem } from './map.js';
 import { renderCards, renderSpotForm } from './render/cards.js';
 import { renderStatusStrip, renderTripDates, startClock } from './render/clock.js';
 import { renderExpenses } from './render/expenses.js';
+import { ocrModuleUrl, readReceipt } from './receipt.js';
 import { renderCurated } from './render/curated.js';
 import { renderNearby } from './render/nearby.js';
 import { renderProgress } from './render/progress.js';
@@ -39,6 +40,7 @@ const ui = {
   addingSpot: false,     // 추가 폼 열림
   proposal: null,        // 동선 최적화 제안
   expenseFormOpen: false,
+  receipt: { enabled: Boolean(ocrModuleUrl()), busy: false, status: '', fill: null },
   meId: null,            // 내 참가자 id
   mapRevision: null,     // 마커를 마지막으로 그린 리비전
 };
@@ -568,16 +570,34 @@ function renderAll() {
     spots: allSpots().map(({ day: d, spot }) => ({ id: spot.id, name: spot.name, day_index: d.day_index })),
     me: participants.find((p) => p.id === ui.meId) || participants[0] || null,
     formOpen: ui.expenseFormOpen,
+    receipt: ui.receipt,
     actions: {
       openForm() { ui.expenseFormOpen = true; emit(); },
-      closeForm() { ui.expenseFormOpen = false; emit(); },
+      closeForm() { ui.expenseFormOpen = false; ui.receipt.status = ''; emit(); },
+      async scanReceipt(file) {
+        const r = ui.receipt;
+        r.busy = true; r.status = '글자 인식 모델을 준비하는 중… (처음 한 번 약 30MB)'; emit();
+        try {
+          const result = await readReceipt(file, (p) => { r.status = `모델 준비 중 ${p.done}/${p.total}`; emit(); });
+          const note = [result.merchant, result.date && result.date.slice(5).replace('-', '/')].filter(Boolean).join(' · ');
+          r.fill = { ...(result.amount ? { amount: result.amount.toFixed(2) } : {}), ...(note ? { note } : {}) };
+          r.status = result.amount
+            ? `영수증에서 HK$${result.amount.toFixed(2)}${note ? ` · ${note}` : ''} 를 읽었습니다. 확인하고 고친 뒤 기록하세요.`
+            : '금액을 찾지 못했습니다. 영수증 전체가 밝게 나오도록 다시 찍거나 직접 입력하세요.';
+        } catch (error) {
+          console.error('영수증 인식 실패', error);
+          r.status = '글자 인식을 불러오지 못했습니다. 네트워크를 확인하거나 직접 입력하세요.';
+        } finally {
+          r.busy = false; emit(); r.fill = null;
+        }
+      },
       invalid(message) { toast(message, true); },
       async submit(payload) {
         const ok = await run(async () => {
           await api.createExpense(store.tripId, store.token, payload);
           await Promise.all([syncOnce({ force: true }), refreshLedger()]);
         }, '경비를 기록했습니다.');
-        if (ok) { ui.expenseFormOpen = false; emit(); }
+        if (ok) { ui.expenseFormOpen = false; ui.receipt.status = ''; emit(); }
       },
       async remove(expenseId) {
         if (!window.confirm('이 경비를 삭제할까요?')) return;

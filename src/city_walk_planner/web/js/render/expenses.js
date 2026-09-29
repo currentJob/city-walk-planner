@@ -15,8 +15,28 @@ function participantOptions(participants, selectedId) {
     .join('');
 }
 
+/** 폼 입력값. 동기화로 다시 그려도 쓰던 값이 사라지지 않게 그리기 전에 읽어 둔다. */
+function formValues(form) {
+  if (!form) return null;
+  const data = new FormData(form);
+  return {
+    payer_id: String(data.get('payer_id') || ''), amount: String(data.get('amount') || ''),
+    note: String(data.get('note') || ''), spot_id: String(data.get('spot_id') || ''),
+    share: data.getAll('share').map(String),
+  };
+}
+
+function restoreForm(form, values) {
+  if (!form || !values) return;
+  for (const name of ['payer_id', 'amount', 'note', 'spot_id']) {
+    if (values[name] != null && form.elements[name]) form.elements[name].value = values[name];
+  }
+  if (values.share) for (const box of form.querySelectorAll('[name="share"]')) box.checked = values.share.includes(box.value);
+}
+
 export function renderExpenses(container, ctx) {
-  const { expenses, participants, spots, me, actions, formOpen } = ctx;
+  const { expenses, participants, spots, me, actions, formOpen, receipt } = ctx;
+  const kept = formOpen ? formValues(container.querySelector('form')) : null;
   const items = (expenses && expenses.items) || [];
   const byId = new Map(participants.map((p) => [p.id, p]));
 
@@ -41,7 +61,7 @@ export function renderExpenses(container, ctx) {
 
   container.innerHTML = `<h2>경비 ${total}</h2>${rows}`
     + (formOpen ? '' : '<button class="secondary" type="button" data-act="add">＋ 경비 추가</button>')
-    + (formOpen ? expenseForm(participants, spots, me) : '');
+    + (formOpen ? expenseForm(participants, spots, me, receipt) : '');
 
   const addBtn = container.querySelector('[data-act="add"]');
   if (addBtn) addBtn.addEventListener('click', actions.openForm);
@@ -52,6 +72,17 @@ export function renderExpenses(container, ctx) {
 
   const form = container.querySelector('form');
   if (form) {
+    // 쓰던 값 → 그 위에 영수증에서 읽은 값(한 번만 적용).
+    restoreForm(form, kept);
+    if (receipt && receipt.fill) restoreForm(form, receipt.fill);
+    const scan = form.querySelector('[data-receipt]');
+    if (scan) {
+      scan.addEventListener('change', () => {
+        const file = scan.files && scan.files[0];
+        scan.value = '';
+        if (file) actions.scanReceipt(file);
+      });
+    }
     form.querySelector('[data-act="cancel"]').addEventListener('click', actions.closeForm);
     form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -79,7 +110,16 @@ export function renderExpenses(container, ctx) {
   }
 }
 
-function expenseForm(participants, spots, me) {
+function receiptBlock(receipt) {
+  if (!receipt || !receipt.enabled) return '';
+  return '<div class="receipt-scan">'
+    + `<label class="receipt-btn${receipt.busy ? ' busy' : ''}">${icon('card')} 영수증 사진으로 채우기`
+    + `<input type="file" accept="image/*" data-receipt${receipt.busy ? ' disabled' : ''}></label>`
+    + `<p class="receipt-status" role="status">${escapeHtml(receipt.status || '사진은 이 기기에서만 읽고 어디로도 보내지 않습니다. 금액·날짜·영문 상호를 채웁니다.')}</p>`
+    + '</div>';
+}
+
+function expenseForm(participants, spots, me, receipt) {
   const checks = participants.map((p) =>
     '<label><input type="checkbox" name="share" checked '
     + `value="${escapeHtml(p.id)}">${escapeHtml(p.display_name)}</label>`).join('');
@@ -88,6 +128,7 @@ function expenseForm(participants, spots, me) {
     .join('');
   return '<form class="form" novalidate>'
     + '<h3>경비 추가</h3>'
+    + receiptBlock(receipt)
     + `<label class="field"><span>낸 사람</span><select name="payer_id">`
     + `${participantOptions(participants, me && me.id)}</select></label>`
     + '<label class="field"><span>금액 (HKD)</span>'
