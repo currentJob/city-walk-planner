@@ -14,7 +14,9 @@
   "vars": {
     "CWP_ALLOWED_ORIGINS": "https://currentjob.github.io",
     // Cloudflare's edge sets this header itself, so the join rate limit sees each user, not the Worker.
-    "CWP_CLIENT_IP_HEADER": "CF-Connecting-IP"
+    "CWP_CLIENT_IP_HEADER": "CF-Connecting-IP",
+    // overpass-api.de / private.coffee failed from Cloudflare egress (2026-09-29); these answered.
+    "CWP_DISCOVERY_OVERPASS_URL": "https://maps.mail.ru/osm/tools/overpass/api/interpreter,https://overpass.kumi.systems/api/interpreter,https://overpass-api.de/api/interpreter"
   },
   "observability": { "enabled": true }
 }

@@ -68,6 +68,10 @@ def _bootstrap(env) -> None:
         return func(*args)
 
     anyio.to_thread.run_sync = run_inline
+    # Requests interleave while one waits on fetch; blocking thread locks would deadlock the object.
+    import coop_sync
+
+    coop_sync.install(lambda: run_sync(asyncio.sleep(0.02)))
 
 
 class AppDO(DurableObject):

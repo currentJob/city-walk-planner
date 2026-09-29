@@ -29,3 +29,19 @@ def test_user_search_fallback_returns_real_metadata():
     result = provider.places(35, 135, 800, True)
     assert result[0]["name"] == "Sample" and result[0]["opening_hours"] == "24/7"
     assert result[0]["limited_search"] is True and result[0]["rating"] is None
+
+
+def test_configured_mirror_list_is_tried_in_order(monkeypatch):
+    """Deployments whose egress some mirrors refuse (Cloudflare Workers) set their own order."""
+    monkeypatch.setenv("CWP_DISCOVERY_OVERPASS_URL", "https://first.example/api, https://second.example/api")
+    hosts = []
+
+    def handler(request):
+        hosts.append(request.url.host)
+        if request.url.host == "first.example":
+            return httpx.Response(503)
+        return httpx.Response(200, json={"elements": []})
+
+    provider = DiscoveryProvider(httpx.Client(transport=httpx.MockTransport(handler)))
+    assert provider._overpass("q") == {"elements": []}
+    assert hosts == ["first.example", "second.example"]
