@@ -65,3 +65,21 @@
   - PASS `PYTHONUTF8=1 uv run pytest -q` 937 passed, ruff.
   - NOT-RUN: CI 에서 Docker 이미지 빌드는 하지 않는다(워크플로 변경 없음).
 - 버전 고정: `worker/package.json` 과 `package-lock.json` 으로 wrangler 를 4.143.0 에 고정했다. pywrangler 는 `npx wrangler` 를 부르는데, npx 는 로컬에 설치된 것을 먼저 쓴다. Docker 는 `npm ci` 로 설치하고 node 이미지는 `22.23.3-bookworm-slim` 으로 고정했다. 이미지 안에서 `npx wrangler --version` 4.143.0, `node` v22.23.3 을 확인했고, 다시 빌드한 스택에서 smoke 17개 항목이 PASS 했다.
+
+## 수정: 주변 맛집 조회 실패 · 2026-09-29
+
+- 증상: 주변 맛집 조회가 안 된다는 사용자 보고.
+- 재현:
+  - 운영 Worker 에 동시 3건: 36~46초 뒤 전부 실패. 로그는 `AbortError: Network connection lost`(Durable Object 연결 끊김).
+  - 로컬 workerd 에 동시 2건: 120초 응답 없음.
+  - 단건은 성공했지만 매번 "제공자 혼잡으로 대체 검색" 안내가 붙고 첫 조회에 22초가 걸렸다.
+- 원인 1 (교착 상태): 장소 검색 캐시와 Nominatim 1초 간격 조절이 `threading.Lock` 을 쓴다. Worker 에는 스레드가 없는데, 한 요청이 `run_sync(fetch)` 로 기다리는 동안 다음 요청이 같은 잠금에서 막히면 아무도 잠금을 풀 수 없다.
+- 수정 1: `worker/src/coop_sync.py`. 잠금이 잡혀 있으면 `run_sync(asyncio.sleep(0.02))` 로 다른 요청에 차례를 넘기는 Lock/BoundedSemaphore 로 바꿨다. discovery·nearby·cache 의 잠금과 explore·reviews 의 `_slots` 에 적용한다. 로컬 uvicorn 은 실제 스레드라 바꾸지 않는다.
+- 원인 2 (느림): Cloudflare 서버에서 `overpass-api.de` 와 `overpass.private.coffee` 가 실패해 Nominatim 대체 검색(3회 × 1.1초 간격)으로 넘어갔다. 로컬 PC 에서는 overpass-api.de 가 2.3초에 응답했다.
+- 수정 2: `CWP_DISCOVERY_OVERPASS_URL` 에 쉼표로 미러 여러 개를 넣을 수 있게 했다. 기본 목록에 maps.mail.ru·overpass.kumi.systems 를 추가했고, Worker 설정은 mail.ru → kumi → overpass-api.de 순서다. 두 미러가 Cloudflare 에서 응답하는 것을 임시 배포로 확인했다.
+- 검증:
+  - PASS pytest 944. 신규 테스트: `tests/test_coop_sync.py` 3개, 미러 순서 1개.
+  - PASS 로컬 workerd 동시 3건: 200·200·429(설계된 동시 2건 제한, 0.2초).
+  - PASS 운영 동시 3건: 200·200·429, 곧바로 다시 요청하면 캐시에서 3건 모두 200.
+  - PASS 운영 단건: Overpass 로 바르셀로나 5.1초, 도쿄 2.5초, 홍콩 16.6초(대체 검색 아님).
+- 주의: Worker 시작 시간이 배포마다 932~1480ms 로 흔들린다(한도 1초). 배포는 받아들여졌지만 여유가 없다.

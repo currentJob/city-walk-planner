@@ -15,6 +15,12 @@ from city_walk_planner.domain.models import LatLng
 from city_walk_planner.services.external.ports import ExternalUnavailable
 
 USER_AGENT = "CityWalkPlanner/0.2 (personal travel planner)"
+OVERPASS_ENDPOINTS = (
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+)
 VIEWPORT_LIMIT = 500
 
 
@@ -112,9 +118,10 @@ class DiscoveryProvider:
             raise ExternalUnavailable("장소 제공자에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.") from exc
 
     def _overpass(self, query, timeout=10):
-        configured = env_value("DISCOVERY_OVERPASS_URL")
-        endpoints = [configured] if configured else [
-            "https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter"]
+        # Tried in order; a failing mirror sits out 30 s. Some mirrors refuse cloud egress (e.g. Cloudflare
+        # Workers), so deployments can set their own comma-separated order in CWP_DISCOVERY_OVERPASS_URL.
+        configured = [url.strip() for url in (env_value("DISCOVERY_OVERPASS_URL") or "").split(",") if url.strip()]
+        endpoints = configured or list(OVERPASS_ENDPOINTS)
         for endpoint in endpoints:
             if self._cooldown.get(endpoint, 0) > time.monotonic():
                 continue

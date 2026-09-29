@@ -20,7 +20,7 @@ COPY seed ./seed
 COPY tools/build_worker.py ./tools/build_worker.py
 COPY worker/pyproject.toml worker/uv.lock worker/pylock.toml worker/wrangler.jsonc \
      worker/package.json worker/package-lock.json ./worker/
-COPY worker/src/entry.py worker/src/do_sqlite.py worker/src/fetch_transport.py ./worker/src/
+COPY worker/src/entry.py worker/src/do_sqlite.py worker/src/fetch_transport.py worker/src/coop_sync.py ./worker/src/
 
 # Same bundle as deploy: app package + baked data copied into worker/src.
 RUN uv run --no-project --python 3.13 python tools/build_worker.py
