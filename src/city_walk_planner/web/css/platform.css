@@ -37,3 +37,11 @@ html{scroll-behavior:smooth;scroll-padding-top:95px}body,.shared-page{margin:0;b
 .title-icon{width:.8em;height:.8em;margin-right:.35em;color:var(--green);stroke-width:2}
 .shared-link{display:inline-flex;align-items:center;gap:6px}
 .alert>.icon{margin-top:1px}
+/* Map ↔ list: popups link back to their item; items open their pin. */
+.map-pop{display:grid;gap:3px;min-width:170px;max-width:240px;cursor:pointer;font-size:12.5px;line-height:1.45}
+.map-pop b{font-size:14px}.map-pop .map-pop-line{color:var(--muted)}
+.map-pop .map-pop-go{justify-self:start;min-height:32px;margin-top:6px;padding:4px 12px;border-radius:999px;background:var(--green);color:#fff;font-size:12px;font-weight:600}
+#planDays .stop[id],#trendDays .stop[id],[data-trend-ref],#foodResults [data-food],.shared-page .nearitem{cursor:pointer}
+.map-hit{animation:map-hit 1.6s ease-out}
+@keyframes map-hit{0%,35%{box-shadow:0 0 0 3px var(--green);background-color:#e3ece3}100%{box-shadow:0 0 0 3px transparent}}
+@media (prefers-reduced-motion:reduce){.map-hit{animation:none;outline:3px solid var(--green)}}

@@ -197,6 +197,16 @@ $('planMapDay').addEventListener('change', event => {
   const day = mapDays.find(entry => String(entry.day_index) === event.target.value);
   if (tripMap && day) tripMap.focusDay(day);
 });
+/* 목록 → 지도: 일정 항목을 누르면 그날로 지도를 바꾸고 그 핀의 팝업을 연다. 버튼·링크·입력은 제외. */
+$('planDays').addEventListener('click', event => {
+  if (!tripMap || event.target.closest('a,button,input,select,label,summary')) return;
+  const id = event.target.closest('.stop[id]')?.id;
+  const day = id && mapDays.find(entry => entry.spots.some(spot => spot.id === id));
+  if (!day) return;
+  if ($('planMapDay').value !== String(day.day_index)) { $('planMapDay').value = String(day.day_index); tripMap.focusDay(day); }
+  tripMap.focus(day.spots.find(spot => spot.id === id));
+});
+
 $('planMapLocate').addEventListener('click', () => {
   if (!tripMap) return notice('지도를 사용할 수 없어 현재 위치를 표시할 수 없습니다. 일정은 그대로 확인할 수 있어요.', true);
   if (myPosition) { tripMap.showMe(myPosition); return tripMap.flyToMe(myPosition); }
@@ -292,8 +302,10 @@ function renderFoods() {
   window.dispatchEvent(new CustomEvent('hl:food',{detail:{places:ordered,origin:foodOrigin,fit:trending && $('trendScope').value === 'city'}}));
 }
 $('foodResults').addEventListener('click',event=>{
-  const button=event.target.closest('[data-focus-food]');
-  const place=foods.find(p=>p.id===button?.dataset.focusFood);
+  // 카드 아무 곳이나 눌러도 지도로 간다. 다른 버튼·링크(길찾기, 리뷰 등)는 제 동작을 한다.
+  if(!event.target.closest('[data-focus-food]') && event.target.closest('a,button,input,select,summary')) return;
+  const id=event.target.closest('[data-food]')?.dataset.food;
+  const place=foods.find(p=>String(p.id)===id);
   if(place) window.dispatchEvent(new CustomEvent('hl:food-focus',{detail:place}));
 });
 function refreshFoodControls() {
