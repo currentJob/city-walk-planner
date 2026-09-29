@@ -8,7 +8,7 @@
  */
 
 import { ApiError, api, readLocal, session, writeLocal } from './api.js';
-import { escapeHtml, formatDistance, formatHktDate } from './format.js';
+import { escapeHtml, formatDistance, formatHktDate, showAuthorBar } from './format.js';
 import { LocationTracker } from './geo.js';
 import { TripMap, scrollToItem } from './map.js';
 import { renderCards, renderSpotForm } from './render/cards.js';
@@ -25,6 +25,8 @@ import {
   activeDayState, allSpots, emit, pickActiveDay, refreshExternal, refreshLedger,
   setSession, startSync, store, subscribe, syncOnce,
 } from './state.js';
+
+showAuthorBar();
 
 const el = (id) => document.getElementById(id);
 

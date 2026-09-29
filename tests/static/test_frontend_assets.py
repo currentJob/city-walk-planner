@@ -31,6 +31,7 @@ ALLOWED_RUNTIME_HOSTS = {
     "www.openstreetmap.org",
     "www.google.com",
     "www.openrice.com",
+    "currentjob.github.io",  # 작성자 다른 프로젝트로 가는 링크(자산이 아니다). Pages 사본에서만 보인다.
     # 지도 저작권 표기에 쓰이는 도메인 문자열이 필요해지면 여기에 명시적으로 추가한다.
 }
 
