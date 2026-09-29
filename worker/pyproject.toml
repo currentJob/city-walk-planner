@@ -1,0 +1,17 @@
+[project]
+name = "city-walk-planner-api"
+version = "0.1.0"
+description = "City Walk Planner API on Cloudflare Workers (Python) + a SQLite-backed Durable Object"
+requires-python = ">=3.13"
+# Runtime packages bundled into the Worker. The app code itself is copied by tools/build_worker.py.
+dependencies = [
+  "fastapi==0.141.1",
+  "pydantic",
+  "httpx==0.28.1",
+]
+
+[dependency-groups]
+dev = [
+  "workers-py",
+  "workers-runtime-sdk",
+]

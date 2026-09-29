@@ -1,0 +1,18 @@
+{
+  // Build first: `uv run python tools/build_worker.py` (from the project root) copies the app into src/.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "city-walk-planner-api",
+  "main": "src/entry.py",
+  "compatibility_date": "2026-09-28",
+  "compatibility_flags": ["python_workers"],
+  "durable_objects": {
+    "bindings": [{ "name": "APP", "class_name": "AppDO" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["AppDO"] }],
+  // Ship the baked city guides / seed data (city_walk_planner/_seed/**.json) with the code.
+  "rules": [{ "type": "Data", "globs": ["**/*.json"], "fallthrough": true }],
+  "vars": {
+    "CWP_ALLOWED_ORIGINS": "https://currentjob.github.io"
+  },
+  "observability": { "enabled": true }
+}

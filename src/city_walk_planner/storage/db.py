@@ -12,7 +12,7 @@
 from __future__ import annotations
 
 import sqlite3
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -77,13 +77,21 @@ class Database:
             conn.close()
 
 
-@contextmanager
-def transaction(conn: sqlite3.Connection) -> Iterator[sqlite3.Connection]:
-    """`BEGIN IMMEDIATE` … `COMMIT`. 예외가 나면 통째로 `ROLLBACK` 한다(AC-047)."""
+def transaction[T](conn: sqlite3.Connection, work: Callable[[], T]) -> T:
+    """`work()` 를 한 트랜잭션으로 실행하고 그 결과를 돌려준다. 예외가 나면 통째로 되돌린다(AC-047).
+
+    콜백 형태인 이유: Cloudflare Durable Object 의 SQLite 는 `BEGIN`/`SAVEPOINT` 문을 받지 않고
+    `transactionSync(callback)` 으로만 트랜잭션을 연다. 연결이 `run_in_transaction` 을 가지면
+    그쪽에 맡기고, 로컬 sqlite3 연결이면 `BEGIN IMMEDIATE` … `COMMIT` 으로 감싼다.
+    """
+    runner = getattr(conn, "run_in_transaction", None)
+    if runner is not None:
+        return runner(work)
     conn.execute("BEGIN IMMEDIATE")
     try:
-        yield conn
+        result = work()
     except BaseException:
         conn.execute("ROLLBACK")
         raise
     conn.execute("COMMIT")
+    return result

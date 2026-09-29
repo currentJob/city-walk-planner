@@ -2,15 +2,15 @@
 
 import json
 from functools import lru_cache
-from pathlib import Path
 
+from city_walk_planner.config import seed_dir
 from city_walk_planner.domain.geo import haversine_m
 from city_walk_planner.domain.models import LatLng
 from city_walk_planner.domain.review_plan import review_score
 from city_walk_planner.services.external.discovery import in_bounds
 from city_walk_planner.services.guides import load_city, load_index
 
-DATA = Path(__file__).resolve().parents[3] / 'seed' / 'place-ratings.json'
+DATA = seed_dir() / 'place-ratings.json'
 
 
 @lru_cache(maxsize=1)

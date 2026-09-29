@@ -39,6 +39,7 @@ __all__ = [
     "TravelConfig",
     "enabled_nearby_categories",
     "load_settings",
+    "seed_dir",
     "nearby_tag_index",
 ]
 
@@ -246,6 +247,13 @@ class Settings:
     poll_interval_s: int = 10
     default_start_date: str = "2026-10-05"  # A2
     max_display_name_len: int = 24
+
+
+def seed_dir() -> Path:
+    """저장소에 구워 둔 데이터(`seed/`). Cloudflare Worker 번들은 같은 파일을 `city_walk_planner/_seed` 로 싣는다."""
+    here = Path(__file__).resolve().parent
+    bundled = here / "_seed"
+    return bundled if bundled.is_dir() else here.parents[1] / "seed"
 
 
 DEFAULT_DB_PATH = Path("city-walk-planner.db")

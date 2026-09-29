@@ -109,7 +109,7 @@ def create_expense(
     if sum(shares.values()) != amount_minor:  # pragma: no cover - 도메인 불변식 (NFR-014)
         raise RuntimeError("분담액 합계가 원금과 다르다")
 
-    with transaction(conn):
+    def work() -> None:
         repo_expenses.insert_expense(
             conn,
             expense_id=expense_id,
@@ -124,6 +124,8 @@ def create_expense(
         )
         repo_expenses.replace_shares(conn, expense_id, shares)
         repo_trips.bump_revision(conn, trip_id)
+
+    transaction(conn, work)
 
     row = repo_expenses.get_expense(conn, trip_id, expense_id)
     if row is None:  # pragma: no cover
@@ -160,7 +162,7 @@ def update_expense(
     share_ids = list(share_participant_ids) if share_participant_ids is not None else sorted(existing_shares)
     shares = split_even(amount_minor, share_ids)
 
-    with transaction(conn):
+    def work() -> None:
         updated = repo_expenses.update_expense(
             conn,
             expense_id=expense_id,
@@ -173,6 +175,8 @@ def update_expense(
         repo_expenses.replace_shares(conn, expense_id, shares)
         repo_trips.bump_revision(conn, trip_id)
 
+    transaction(conn, work)
+
     fresh = repo_expenses.get_expense(conn, trip_id, expense_id)
     if fresh is None:  # pragma: no cover
         raise RuntimeError("경비 수정 직후 조회에 실패했다")
@@ -183,9 +187,11 @@ def delete_expense(conn: sqlite3.Connection, *, trip: sqlite3.Row, expense_id: s
     trip_id = str(trip["id"])
     if repo_expenses.get_expense(conn, trip_id, expense_id) is None:
         raise NotFoundError("경비를 찾을 수 없습니다.")
-    with transaction(conn):
+    def work() -> None:
         repo_expenses.delete_expense(conn, expense_id)  # share 는 CASCADE 로 함께 사라진다
         repo_trips.bump_revision(conn, trip_id)
+
+    transaction(conn, work)
 
 
 def build_settlement(conn: sqlite3.Connection, trip_id: str) -> dict[str, Any]:

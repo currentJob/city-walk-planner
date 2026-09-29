@@ -25,6 +25,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from city_walk_planner.config import seed_dir
 from city_walk_planner.domain.util import add_days, is_hhmm
 from city_walk_planner.storage import repo_trips
 from city_walk_planner.storage.repo_spots import insert_spot
@@ -40,7 +41,7 @@ __all__ = [
 ]
 
 # `src/city_walk_planner/storage/seed.py` → parents[3] 이 프로젝트 루트다.
-SEED_PATH = Path(__file__).resolve().parents[3] / "seed" / "spots.json"
+SEED_PATH = seed_dir() / "spots.json"
 
 SCHEMA_VERSION = "1.0"
 SOURCE = "reference/original-static-page.html"

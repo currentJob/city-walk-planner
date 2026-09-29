@@ -68,7 +68,8 @@ def create_spot(
     now = format_iso_utc(clock.now_utc())
     spot_id = uuid.uuid4().hex
     time_label = str(fields["time_label"])
-    with transaction(conn):
+
+    def work() -> None:
         repo_spots.insert_spot(
             conn,
             spot_id=spot_id,
@@ -92,6 +93,8 @@ def create_spot(
             updated_at=now,
         )
         repo_trips.bump_revision(conn, trip_id)
+
+    transaction(conn, work)
     return spot_response(conn, trip_id, spot_id, settings)
 
 
@@ -121,7 +124,8 @@ def update_spot(
         fields["fixed_start_local"] = label if is_hhmm(label) else None
 
     now = format_iso_utc(clock.now_utc())
-    with transaction(conn):
+
+    def work() -> None:
         updated = repo_spots.update_spot(
             conn,
             spot_id=spot_id,
@@ -132,6 +136,8 @@ def update_spot(
         if not updated:
             raise VersionConflictError(spot_response(conn, trip_id, spot_id, settings))
         repo_trips.bump_revision(conn, trip_id)
+
+    transaction(conn, work)
     return spot_response(conn, trip_id, spot_id, settings)
 
 
@@ -147,10 +153,13 @@ def delete_spot(conn: sqlite3.Connection, clock: Clock, *, trip: sqlite3.Row, sp
         raise NotFoundError("스팟을 찾을 수 없습니다.")
     day_id = str(row["day_id"])
     now = format_iso_utc(clock.now_utc())
-    with transaction(conn):
+
+    def work() -> None:
         repo_spots.delete_spot(conn, spot_id)
         repo_spots.renumber_day(conn, day_id, repo_spots.list_spot_ids_of_day(conn, day_id), now)
         repo_trips.bump_revision(conn, trip_id)
+
+    transaction(conn, work)
 
 
 def reorder_day(
@@ -175,9 +184,12 @@ def reorder_day(
     _require_same_set(spot_ids, current)
 
     now = format_iso_utc(clock.now_utc())
-    with transaction(conn):
+
+    def work() -> int:
         repo_spots.renumber_day(conn, str(day["id"]), list(spot_ids), now)
-        revision = repo_trips.bump_revision(conn, trip_id)
+        return repo_trips.bump_revision(conn, trip_id)
+
+    revision = transaction(conn, work)
     return {"day_index": day_index, "spot_ids": list(spot_ids), "revision": revision}
 
 
@@ -208,13 +220,15 @@ def move_spot(
     if from_day_id == to_day_id:
         target_order = list(source_order)
         target_order.insert(_clamp(to_position, len(target_order)), spot_id)
-        with transaction(conn):
+
+        def work() -> int:
             repo_spots.renumber_day(conn, to_day_id, target_order, now)
-            revision = repo_trips.bump_revision(conn, trip_id)
+            return repo_trips.bump_revision(conn, trip_id)
     else:
         target_order = repo_spots.list_spot_ids_of_day(conn, to_day_id)
         target_order.insert(_clamp(to_position, len(target_order)), spot_id)
-        with transaction(conn):
+
+        def work() -> int:
             repo_spots.move_spot_between_days(
                 conn,
                 spot_id=spot_id,
@@ -224,7 +238,9 @@ def move_spot(
                 to_order=target_order,
                 updated_at=now,
             )
-            revision = repo_trips.bump_revision(conn, trip_id)
+            return repo_trips.bump_revision(conn, trip_id)
+
+    revision = transaction(conn, work)
     return {
         "spot_id": spot_id,
         "from_day_index": from_day_index,
@@ -250,7 +266,8 @@ def set_done(
     if repo_spots.get_spot(conn, trip_id, spot_id) is None:
         raise NotFoundError("스팟을 찾을 수 없습니다.")
     now = format_iso_utc(clock.now_utc())
-    with transaction(conn):
+
+    def work() -> int:
         if done:
             repo_spots.set_visit(
                 conn,
@@ -261,7 +278,9 @@ def set_done(
             )
         else:
             repo_spots.clear_visit(conn, spot_id)
-        revision = repo_trips.bump_revision(conn, trip_id)
+        return repo_trips.bump_revision(conn, trip_id)
+
+    revision = transaction(conn, work)
 
     visit = repo_spots.get_visit(conn, spot_id)
     names = {str(item["id"]): str(item["display_name"]) for item in repo_trips.list_participants(conn, trip_id)}

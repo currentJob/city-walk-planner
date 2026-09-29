@@ -75,8 +75,11 @@ def collect_reviews(provider, spots, enabled):
             except (ValueError, TypeError, KeyError, AttributeError):
                 return {"status": "unavailable"}
 
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            results = list(pool.map(fetch, chosen))
+        try:
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                results = list(pool.map(fetch, chosen))
+        except RuntimeError:  # 스레드가 없는 런타임(Cloudflare Python Worker) — 순서대로 조회한다
+            results = [fetch(spot) for spot in chosen]
         evidence.update({s["id"]: result for s, result in zip(chosen, results, strict=True)})
         return evidence
     finally:

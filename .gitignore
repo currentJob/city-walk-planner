@@ -47,3 +47,13 @@ sbom.cyclonedx.json
 # uv.lock 은 **절대** 무시하지 않는다. 락파일이 빠지면 재현성이 사라지고
 # `uv sync --frozen` 도, AC-041 도 성립하지 않는다 (NFR-002).
 .local/
+
+# Cloudflare Worker: build output and local tooling (tools/build_worker.py, pywrangler)
+worker/src/city_walk_planner/
+worker/.venv/
+worker/.venv-workers/
+worker/python_modules/
+worker/node_modules/
+worker/.wrangler/
+worker/.wrangler-dev.log
+worker/.tail.*

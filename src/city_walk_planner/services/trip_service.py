@@ -70,7 +70,7 @@ def create_trip(
     participant_id = uuid.uuid4().hex
     token, token_hash = issue_token()
 
-    with transaction(conn):
+    def work() -> None:
         _insert_trip_with_unique_code(
             conn, trip_id=trip_id, name=name, start_date=start_date, created_at=now
         )
@@ -84,6 +84,8 @@ def create_trip(
             joined_at=now,
         )
         install_seed(conn, trip_id=trip_id, start_date=start_date, created_at=now)
+
+    transaction(conn, work)
 
     trip = repo_trips.get_trip(conn, trip_id)
     participant = repo_trips.get_participant(conn, participant_id)
@@ -161,16 +163,15 @@ def join_trip(
     participant_id = uuid.uuid4().hex
     token, token_hash = issue_token()
     try:
-        with transaction(conn):
-            repo_trips.insert_participant(
-                conn,
-                participant_id=participant_id,
-                trip_id=trip_id,
-                display_name=name,
-                token_hash=token_hash,
-                is_organizer=False,
-                joined_at=now,
-            )
+        transaction(conn, lambda: repo_trips.insert_participant(
+            conn,
+            participant_id=participant_id,
+            trip_id=trip_id,
+            display_name=name,
+            token_hash=token_hash,
+            is_organizer=False,
+            joined_at=now,
+        ))
     except sqlite3.IntegrityError as exc:  # 같은 이름이 동시에 들어온 경우
         raise ConflictError("같은 이름이 이미 있습니다. 다른 이름을 쓰세요.", code="display_name_taken") from exc
 
