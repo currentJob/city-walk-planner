@@ -34,5 +34,7 @@ RUN npx wrangler --version && uv run pywrangler sync
 
 EXPOSE 8787
 # Allowed browser origin for direct API calls (the bundled web container proxies /api, so it is same-origin).
-ENV CWP_ALLOWED_ORIGINS=http://localhost:8080
-CMD ["sh", "-c", "exec uv run pywrangler dev --ip 0.0.0.0 --port 8787 --persist-to /data --var CWP_ALLOWED_ORIGINS:${CWP_ALLOWED_ORIGINS}"]
+# X-Real-IP is overwritten by the web container's nginx, so the join rate limit can tell users apart.
+ENV CWP_ALLOWED_ORIGINS=http://localhost:8080 \
+    CWP_CLIENT_IP_HEADER=X-Real-IP
+CMD ["sh", "-c", "exec uv run pywrangler dev --ip 0.0.0.0 --port 8787 --persist-to /data --var CWP_ALLOWED_ORIGINS:${CWP_ALLOWED_ORIGINS} --var CWP_CLIENT_IP_HEADER:${CWP_CLIENT_IP_HEADER}"]

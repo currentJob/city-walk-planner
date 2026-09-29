@@ -161,6 +161,43 @@ docker compose up --build        # 처음은 이미지 빌드에 몇 분 걸린�
 - 클라우드와 데이터는 공유하지 않는다. 로컬은 로컬 볼륨, 배포 서버는 Cloudflare 의 Durable Object 를 쓴다.
 - Docker 없이 파이썬만으로 돌리려면 위의 `uv run python -m city_walk_planner`(로컬 SQLite 파일)를 쓴다.
 
+## 셀프 호스팅 (내 도메인에 배포)
+
+서버 한 대와 도메인만 있으면 된다. 저장소를 받을 필요 없이 **`docker-compose.selfhost.yml` 파일 하나**로 띄운다.
+
+1. 도메인의 DNS A(또는 AAAA) 레코드를 서버 IP 로 향하게 하고, 서버의 80·443 포트를 연다.
+2. 서버에 Docker 를 설치하고 파일을 받아 실행한다.
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/currentJob/city-walk-planner/main/docker-compose.selfhost.yml
+DOMAIN=trips.example.com docker compose -f docker-compose.selfhost.yml up -d
+```
+
+| 구성 | 내용 |
+|------|------|
+| `app` | `ghcr.io/currentjob/city-walk-planner` — FastAPI(uvicorn) + SQLite 가 화면과 API 를 함께 준다. 외부 포트를 열지 않는다 |
+| `proxy` | Caddy 가 `$DOMAIN` 의 HTTPS 인증서를 자동 발급·갱신하고 `app` 으로 넘긴다. HTTP 는 HTTPS 로 돌린다 |
+
+- 이미지는 `main` 에 push 할 때마다 `.github/workflows/image.yml` 이 GHCR 에 올린다(`latest` · 커밋 SHA · `v*` 태그). 특정 버전은 `CWP_VERSION=<태그>` 로 고정한다.
+- 선택: `CWP_GOOGLE_PLACES_API_KEY` 를 주면 리뷰 반영 기능이 켜진다.
+- 초대코드 참여 제한은 Caddy 가 넘기는 실제 접속 주소로 센다(`--proxy-headers`, 앱 포트는 Caddy 만 닿는다).
+- 직접 빌드: 저장소에서 `DOMAIN=localhost docker compose -f docker-compose.selfhost.yml up -d --build` (localhost 는 Caddy 자체 인증서).
+- 백업(서비스를 멈추지 않고 SQLite 온라인 백업):
+
+```bash
+docker compose -f docker-compose.selfhost.yml exec app /app/.venv/bin/python -c "import sqlite3; sqlite3.connect('/data/city-walk-planner.db').backup(sqlite3.connect('/data/backup.db'))"
+docker compose -f docker-compose.selfhost.yml cp app:/data/backup.db ./city-walk-planner-backup.db
+```
+
+- 복원(앱을 멈추고, 일회용 컨테이너로 파일을 바꾼 뒤 이전 WAL 을 지우고 소유자를 앱 사용자로 돌린다 — `docker cp` 로 덮으면 root 소유가 되어 쓰기가 막힌다):
+
+```bash
+docker compose -f docker-compose.selfhost.yml stop app
+docker compose -f docker-compose.selfhost.yml run --rm --no-deps -u root -v "$PWD:/restore" app sh -c   "cp /restore/city-walk-planner-backup.db /data/city-walk-planner.db && rm -f /data/city-walk-planner.db-wal /data/city-walk-planner.db-shm && chown 10001 /data/city-walk-planner.db"
+docker compose -f docker-compose.selfhost.yml start app
+```
+- 이 구성은 Cloudflare 배포(아래)와 데이터를 공유하지 않는 독립 설치다.
+
 ## 배포 (GitHub Pages + Cloudflare Worker)
 
 화면은 Pages, API·DB 는 **Cloudflare Worker** 에서 돈다. PC 가 꺼져도 동작한다.

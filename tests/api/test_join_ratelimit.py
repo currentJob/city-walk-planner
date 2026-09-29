@@ -125,3 +125,29 @@ def test_successful_join_also_counts_as_an_attempt(trip: TripFixture, settings: 
     for index in range(settings.join_rate_limit_n):
         assert _join(trip.client, trip.invite_code, f"참가자{index}").status_code == 200
     assert _join(trip.client, trip.invite_code, "한명더").status_code == 429
+
+
+def test_rate_limit_counts_each_client_behind_a_trusted_front(trip: TripFixture, settings: Any, monkeypatch) -> None:
+    """Behind a proxy/edge every request shares one socket address; the configured header tells users apart."""
+    monkeypatch.setenv("CWP_CLIENT_IP_HEADER", "X-Real-IP")
+    for _ in range(settings.join_rate_limit_n):
+        trip.client.post("/api/join", json={"invite_code": NONEXISTENT, "display_name": "a"},
+                         headers={"X-Real-IP": "203.0.113.1"})
+    blocked = trip.client.post("/api/join", json={"invite_code": NONEXISTENT, "display_name": "a"},
+                               headers={"X-Real-IP": "203.0.113.1"})
+    other = trip.client.post("/api/join", json={"invite_code": NONEXISTENT, "display_name": "b"},
+                             headers={"X-Real-IP": "203.0.113.2"})
+    assert blocked.status_code == 429 and other.status_code == 404
+
+
+def test_client_ip_header_is_ignored_unless_configured(monkeypatch) -> None:
+    from types import SimpleNamespace
+
+    from city_walk_planner.api.ratelimit import client_ip
+
+    request = SimpleNamespace(headers={"X-Real-IP": "203.0.113.9"}, client=SimpleNamespace(host="10.0.0.5"))
+    monkeypatch.delenv("CWP_CLIENT_IP_HEADER", raising=False)
+    monkeypatch.delenv("HL_CLIENT_IP_HEADER", raising=False)
+    assert client_ip(request) == "10.0.0.5"  # a client-supplied header must not move it by default
+    monkeypatch.setenv("CWP_CLIENT_IP_HEADER", "X-Real-IP")
+    assert client_ip(request) == "203.0.113.9"

@@ -1,0 +1,44 @@
+# Self-host City Walk Planner on your own domain with automatic HTTPS.
+#
+#   1. Point your domain's DNS (A/AAAA record) at this server; open ports 80 and 443.
+#   2. DOMAIN=trips.example.com docker compose -f docker-compose.selfhost.yml up -d
+#
+# Only this file is needed — the app image comes from GitHub Container Registry.
+# Caddy obtains and renews the TLS certificate for $DOMAIN (use DOMAIN=localhost to try it locally).
+# Data: the `app-data` volume (SQLite). Back it up as described in README "셀프 호스팅".
+# Own project name so it never touches the dev stack in docker-compose.yml.
+name: city-walk-planner-selfhost
+
+services:
+  app:
+    image: ghcr.io/currentjob/city-walk-planner:${CWP_VERSION:-latest}
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    restart: unless-stopped
+    environment:
+      # Optional: Google Places key for review-based planning (leave empty to disable).
+      CWP_GOOGLE_PLACES_API_KEY: ${CWP_GOOGLE_PLACES_API_KEY:-}
+    volumes:
+      - app-data:/data
+    # No published port: only the proxy below can reach the app.
+
+  proxy:
+    image: caddy:2.11.4-alpine
+    restart: unless-stopped
+    command: caddy reverse-proxy --from ${DOMAIN:?set DOMAIN, e.g. DOMAIN=trips.example.com} --to app:8000
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+
+volumes:
+  app-data:
+  caddy-data:
+  caddy-config:
