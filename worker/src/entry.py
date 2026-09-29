@@ -16,7 +16,7 @@ import types
 from workers import DurableObject, WorkerEntrypoint, asgi  # type: ignore[import-not-found]
 
 # String settings copied from Worker vars/secrets into os.environ, where the app reads them.
-ENV_KEYS = ("CWP_ALLOWED_ORIGINS", "CWP_GOOGLE_PLACES_API_KEY", "CWP_DISCOVERY_OVERPASS_URL")
+ENV_KEYS = ("CWP_ALLOWED_ORIGINS", "CWP_CLIENT_IP_HEADER", "CWP_GOOGLE_PLACES_API_KEY", "CWP_DISCOVERY_OVERPASS_URL")
 OBJECT_NAME = "main"
 
 

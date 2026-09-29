@@ -18,7 +18,9 @@ ORIGIN = "https://currentjob.github.io"
 
 
 def main(base: str) -> int:
-    client = httpx.Client(base_url=base.rstrip("/"), timeout=90, headers={"Origin": ORIGIN})
+    # `https://localhost` is Caddy's self-signed local certificate (docker-compose.selfhost.yml with DOMAIN=localhost).
+    verify = not base.startswith("https://localhost")
+    client = httpx.Client(base_url=base.rstrip("/"), timeout=90, headers={"Origin": ORIGIN}, verify=verify)
     failures = 0
 
     def check(label: str, method: str, url: str, expect: int, **kwargs) -> httpx.Response:

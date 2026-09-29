@@ -14,7 +14,7 @@ from datetime import timedelta
 
 from city_walk_planner.api.errors import RateLimitedError
 from city_walk_planner.clock import Clock
-from city_walk_planner.config import Settings
+from city_walk_planner.config import Settings, env_value
 from city_walk_planner.domain.util import format_iso_utc, parse_iso_utc
 from city_walk_planner.storage import repo_cache
 
@@ -22,8 +22,19 @@ __all__ = ["client_ip", "enforce_join_rate_limit"]
 
 
 def client_ip(request: object) -> str:
-    """프록시 헤더는 **믿지 않는다** — 클라이언트가 마음대로 쓸 수 있는 값으로 리밋을
-    걸면 리밋이 없는 것과 같다. 단일 인스턴스 로컬 실행(A6)이라 소켓 주소면 충분하다."""
+    """기본은 소켓 주소다 — 클라이언트가 마음대로 쓸 수 있는 헤더로 리밋을 걸면 리밋이 없는 것과 같다.
+
+    다만 앞단(프록시·엣지) 뒤에서는 소켓 주소가 전부 그 앞단 하나라, 모든 사용자가 리밋 하나를
+    나눠 쓰게 된다. 그래서 `CWP_CLIENT_IP_HEADER` 로 **앞단이 직접 덮어쓰는** 헤더 하나만
+    믿도록 연다(Cloudflare `CF-Connecting-IP`, 로컬 nginx `X-Real-IP`). 그 앞단을 거치지 않고
+    서버에 바로 닿을 수 있는 배치에서는 설정하지 않는다.
+    """
+    header = env_value("CLIENT_IP_HEADER")
+    headers = getattr(request, "headers", None)
+    if header and headers is not None:
+        value = str(headers.get(header) or "").split(",")[0].strip()
+        if value:
+            return value
     client = getattr(request, "client", None)
     host = getattr(client, "host", None)
     return str(host) if host else "unknown"
