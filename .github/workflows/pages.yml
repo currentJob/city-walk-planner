@@ -1,11 +1,10 @@
 # 화면(정적 자산)만 GitHub Pages 로 배포한다.
 #
-# 백엔드(FastAPI + SQLite)는 사용자의 PC 에서 돌고, 브라우저가 그쪽으로 직접 요청한다.
-# 그래서 여기서 올리는 것은 `src/city_walk_planner/web` 그대로이고, 서버 주소는 굽지 않는다 —
-# 터널 주소는 재시작마다 바뀌므로 배포 시점에 박아 넣으면 그때마다 다시 배포해야 한다.
-# 대신 화면이 런타임에 주소를 받는다(`?api=` 쿼리 또는 게이트의 "백엔드 주소" 칸, 기기에 저장).
+# 백엔드는 Cloudflare Worker(`worker/`, FastAPI + Durable Object SQLite)에서 돈다 — PC 가 꺼져도 동작한다.
+# 여기서 올리는 것은 `src/city_walk_planner/web` 그대로이고, 기본 서버 주소만 `config.js` 에 굽는다.
+# 화면은 런타임에도 주소를 바꿀 수 있다(`?api=` 쿼리 또는 게이트의 "백엔드 주소" 칸, 기기에 저장).
 #
-# 저장소 변수 `CWP_API_BASE`(옛 `HL_API_BASE`도 읽음) 를 설정해 두면 기본값으로 구워진다(선택).
+# 기본값은 Cloudflare Worker 주소다. 저장소 변수 `CWP_API_BASE` 를 설정하면 그 주소로 바꿔 굽는다(선택).
 
 name: Pages
 
@@ -36,7 +35,8 @@ jobs:
       - name: 정적 자산 수집
         shell: bash
         env:
-          CWP_API_BASE: ${{ vars.CWP_API_BASE || vars.HL_API_BASE }}
+          # 기본 백엔드는 Cloudflare Worker(worker/). 옛 HL_API_BASE 는 임시 터널 주소라 더 읽지 않는다.
+          CWP_API_BASE: ${{ vars.CWP_API_BASE || 'https://city-walk-planner-api.currentjob.workers.dev' }}
         run: |
           set -euo pipefail
           cp -r src/city_walk_planner/web _site

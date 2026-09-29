@@ -21,10 +21,11 @@ from city_walk_planner.storage.db import Database
 
 
 def create_app(*, settings: Settings | None = None, clock: Clock | None = None,
-               allowed_origins: list[str] | None = None) -> FastAPI:
+               allowed_origins: list[str] | None = None, db: Database | None = None) -> FastAPI:
+    """`db` 를 주면 그 저장소를 쓴다 — Cloudflare Durable Object 가 자기 SQLite 어댑터를 넘긴다."""
     settings = settings or load_settings()
     clock = clock or SystemClock()
-    db = Database(settings.db_path)
+    db = db or Database(settings.db_path)
     db.apply_schema()
     app = FastAPI(title="City Walk Planner", version="0.1.0")
     app.state.settings = settings
@@ -61,5 +62,6 @@ def create_app(*, settings: Settings | None = None, clock: Clock | None = None,
     for router in (trips.router, spots.router, expenses.router, external.router, meta.router, explore.router):
         app.include_router(router)
     web = Path(__file__).resolve().parents[1] / "web"
-    app.mount("/", StaticFiles(directory=web, html=True), name="web")
+    if web.is_dir():  # Worker 번들에는 화면이 없다 — 화면은 GitHub Pages 가 준다
+        app.mount("/", StaticFiles(directory=web, html=True), name="web")
     return app

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import os
 import socket
 import sqlite3
 from collections.abc import Iterator
@@ -198,6 +199,11 @@ def app(settings: Settings, fixed_clock: FixedClock) -> Any:
         kwargs["settings"] = settings
     if "clock" in params:
         kwargs["clock"] = fixed_clock
+    # `CWP_TEST_STORAGE=durable-object` re-runs the same API tests on the Cloudflare Worker storage adapter.
+    if os.environ.get("CWP_TEST_STORAGE") == "durable-object":
+        from tests.do_fake import durable_database
+
+        kwargs["db"] = durable_database()
     return create_app(**kwargs)
 
 

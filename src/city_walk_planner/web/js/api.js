@@ -27,9 +27,19 @@ function normalizeBase(value) {
   return url.origin;
 }
 
+/** 재시작마다 사라지는 Cloudflare 임시 터널 주소인가. */
+export function isQuickTunnel(base) {
+  try { return new URL(base).hostname.endsWith('.trycloudflare.com'); } catch { return false; }
+}
+
 function resolveApiBase() {
   let stored = null;
   try { stored = localStorage.getItem(API_BASE_KEY); } catch { /* 저장소가 막힌 브라우저 */ }
+  // 고정 백엔드가 배포에 들어 있으면, 예전에 저장한 임시 터널 주소(이미 죽었을 가능성이 큼)가 그것을 가리지 않게 한다.
+  if (stored && isQuickTunnel(stored) && window.CWP_CONFIG?.apiBase && !isQuickTunnel(window.CWP_CONFIG.apiBase)) {
+    stored = null;
+    try { localStorage.removeItem(API_BASE_KEY); } catch { /* 무시 */ }
+  }
 
   const fromQuery = normalizeBase(new URLSearchParams(location.search).get('api'));
   if (fromQuery) {

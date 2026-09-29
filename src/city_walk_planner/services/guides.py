@@ -27,6 +27,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from city_walk_planner.config import seed_dir
+
 __all__ = [
     "CITY_ID_PATTERN",
     "DATA_DIR",
@@ -40,7 +42,7 @@ __all__ = [
 
 # `src/city_walk_planner/services/guides.py` → parents[3] 이 프로젝트 루트다
 # (`curated.py`·`storage/seed.py` 와 같은 규칙).
-DATA_DIR = Path(__file__).resolve().parents[3] / "seed" / "city-guides"
+DATA_DIR = seed_dir() / "city-guides"
 
 # 식별자는 **검증한 뒤에만** 경로에 붙인다. 검증 없이 붙이면 `../` 가 파일 읽기가 된다.
 CITY_ID_PATTERN = r"^[a-z0-9-]+$"

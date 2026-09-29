@@ -22,6 +22,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from city_walk_planner.config import seed_dir
 from city_walk_planner.domain.geo import haversine_m
 from city_walk_planner.domain.models import LatLng
 
@@ -29,7 +30,7 @@ __all__ = ["CuratedDataset", "load_curated", "select"]
 
 # `src/city_walk_planner/services/curated.py` → parents[3] 이 프로젝트 루트다
 # (`storage/seed.py` 와 같은 규칙).
-DATA_PATH = Path(__file__).resolve().parents[3] / "seed" / "curated-places.json"
+DATA_PATH = seed_dir() / "curated-places.json"
 
 
 @dataclass(frozen=True)

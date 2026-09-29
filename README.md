@@ -43,7 +43,7 @@ Trip.com 조사 자료에서 도시와 Wikidata 이름/별칭이 정확히 일�
 리뷰 포함 요청은 최대 40개 후보를 조회하며 실제 API 과금이 발생할 수 있습니다.
 계산 방식·제약·검증 범위: [리뷰 기반 일정 개선](docs/_change_review_planner.md).
 
-배포: https://currentjob.github.io/city-walk-planner/
+배포: https://currentjob.github.io/city-walk-planner/ (API: https://city-walk-planner-api.currentjob.workers.dev)
 변경 설계·검증 범위: [지역 여행 확장](docs/_change_explore.md).
 
 홍콩 3박 4일 여행을 **동행 여럿이 같이 편집하는** 웹 앱. 정적 HTML 한 장짜리 가이드를
@@ -143,7 +143,30 @@ uv run python tools/vendor_check.py     # Leaflet 벤더 파일 SHA256 대조
 
 **최신 릴리스**: [Releases](../../releases/latest) · 산출물은 sdist·wheel·SBOM·`SHA256SUMS`.
 
-## 배포 (GitHub Pages + 로컬 백엔드)
+## 배포 (GitHub Pages + Cloudflare Worker)
+
+화면은 Pages, API·DB 는 **Cloudflare Worker** 에서 돈다. PC 가 꺼져도 동작한다.
+
+- 서버: https://city-walk-planner-api.currentjob.workers.dev (Pages 빌드의 기본 서버 주소)
+- 구성: Python Worker 하나 + SQLite 기반 Durable Object 하나(`AppDO`). 기존 FastAPI 앱을 그대로 실행하고,
+  저장소만 `worker/src/do_sqlite.py` 어댑터로, 외부 HTTP 만 `worker/src/fetch_transport.py`(Workers `fetch`)로 바꾼다.
+- 배포(프로젝트 루트에서, 처음 한 번 `npx wrangler login`):
+
+```powershell
+uv run python tools/build_worker.py            # 앱 코드·데이터를 worker/src 로 복사
+cd worker; uv sync                             # pywrangler 설치 (uv 0.12.3 이상 필요 — 없으면 .venv 에 설치)
+uv run pywrangler deploy
+uv run python ../tools/smoke_api.py https://city-walk-planner-api.currentjob.workers.dev
+```
+
+- 로컬 확인: `worker` 에서 `uv run pywrangler dev` 후 `tools/smoke_api.py http://127.0.0.1:8787`.
+- 테스트: `CWP_TEST_STORAGE=durable-object` 로 API 테스트를 Durable Object 어댑터 위에서 다시 돌릴 수 있다.
+- 무료 요금제는 요청당 CPU 10ms 한도가 있다. 실측(2026-09-29)은 요청당 6~31ms라 가끔 넘으며,
+  Cloudflare 가 일시 초과를 허용해 현재는 정상 응답한다. 계속 넘으면 1102 오류가 날 수 있다.
+
+아래는 이전 방식(PC 백엔드 + 터널)이다. Worker 를 쓰면 필요 없다.
+
+### 이전 방식: PC 백엔드
 
 화면만 Pages 에 올리고 API·DB 는 PC 에서 돌린다. **브라우저가 PC 의 백엔드로 직접 요청한다** —
 Pages 는 정적 파일만 준다.
