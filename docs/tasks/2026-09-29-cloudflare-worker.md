@@ -38,3 +38,11 @@
 - 무료 CPU 한도 초과가 잦다. 1102 오류가 보이면 Workers Paid($5/월)로 올리거나 무거운 요청(`/state` 재계산, 여행 생성 시드 주입)을 최적화한다.
 - 기존 PC DB 의 동행 여행 데이터는 옮기지 않았다. 새 서버는 빈 DB 에서 시작한다.
 - 저장소 변수 `HL_API_BASE` 는 더 이상 쓰지 않으므로 지워도 된다.
+
+## 배포 · 2026-09-29
+
+- `0cf559a` 를 main 에 푸시했다. CI 성공([run 36510378408](https://github.com/currentJob/city-walk-planner/actions/runs/36510378408)), Pages 성공([run 36510378502](https://github.com/currentJob/city-walk-planner/actions/runs/36510378502)). 배포된 `config.js` 의 `apiBase` 가 Worker 주소다.
+- PASS https://currentjob.github.io/city-walk-planner/ 확인:
+  - 예전 임시 터널 주소를 저장해 둔 상태에서 새로 불러오면 저장값이 지워지고 Worker 로 연결된다.
+  - 도시 29곳, 홍콩 상세 49곳, 추천 일정(3일·방문지 15·핀 15) 표시, 콘솔 오류 없음.
+- 관찰: 한동안 요청이 없다가 온 첫 요청은 4.8초(Durable Object 와 Python 콜드 스타트), 이후 요청은 0.3~0.7초.
