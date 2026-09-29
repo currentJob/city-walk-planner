@@ -143,6 +143,24 @@ uv run python tools/vendor_check.py     # Leaflet 벤더 파일 SHA256 대조
 
 **최신 릴리스**: [Releases](../../releases/latest) · 산출물은 sdist·wheel·SBOM·`SHA256SUMS`.
 
+## 로컬 실행 (Docker · 배포와 같은 구조)
+
+배포와 같은 모양으로 화면과 API 를 PC 에서 띄운다. Docker Desktop 이 켜져 있어야 한다.
+
+```powershell
+docker compose up --build        # 처음은 이미지 빌드에 몇 분 걸린다
+```
+
+| 서비스 | 주소 | 내용 |
+|--------|------|------|
+| web | http://localhost:8080 | GitHub Pages 와 같은 정적 화면. `/api` 는 api 컨테이너로 넘긴다(같은 출처라 CORS·서버 주소 설정 불필요) |
+| api | http://localhost:8787 | 배포되는 것과 같은 Cloudflare Worker 번들을 workerd 런타임(`pywrangler dev`)에서 실행. Durable Object SQLite 데이터는 `api-data` 볼륨에 남는다 |
+
+- 초기화: `docker compose down -v` (볼륨을 지우면 로컬 여행 데이터도 사라진다).
+- 점검: `uv run python tools/smoke_api.py http://localhost:8080`
+- 클라우드와 데이터는 공유하지 않는다. 로컬은 로컬 볼륨, 배포 서버는 Cloudflare 의 Durable Object 를 쓴다.
+- Docker 없이 파이썬만으로 돌리려면 위의 `uv run python -m city_walk_planner`(로컬 SQLite 파일)를 쓴다.
+
 ## 배포 (GitHub Pages + Cloudflare Worker)
 
 화면은 Pages, API·DB 는 **Cloudflare Worker** 에서 돈다. PC 가 꺼져도 동작한다.

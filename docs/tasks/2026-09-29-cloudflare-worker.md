@@ -46,3 +46,21 @@
   - 예전 임시 터널 주소를 저장해 둔 상태에서 새로 불러오면 저장값이 지워지고 Worker 로 연결된다.
   - 도시 29곳, 홍콩 상세 49곳, 추천 일정(3일·방문지 15·핀 15) 표시, 콘솔 오류 없음.
 - 관찰: 한동안 요청이 없다가 온 첫 요청은 4.8초(Durable Object 와 Python 콜드 스타트), 이후 요청은 0.3~0.7초.
+
+## 추가: 로컬 Docker 실행 · 2026-09-29
+
+- 요청: 클라우드에 올린 구조와 같게 Docker 로 로컬에서 프론트와 백엔드를 띄운다.
+- `docker/api.Dockerfile`:
+  - node 22 + uv 0.12.20 이미지다.
+  - 배포와 같은 `tools/build_worker.py` 번들을 `pywrangler dev`(workerd)로 실행한다.
+  - Durable Object 데이터는 `/data` 볼륨(`--persist-to`)에 저장한다.
+  - wrangler 와 파이썬 패키지는 빌드할 때 미리 받아 둔다.
+- `docker/web.Dockerfile`: nginx 가 `web/` 를 서빙하고 `/api/` 를 api 컨테이너로 넘긴다. `config.js` 의 `apiBase` 를 비워 같은 출처로 요청한다.
+- `docker-compose.yml`: api 에 health check(`/api/health`)를 두고, web 은 api 가 healthy 가 된 뒤 뜬다.
+- 검증:
+  - PASS `docker compose build` / `up -d`: api 는 20초 안에 healthy 가 됐다. 첫 health 응답은 7.4초(Python 부팅).
+  - PASS `tools/smoke_api.py http://localhost:8080`(nginx 경유)와 `:8787`(직접) 17개 항목.
+  - PASS `docker compose restart api` 뒤에도 앞서 만든 여행(스팟 27)이 그대로 조회된다(볼륨 유지).
+  - PASS 브라우저 http://localhost:8080: 도시 상세 49곳과 추천 일정(방문지 15)이 nginx 로그상 `/api/explore/*` 로 로컬 Worker 에서 왔다. 콘솔 오류 없음.
+  - PASS `PYTHONUTF8=1 uv run pytest -q` 937 passed, ruff.
+  - NOT-RUN: CI 에서 Docker 이미지 빌드는 하지 않는다(워크플로 변경 없음).
