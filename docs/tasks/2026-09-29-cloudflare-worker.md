@@ -64,3 +64,4 @@
   - PASS 브라우저 http://localhost:8080: 도시 상세 49곳과 추천 일정(방문지 15)이 nginx 로그상 `/api/explore/*` 로 로컬 Worker 에서 왔다. 콘솔 오류 없음.
   - PASS `PYTHONUTF8=1 uv run pytest -q` 937 passed, ruff.
   - NOT-RUN: CI 에서 Docker 이미지 빌드는 하지 않는다(워크플로 변경 없음).
+- 버전 고정: `worker/package.json` 과 `package-lock.json` 으로 wrangler 를 4.143.0 에 고정했다. pywrangler 는 `npx wrangler` 를 부르는데, npx 는 로컬에 설치된 것을 먼저 쓴다. Docker 는 `npm ci` 로 설치하고 node 이미지는 `22.23.3-bookworm-slim` 으로 고정했다. 이미지 안에서 `npx wrangler --version` 4.143.0, `node` v22.23.3 을 확인했고, 다시 빌드한 스택에서 smoke 17개 항목이 PASS 했다.
