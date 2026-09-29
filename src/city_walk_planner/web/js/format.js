@@ -111,6 +111,11 @@ export function formatInviteCode(code) {
 /** 텍스트를 HTML 에 끼워 넣기 전에 반드시 통과시킨다.
  *  스팟 이름·메모는 **사용자 입력**이다(REQ-004). 원본은 고정 배열이라 이스케이프가 없었지만,
  *  이제는 동행이 넣은 문자열이 그대로 innerHTML 에 들어간다. */
+/** The bar linking the author's other projects belongs only on the author's GitHub Pages site, not on self-hosted copies. */
+export function showAuthorBar(host = location.hostname) {
+  if (host === 'currentjob.github.io') document.querySelector('.cj-projects')?.removeAttribute('hidden');
+}
+
 export function escapeHtml(value) {
   return String(value == null ? '' : value)
     .replace(/&/g, '&amp;')

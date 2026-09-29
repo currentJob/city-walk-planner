@@ -1,5 +1,6 @@
 import { request } from './api.js';
-import { escapeHtml as esc, link } from './format.js';
+import { escapeHtml as esc, link, showAuthorBar } from './format.js';
+showAuthorBar();
 import { LocationTracker, directionsUrl, haversineMeters } from './geo.js';
 import { TripMap } from './map.js';
 import { cityLabel, daysHtml, gradeBadgeHtml, gradeSummary, isGuidePlan, sourcesHtml, stopDomId } from './render/guide.js';
