@@ -1,7 +1,10 @@
 {
   "private": true,
-  "description": "Pins the wrangler CLI that pywrangler runs through npx (npx prefers this local copy).",
+  "description": "Pins the wrangler CLI that pywrangler runs through npx (npx prefers this local copy). undici is lifted to its patched release (GHSA-3wwx-pv8p-q78v).",
   "devDependencies": {
     "wrangler": "4.143.0"
+  },
+  "overrides": {
+    "undici": "7.29.1"
   }
 }
