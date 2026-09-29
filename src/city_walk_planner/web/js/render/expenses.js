@@ -6,6 +6,7 @@
  */
 
 import { escapeHtml, formatHkd, formatKrw } from '../format.js';
+import { icon } from '../icons.js';
 
 function participantOptions(participants, selectedId) {
   return participants
@@ -28,7 +29,7 @@ export function renderExpenses(container, ctx) {
         + `<div class="memo">${escapeHtml(item.note || '메모 없음')} · ${item.shares.length}명 분담</div></div>`
         + `<div class="amt">${escapeHtml(formatHkd(item.amount_minor))}`
         + `${krw ? `<small>${escapeHtml(krw)}</small>` : ''}</div>`
-        + `<button class="mini danger" type="button" data-del="${escapeHtml(item.id)}" aria-label="삭제">🗑</button>`
+        + `<button class="mini danger" type="button" data-del="${escapeHtml(item.id)}" aria-label="삭제">${icon('trash')}</button>`
         + '</div>';
     }).join('')
     : '<div class="empty">아직 기록된 경비가 없습니다.</div>';

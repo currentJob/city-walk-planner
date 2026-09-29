@@ -8,6 +8,7 @@
  */
 
 import { escapeHtml } from '../format.js';
+import { icon } from '../icons.js';
 
 const KIND_LABEL = {
   closed_on_arrival: '도착 시각에 닫혀 있음',
@@ -36,13 +37,13 @@ export function renderAlerts(container, { warnings, conflicts, day, spotsById })
       ? ` <span class="who">(${escapeHtml(w.open_local)}–${escapeHtml(w.close_local)})</span>` : '';
     const eta = w.eta_local ? ` · 도착 ${escapeHtml(w.eta_local)}` : '';
     rows.push(
-      `<div class="alert"><span>⚠</span><div><b>${escapeHtml(nameOf(spotsById, w.spot_id))}</b> · `
+      `<div class="alert">${icon('alert')}<div><b>${escapeHtml(nameOf(spotsById, w.spot_id))}</b> · `
       + `${escapeHtml(label)}${eta}${window}<br>${escapeHtml(w.message || '')}</div></div>`,
     );
   }
   for (const c of dayConflicts) {
     rows.push(
-      `<div class="alert conflict"><span>⏱</span><div>`
+      `<div class="alert conflict">${icon('timer')}<div>`
       + `<b>${escapeHtml(nameOf(spotsById, c.fixed_spot_id))}</b> 고정시각과 겹칩니다 — `
       + `<b>${escapeHtml(nameOf(spotsById, c.spot_id))}</b> 일정이 `
       + `${escapeHtml(c.overlap_start_local)}~${escapeHtml(c.overlap_end_local)}`
