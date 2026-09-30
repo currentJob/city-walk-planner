@@ -3,7 +3,6 @@
 도시를 고르고 날짜를 정하면 지도 위에 하루 동선을 짜 주는 여행 플래너입니다. 동행과 함께 일정·경비를 편집하는 공유 여행도 지원합니다.
 
 - 사이트: https://currentjob.github.io/city-walk-planner/
-- API: https://city-walk-planner-api.currentjob.workers.dev
 
 ## 기능
 
