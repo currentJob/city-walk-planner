@@ -1,4 +1,4 @@
-# 릴리스 배포 (release-engineering.md §5).
+# 릴리스 배포.
 #
 # 태그를 밀면 **CI 게이트를 그대로 다시 통과한 뒤에만** 릴리스가 만들어진다.
 # "로컬에서 통과했으니 됐다"로 배포하지 않는다 — 배포는 검증의 결과지 별개 행동이 아니다.
@@ -29,7 +29,6 @@ jobs:
         with:
           fetch-depth: 0 # 릴리스 노트 자동 생성이 이전 태그를 본다
 
-      # Python (uv) — build 잡 스택 블록 (release-engineering.md §4)
       - uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.12"

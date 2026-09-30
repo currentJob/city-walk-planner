@@ -45,9 +45,7 @@ include = ["src/city_walk_planner", "seed", "contracts", "tests"]
 line-length = 120
 target-version = "py312"
 src = ["src", "tests", "tools"]
-# `.github/quality/**` 는 하네스가 빌드마다 덮어쓰는 생성물이다. 우리가 고칠 수 없는
-# 파일로 게이트를 빨갛게 만들면 아무도 게이트를 안 본다.
-extend-exclude = ["src/city_walk_planner/web/vendor", ".github"]
+extend-exclude = ["src/city_walk_planner/web/vendor"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "TID"]
