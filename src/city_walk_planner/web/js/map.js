@@ -325,7 +325,7 @@ export class TripMap {
     const points = day.spots.map(spot => [spot.lat, spot.lng]);
     this.invalidate();
     this.map.fitBounds(points, { padding: [28, 28], maxZoom: 15, animate: false });
-    this.routeLine = L.polyline(points, { color: '#315e4d', weight: 3, dashArray: '6 8', opacity: 0.7 }).addTo(this.map);
+    this.routeLine = L.polyline(points, { color: '#2a6f96', weight: 3, dashArray: '6 8', opacity: 0.7 }).addTo(this.map);
   }
 
   showMe(me) {

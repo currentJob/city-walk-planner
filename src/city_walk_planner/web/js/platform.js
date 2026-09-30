@@ -169,7 +169,7 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
       }
       if(kind==='move') {plan.days[target].stops.push(stops.splice(si,1)[0]);selectedDay=target;}
       const minutes=t=>{const [h,m]=t.split(':').map(Number);return h*60+m;};
-      const days=plan.days.map(d=>({date:d.date,start_time:d.start_time||'09:00',title:d.title||'',area:d.area||'',color:d.color||'#245548',stops:d.stops.map(s=>({place:s.place,duration:s.duration||Math.max(5,minutes(s.departure)-minutes(s.arrival)),completed:Boolean(s.completed),fixed_start:s.fixed_start||null}))}));
+      const days=plan.days.map(d=>({date:d.date,start_time:d.start_time||'09:00',title:d.title||'',area:d.area||'',color:d.color||'#0b5f8a',stops:d.stops.map(s=>({place:s.place,duration:s.duration||Math.max(5,minutes(s.departure)-minutes(s.arrival)),completed:Boolean(s.completed),fixed_start:s.fixed_start||null}))}));
       const result=await apiRequest('recalculate',{days,...(kind==='add'?{insert:{day_index:di,stop:{place:target,duration:90}}}:{})});
       plan.days=result.days.map((day,index)=>index===di || (kind==='move' && index===target)
         ? {...plan.days[index],...day} : plan.days[index]);plan.scheduled_count=result.scheduled_count;
