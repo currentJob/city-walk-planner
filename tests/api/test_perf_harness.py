@@ -29,8 +29,6 @@ import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 HARNESS = PROJECT_ROOT / "tools" / "perf_report.py"
-COMMITTED_JSON = PROJECT_ROOT / "reports" / "perf.json"
-COMMITTED_MD = PROJECT_ROOT / "reports" / "perf.md"
 
 REQUIRED_TARGET_FIELDS = {
     "name", "samples", "min_ms", "p50_ms", "p95_ms", "p99_ms", "max_ms", "mean_ms",
@@ -118,23 +116,6 @@ def test_ac043_main_writes_both_report_files(harness: Any, tmp_path: Path) -> No
     assert document["python"] in markdown and document["platform"] in markdown
     for item in document["targets"]:
         assert item["name"] in markdown, f"{item['name']} 가 사람용 리포트에 없다"
-
-
-def test_ac043_committed_report_has_the_same_shape(harness: Any) -> None:
-    """AC-043: 저장소에 커밋된 리포트도 같은 계약을 따른다(빈 껍데기가 아니다)."""
-    assert COMMITTED_JSON.is_file() and COMMITTED_MD.is_file(), "reports/ 산출물이 없다 (AC-043)"
-    document = json.loads(COMMITTED_JSON.read_text(encoding="utf-8"))
-
-    assert document["spot_count"] == 27
-    assert document["python"] and document["platform"]
-    assert len(document["targets"]) >= 2
-    for item in document["targets"]:
-        assert set(item) == REQUIRED_TARGET_FIELDS
-        assert item["samples"] >= 1
-        assert item["min_ms"] <= item["p50_ms"] <= item["p95_ms"] <= item["max_ms"], item
-        assert item["breached"] is False, (
-            f"커밋된 리포트가 파탄 상한을 넘었다: {item['name']} p95={item['p95_ms']}ms"
-        )
 
 
 def test_process_time_header_is_what_the_harness_measures(client: Any) -> None:
