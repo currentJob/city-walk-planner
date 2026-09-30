@@ -118,7 +118,7 @@ summary{min-height:var(--tap);display:flex;align-items:center}
 .trend-tabs{position:sticky;top:var(--m-top);z-index:900;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;
   margin:0 calc(-1 * var(--m-gutter)) 4px;padding:8px var(--m-gutter);background:var(--paper);border-bottom:1px solid var(--line)}
 .trend-tabs button{min-height:var(--tap);padding:0 4px;border-radius:8px;background:var(--bg2);color:var(--ink);font-size:13px;font-weight:650}
-.trend-tabs button[aria-pressed=true]{background:var(--green);color:#fff}
+.trend-tabs button[aria-pressed=true]{background:var(--green);color:var(--on-green)}
 #trendRoot .page-heading{padding-top:18px}
 #trendRoot:not([data-tab=plan]) .page-heading{display:none}
 #trendRoot .page-heading .hint{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -148,3 +148,6 @@ summary{min-height:var(--tap);display:flex;align-items:center}
 /* Top notice sits just under the compact header. */
 #message{top:calc(var(--m-top) + 8px)}
 .saved-card{padding:18px}
+
+/* Theme switch: thumb-sized on phones */
+.theme-toggle{width:var(--tap);height:var(--tap);min-height:var(--tap)}

@@ -1,0 +1,1 @@
+(async()=>{await new Promise(r=>setTimeout(r,800)); document.querySelector('.cj-projects')?.removeAttribute('hidden'); return {theme: document.documentElement.dataset.theme, bg: getComputedStyle(document.body).backgroundColor, toggle: document.querySelector('[data-theme-toggle]')?.getAttribute('aria-label')}})()
