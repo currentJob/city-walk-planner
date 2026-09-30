@@ -8,7 +8,7 @@
  */
 
 import { ApiError, api, readLocal, session, writeLocal } from './api.js';
-import { escapeHtml, formatDistance, formatHktDate, showAuthorBar } from './format.js';
+import { escapeHtml, formatDistance, formatHktDate, initThemeToggle, showAuthorBar } from './format.js';
 import { LocationTracker } from './geo.js';
 import { TripMap, scrollToItem } from './map.js';
 import { renderCards, renderSpotForm } from './render/cards.js';
@@ -28,6 +28,7 @@ import {
 } from './state.js';
 
 showAuthorBar();
+initThemeToggle();
 
 const el = (id) => document.getElementById(id);
 
