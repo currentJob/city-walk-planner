@@ -1,308 +1,107 @@
 # City Walk Planner · 도시를 걷는 여행
 
-도시 탐색, 도시별 가이드, 일정 만들기, 주변 맛집, 내 여행을 독립 화면으로 제공합니다.
-29개 도시(완전 26 · 부분 3)에 동일한 지도·날짜 탭·방문 체크·장소 추가/제외·순서/날짜 이동·
-체류시간 편집을 적용했습니다. 변경 시 이동시간과 공개 영업시간을 다시 계산하고 브라우저에 저장합니다.
-**지도에서 관광지 찾아 추가**에서 Trip.com 평점이 연결된 관광 가이드 또는 실제 지도 검색
-결과를 핀으로 선택합니다. 평점·리뷰 수·조회일·원문과 관광 설명을 확인하고 해당 날짜의 시간 충돌과 이동거리를
-비교해 알맞은 순서에 넣습니다. 하루 시작·장소별 방문 시각을 직접 지정하거나 자동으로 되돌릴 수 있습니다.
-참조 자료 필터로 Trip.com 평점이 있는 장소와 실시간 OSM 검색 결과를 구분합니다.
-관광지 추가 지도는 현재 화면의 영역을 자동 조회합니다. 국가·도시 제한 없이 이동할 수 있으며,
-하단 장소 목록을 누르면 해당 좌표로 지도가 이동·확대되고 팝업이 열립니다. 모바일에서는 지도까지 화면도 이동합니다.
-종류·최소 별점·최소 리뷰 수·자료·정렬 필터와 장소 설명·확인된 방문 팁을 함께 제공합니다.
-종류 변경은 해당 종류를 다시 조회합니다. 공개 지도는 한 영역 최대 500건이며 조회 범위가 넓거나
-결과가 잘리면 확대 안내를 표시합니다. 외부 조회 실패 시 조사 자료만 표시하고 실패 사실을 알립니다.
-평점이 없는 장소에는 ‘평가 정보 없음’, 장소별 근거가 없는 팁에는 ‘일반 방문 체크’를 표시합니다.
-Trip.com은 기존 조사 자료를 활용하며 실시간 Trip.com 검색·예약 API를 연결한 것은 아닙니다.
-밝은 미네랄 배경과 포레스트 그린, 도시 사진으로 기존 홍콩 공동 일정까지 디자인을 통일했습니다.
+도시를 고르고 날짜를 정하면 지도 위에 하루 동선을 짜 주는 여행 플래너입니다. 동행과 함께 일정·경비를 편집하는 공유 여행도 지원합니다.
 
-Trip.com 조사 자료에서 도시와 Wikidata 이름/별칭이 정확히 일치한 **131곳의 평점·리뷰 수**를
-반영합니다(2026-09-18 조회). 기본 추천에는 `(평점 × 리뷰 수 + 3.5 × 50) / (리뷰 수 + 50)`
-보정 점수를 제한적으로 가산합니다. 자료가 없는 장소를 배제하지 않으며 주요 명소·동선·영업시간
-제약은 유지합니다. 원문 링크·조회일을 표시하고 후기 본문은 저장하지 않습니다.
-조회된 스냅샷이므로 실시간 평점이나 모든 관광지의 평가를 제공하는 것은 아닙니다.
+- 사이트: https://currentjob.github.io/city-walk-planner/
+- API: https://city-walk-planner-api.currentjob.workers.dev
 
-메인 화면에서 나라·도시·지역을 검색하고 날짜를 선택하면 동네 단위 추천 일정을 만듭니다.
-**미리 조사해 저장소에 구워 둔 도시 29곳**(완전 26 · 부분 3)은 한국어 설명·출처·하루 테마가 붙은
-가이드 일정을 주고, 굽지 않은 도시는 예전처럼 "제한된 자동 추천"으로 표시해 만듭니다.
-현지 날짜·요일·공개 영업시간과 거리를 고려하며 최근 여행 10개를 브라우저에 보관합니다.
-현재 위치 주변 음식점 검색, 거리/평점 정렬, 제공되는 메뉴·업체 원문 링크도 지원합니다.
+## 기능
 
-실시간 음식점 평점·후기는 서버 환경변수 `CWP_GOOGLE_PLACES_API_KEY`가 있을 때 Google Places에서 조회합니다.
-키는 PC에만 설정하고 Pages나 채팅에 넣지 마세요. Places API(New)와 결제가 활성화된 키가 필요합니다.
-키 없이도 OSM 검색이 동작하지만 평점·후기·업체별 추천 메뉴는 원천 데이터에 없으면 미제공으로 표시합니다.
-동선은 휴리스틱 추천이며 실제 교통망 최단 경로·공휴일·임시휴무를 보장하지 않습니다.
-기존 홍콩 공동 일정은 메인의 **동행과 함께** 링크에서 엽니다.
+| 기능 | 내용 |
+|---|---|
+| 도시 가이드 | 미리 조사해 저장소에 넣은 29개 도시(완전 26 · 부분 3). 스팟별 한국어 이름·원어명·위키백과 설명과 출처, 하루 테마 |
+| 일정 만들기 | 나라·도시를 검색하고 날짜를 고르면 영업시간·거리를 고려해 날짜별 동선을 만든다. 장소 추가·제외, 순서·날짜 이동, 체류시간 편집, 지도와 목록 연결 |
+| 평점 반영 | Trip.com 조사 자료 131곳의 평점·리뷰 수를 보정 점수로 반영(조회 시점 스냅샷). Google 평점·후기는 서버에 `CWP_GOOGLE_PLACES_API_KEY` 가 있을 때만 |
+| 주변 맛집 | 현재 위치나 여행지 기준 OpenStreetMap 음식점·카페 검색, 거리·평점 정렬, SNS·트렌드 맛집(홍콩) |
+| 홍콩·마카오 트렌드 코스 | 날짜·숙소에 맞춘 코스 배치, OpenRice 반응 요약, 영업시간, 꿀팁 |
+| 동행과 함께 | 초대코드로 참여하는 공유 여행(홍콩 3박 4일): 완료 체크 공유, 경비 기록·정산, 영수증 사진으로 경비 입력, 영업시간·시간 충돌 경고, 날씨·환율 |
+| 내 여행 | 브라우저에 최근 10개 보관, 삭제·되돌리기, 일정 파일 내려받기·불러오기 |
+| 화면 | 밝은/어두운 테마, 강조 색상 선택, 모바일 레이아웃 |
 
-홍콩 가이드의 **전체 일정 점검·개선 제안**은 모든 날짜의 영업시간·예약 충돌·이동 부담을
-점검하고 날짜별 제안을 비교해 적용합니다. **Google Maps 평점·후기 반영**을 켜면 이름·좌표가
-확인된 장소의 평점과 평가 수도 활용합니다. 메인 여행 설계에도 같은 선택 옵션이 있습니다.
-키가 없거나 조회가 실패하면 그 상태를 표시하며 기본 일정 계획은 계속 동작합니다.
-모든 일정 화면에서 이전 장소→다음 장소의 **도보·대중교통 길찾기**를 선택할 수 있습니다.
-리뷰 포함 요청은 최대 40개 후보를 조회하며 실제 API 과금이 발생할 수 있습니다.
+영수증 인식은 [OCR 프로젝트](https://github.com/currentJob/ocr-llm-page)가 배포한 모듈을 브라우저에서 불러 쓰며, 사진은 기기 밖으로 나가지 않습니다(`CWP_CONFIG.ocrModule` 이 비어 있으면 버튼이 숨겨집니다).
 
-배포: https://currentjob.github.io/city-walk-planner/ (API: https://city-walk-planner-api.currentjob.workers.dev)
+## 실행
 
-홍콩 3박 4일 여행을 **동행 여럿이 같이 편집하는** 웹 앱. 정적 HTML 한 장짜리 가이드를
-서버 기반 공유 일정표로 옮긴 것으로, 27개 기본 스팟·초대코드 참여·이동시간 계산·영업시간
-경고·경비 정산을 제공한다.
-
-파이썬 프로세스 **하나**가 API와 화면을 같이 서빙하고, SQLite 파일 하나가 영속을 맡는다.
-프론트에는 빌드 체인이 없다 — 브라우저가 그대로 읽는 ES 모듈이고, Leaflet 은 저장소 안에
-벤더링돼 있어 **외부 CDN 을 하나도 부르지 않는다**.
-
-## 무엇을 하는가
-
-| 기능 | 내용 | 요구 |
-|------|------|------|
-| 여행 생성 · 참여 | 27스팟(4일 · 6/9/8/4)이 자동 주입되고, 12자 초대코드가 발급된다. 계정은 없다 | REQ-001~003 |
-| 일정 편집 | 스팟 추가·수정·삭제, 일자 내 순서 변경, 일자 간 이동 (낙관적 잠금 · 원자 트랜잭션) | REQ-004 · REQ-005 |
-| 완료 체크 공유 | 체크가 서버에 저장되어 **누가 언제 체크했는지** 동행 모두에게 보인다 | REQ-006 |
-| 경비 · 정산 | 지출을 기록하면 분담액이 기록 시점에 확정되고, 최소 송금으로 "누가 누구에게 얼마"를 낸다 | REQ-007 · REQ-008 |
-| **영수증으로 경비 입력** | 영수증 사진에서 금액·날짜·영문 상호를 읽어 경비 입력 칸을 채운다. 글자 인식은 작성자의 [OCR 프로젝트](https://github.com/currentJob/ocr-llm-page)가 배포한 모듈을 브라우저에서 불러 쓰며, 사진은 어디로도 보내지 않는다. 한자는 읽지 못한다. `CWP_CONFIG.ocrModule` 이 비면(셀프 호스팅 기본) 버튼이 나오지 않는다 | 플랫폼 확장 |
-| 동선 최적화 제안 | 현재 순서 대비 총 이동거리를 비교해 제안한다. 고정시각 스팟은 자리를 지키고, **적용 여부는 사용자가 고른다** | REQ-009 |
-| 이동시간 · 도착 예상시각 | 하버사인 거리 + 모드별 평균속도로 구간을 추정하고 하루 타임라인을 세운다(추정치임을 화면에 표시) | REQ-010 · REQ-011 |
-| 영업시간 · 충돌 경고 | 영업시간 원문을 파싱해 "도착 시각에 닫힘"·"휴무일"·고정시각 충돌을 알린다. **못 읽은 문자열은 경고를 만들지 않는다** | REQ-012 · REQ-013 |
-| 날씨 · 환율 | 서버가 캐시하고, 갱신에 실패하면 마지막 성공값과 **그 시각**을 함께 보여 준다 | REQ-014 · REQ-015 |
-| 폴링 동기화 | 리비전 ETag + `If-None-Match` → 변경이 없으면 304. 탭이 숨으면 멈춘다 | REQ-016 |
-| **근처 맛집 찾기** | 지금 서 있는 자리 기준 반경 800m(최대 3km)의 음식점·카페·간편식을 OpenStreetMap에서 조회한다. 거리순 정렬 · 길찾기 · **버튼 하나로 오늘 일정에 추가**(이동시간·도착시각에 바로 반영) | REQ-017 · REQ-018 |
-| **미쉐린 목록** | 미리 조사해 저장한 **홍콩·마카오 미쉐린 별 등급 98곳**(공식 집계와 일치). 위치가 확인된 94곳은 거리순으로 보이고, 각 항목에서 지도·OpenRice 리뷰 검색을 연다. 출처와 한계를 화면에 함께 표시 | REQ-019 |
-| **도시 가이드 (구운 29곳)** | 빌드 타임에 조사해 저장소에 넣은 도시 데이터로 일정을 만든다. 스팟마다 한국어 이름·원어명·**위키백과 설명 + 출처 링크**, 하루마다 제목·지역·색. 조회는 **파일 읽기**라 외부 호출이 0건이다. 국가 이름("일본"·"Japan"·"JP")으로 구운 도시를 고를 수 있고, **완전/부분/폴백** 등급이 화면에 항상 뜬다 | REQ-022~030 |
-| 화면 | 공유 라이트 테마 · Leaflet/OSM 지도 · 일자 탭 · 진행률 링 · 홍콩 현지시각 시계 · 실시간 위치 추적 · 가까운 순 정렬 · 구글맵 길찾기 | NFR-007~009 · 플랫폼 확장 |
-| **설계한 일정도 지도로** | 직접 설계한 일정의 모든 스팟을 핀으로 띄우고 일자별로 초점을 옮긴다. 핀을 누르면 목록의 그 스팟으로 이어진다. **내 위치** 버튼을 누른 뒤에만 위치를 요청하고, 거부해도 일정·지도·핀은 그대로 동작한다 | DSN-46 |
-
-## 설치 · 실행
-
-Python 3.12+ 와 [uv](https://docs.astral.sh/uv/) 가 필요하다. 그 밖의 런타임 의존성은 없다
-(Node·npm·번들러를 쓰지 않는다).
+Python 3.12+ 와 [uv](https://docs.astral.sh/uv/) 가 필요합니다.
 
 ```powershell
 uv sync --frozen
-uv run python -m city_walk_planner
+uv run python -m city_walk_planner      # http://127.0.0.1:8080
 ```
-
-`http://127.0.0.1:8080` 을 열면 된다. 여행은 SQLite 파일(`./city-walk-planner.db`)에 남는다.
 
 | 환경변수 | 기본값 | 뜻 |
-|----------|--------|-----|
+|---|---|---|
 | `CWP_DB_PATH` | `city-walk-planner.db` | SQLite 파일 경로 |
 | `CWP_HOST` · `CWP_PORT` | `127.0.0.1` · `8080` | 바인딩 주소 |
-| `CWP_ALLOWED_ORIGINS` | (비어 있음) | CORS 허용 출처. 화면을 다른 호스트에 올릴 때만 쓴다 |
-| `CWP_TRAVEL_*` · `CWP_EXTERNAL_*` | 설계서 §6.1 | 이동시간 계수·외부 API TTL (전부 추정치라 설정으로 열어 뒀다) |
+| `CWP_ALLOWED_ORIGINS` | (비어 있음) | CORS 허용 출처. 화면을 다른 호스트에 올릴 때만 |
+| `CWP_GOOGLE_PLACES_API_KEY` | (비어 있음) | Google 평점·후기 조회(선택, 과금 발생 가능) |
+| `CWP_CLIENT_IP_HEADER` | (비어 있음) | 프록시 뒤에서 실제 접속 주소를 읽을 헤더 |
 
-### 도시 가이드 쓰기
+날씨(Open-Meteo)·환율(Frankfurter)·주변 장소(OpenStreetMap)는 API 키가 필요 없습니다. 도시 가이드 데이터를 다시 만들려면 `uv run python tools/bake_city_guides.py --help`.
 
-구운 데이터는 저장소에 들어 있다(`seed/city-guides/`). 별도 준비 없이 바로 동작한다.
-
-```powershell
-# 국가·도시 이름으로 구운 도시 찾기 ("일본" · "Japan" · "JP" 가 같은 목록을 준다)
-curl "http://127.0.0.1:8080/api/explore/guides?q=일본"
-
-# 도시 하나의 가이드 상세 (등급 · 출처 · 조사 시점)
-curl "http://127.0.0.1:8080/api/explore/guides/prague"
-
-# 가이드 일정 생성 (city_id 를 주면 구운 데이터, destination 을 주면 기존 휴리스틱)
-curl -X POST "http://127.0.0.1:8080/api/explore/plan" -H "Content-Type: application/json" -d '{"city_id":"prague","start_date":"2026-10-05","end_date":"2026-10-07"}'
-```
-
-데이터를 다시 구우려면 `uv run python tools/bake_city_guides.py --help`.
-**베이커는 빌드 타임 도구다** — 서버도 테스트도 이것을 부르지 않는다.
-
-기본 날씨(Open-Meteo)·환율(Frankfurter)·근처 장소(OpenStreetMap Overpass)는 API 키를 요구하지 않는다.
-새 메인의 Google 평점·후기를 선택적으로 사용할 때만 PC에 별도 키를 설정한다.
-
-## 검증
+## Docker
 
 ```powershell
-uv run pytest -q                        # 전체 (도메인 · API · 정적 검사)
-uv run pytest tests/static -q           # 프론트 자산 · 계층 · 네트워크 · 시크릿/고정
-uv run ruff check .
-uv run python tools/vendor_check.py     # Leaflet 벤더 파일 SHA256 대조
+docker compose up --build     # 화면 http://localhost:8080 · API http://localhost:8787
 ```
 
-테스트는 **네트워크 없이** 돈다. `tests/conftest.py` 가 루프백 밖 연결을 세션 전체에서
-막고, 외부 공급자는 호출 횟수를 세는 가짜로 대체된다 — 그래서 "테스트 중 실제 HTTP 호출
-0건"이 주석이 아니라 검사 결과다.
+배포와 같은 Cloudflare Worker 번들을 로컬 workerd 로 실행합니다. 데이터는 `api-data` 볼륨에 남고, `docker compose down -v` 로 초기화합니다.
 
-### 실측 수치 (2026-09-16 · Windows 11 AMD64 · Python 3.12.13)
+## 셀프 호스팅
 
-| 항목 | 값 |
-|------|-----|
-| 전체 테스트 | **860 passed** (도메인 407 · API 237 · 정적 110 · 도구 68 · 기반 38) · 실패 0 |
-| 수용 기준 커버리지 | **88/88** (미커버 0) |
-| 구운 도시 | 조사 **32** → 수록 **29** (완전 26 · 부분 3) · 미달 제외 3 · 비활성 3 |
-| 프라하(예시) | 후보 92 → 수록 51 · 설명 50 · 연결 검증 실패 1(설명만 비움) · 영업시간 있는 스팟 6 |
-| 린트 | `ruff check .` 통과 |
-| `GET /state` 처리시간 | p50 **4.64 ms** · p95 5.24 ms · p99 6.79 ms (27스팟 전량 재계산, 200표본) |
-| `POST /optimize` 처리시간 | p50 **2.60 ms** · p95 3.04 ms (자유 9스팟) |
-
-성능 절대치는 실행 환경에 의존한다 — 근거 파일은 `reports/perf.md`(측정 환경을 스스로 적는다).
-직접 재려면 `uv run python tools/perf_report.py`.
-
-**최신 릴리스**: [Releases](../../releases/latest) · 산출물은 sdist·wheel·SBOM·`SHA256SUMS`.
-
-## 로컬 실행 (Docker · 배포와 같은 구조)
-
-배포와 같은 모양으로 화면과 API 를 PC 에서 띄운다. Docker Desktop 이 켜져 있어야 한다.
-
-```powershell
-docker compose up --build        # 처음은 이미지 빌드에 몇 분 걸린다
-```
-
-| 서비스 | 주소 | 내용 |
-|--------|------|------|
-| web | http://localhost:8080 | GitHub Pages 와 같은 정적 화면. `/api` 는 api 컨테이너로 넘긴다(같은 출처라 CORS·서버 주소 설정 불필요) |
-| api | http://localhost:8787 | 배포되는 것과 같은 Cloudflare Worker 번들을 workerd 런타임(`pywrangler dev`)에서 실행. Durable Object SQLite 데이터는 `api-data` 볼륨에 남는다 |
-
-- 초기화: `docker compose down -v` (볼륨을 지우면 로컬 여행 데이터도 사라진다).
-- 점검: `uv run python tools/smoke_api.py http://localhost:8080`
-- 클라우드와 데이터는 공유하지 않는다. 로컬은 로컬 볼륨, 배포 서버는 Cloudflare 의 Durable Object 를 쓴다.
-- Docker 없이 파이썬만으로 돌리려면 위의 `uv run python -m city_walk_planner`(로컬 SQLite 파일)를 쓴다.
-
-## 셀프 호스팅 (내 도메인에 배포)
-
-서버 한 대와 도메인만 있으면 된다. 저장소를 받을 필요 없이 **`docker-compose.selfhost.yml` 파일 하나**로 띄운다.
-
-1. 도메인의 DNS A(또는 AAAA) 레코드를 서버 IP 로 향하게 하고, 서버의 80·443 포트를 연다.
-2. 서버에 Docker 를 설치하고 파일을 받아 실행한다.
+도메인의 DNS 를 서버로 향하게 하고 80·443 포트를 연 뒤, 파일 하나로 실행합니다.
 
 ```bash
 curl -fsSLO https://raw.githubusercontent.com/currentJob/city-walk-planner/main/docker-compose.selfhost.yml
 DOMAIN=trips.example.com docker compose -f docker-compose.selfhost.yml up -d
 ```
 
-| 구성 | 내용 |
-|------|------|
-| `app` | `ghcr.io/currentjob/city-walk-planner` — FastAPI(uvicorn) + SQLite 가 화면과 API 를 함께 준다. 외부 포트를 열지 않는다 |
-| `proxy` | Caddy 가 `$DOMAIN` 의 HTTPS 인증서를 자동 발급·갱신하고 `app` 으로 넘긴다. HTTP 는 HTTPS 로 돌린다 |
-
-- 이미지는 `main` 에 push 할 때마다 `.github/workflows/image.yml` 이 GHCR 에 올린다(`latest` · 커밋 SHA · `v*` 태그). 특정 버전은 `CWP_VERSION=<태그>` 로 고정한다.
-- 선택: `CWP_GOOGLE_PLACES_API_KEY` 를 주면 리뷰 반영 기능이 켜진다.
-- 초대코드 참여 제한은 Caddy 가 넘기는 실제 접속 주소로 센다(`--proxy-headers`, 앱 포트는 Caddy 만 닿는다).
-- 직접 빌드: 저장소에서 `DOMAIN=localhost docker compose -f docker-compose.selfhost.yml up -d --build` (localhost 는 Caddy 자체 인증서).
-- 백업(서비스를 멈추지 않고 SQLite 온라인 백업):
+- `app`: `ghcr.io/currentjob/city-walk-planner` (FastAPI + SQLite, 화면과 API). `proxy`: Caddy 가 HTTPS 인증서를 자동 발급합니다.
+- 백업:
 
 ```bash
 docker compose -f docker-compose.selfhost.yml exec app /app/.venv/bin/python -c "import sqlite3; sqlite3.connect('/data/city-walk-planner.db').backup(sqlite3.connect('/data/backup.db'))"
 docker compose -f docker-compose.selfhost.yml cp app:/data/backup.db ./city-walk-planner-backup.db
 ```
 
-- 복원(앱을 멈추고, 일회용 컨테이너로 파일을 바꾼 뒤 이전 WAL 을 지우고 소유자를 앱 사용자로 돌린다 — `docker cp` 로 덮으면 root 소유가 되어 쓰기가 막힌다):
+- 복원(파일 소유자를 앱 사용자로 되돌립니다):
 
 ```bash
 docker compose -f docker-compose.selfhost.yml stop app
-docker compose -f docker-compose.selfhost.yml run --rm --no-deps -u root -v "$PWD:/restore" app sh -c   "cp /restore/city-walk-planner-backup.db /data/city-walk-planner.db && rm -f /data/city-walk-planner.db-wal /data/city-walk-planner.db-shm && chown 10001 /data/city-walk-planner.db"
+docker compose -f docker-compose.selfhost.yml run --rm --no-deps -u root -v "$PWD:/restore" app sh -c "cp /restore/city-walk-planner-backup.db /data/city-walk-planner.db && rm -f /data/city-walk-planner.db-wal /data/city-walk-planner.db-shm && chown 10001 /data/city-walk-planner.db"
 docker compose -f docker-compose.selfhost.yml start app
 ```
-- 이 구성은 Cloudflare 배포(아래)와 데이터를 공유하지 않는 독립 설치다.
 
 ## 배포 (GitHub Pages + Cloudflare Worker)
 
-화면은 Pages, API·DB 는 **Cloudflare Worker** 에서 돈다. PC 가 꺼져도 동작한다.
+화면은 `main` 에 push 하면 `.github/workflows/pages.yml` 이 GitHub Pages 에 올립니다. 서버 주소(`CWP_API_BASE`)와 영수증 인식 모듈(`CWP_OCR_MODULE`)은 저장소 변수로 바꿀 수 있습니다.
 
-- 서버: https://city-walk-planner-api.currentjob.workers.dev (Pages 빌드의 기본 서버 주소)
-- 영수증 인식 모듈: 저장소 변수 `CWP_OCR_MODULE`(기본 `https://currentjob.github.io/ocr-llm-page/lib/korean-ocr.mjs`)을 `config.js` 의 `ocrModule` 로 굽는다.
-- 구성: Python Worker 하나 + SQLite 기반 Durable Object 하나(`AppDO`). 기존 FastAPI 앱을 그대로 실행하고,
-  저장소만 `worker/src/do_sqlite.py` 어댑터로, 외부 HTTP 만 `worker/src/fetch_transport.py`(Workers `fetch`)로 바꾼다.
-- 배포(프로젝트 루트에서, 처음 한 번 `npx wrangler login`):
+API 는 Python Worker 하나와 SQLite 기반 Durable Object(`AppDO`)에서 FastAPI 앱을 그대로 실행합니다.
 
 ```powershell
-uv run python tools/build_worker.py            # 앱 코드·데이터를 worker/src 로 복사
-cd worker; npm ci; uv sync                     # 고정된 wrangler(package-lock) + pywrangler (uv 0.12.3 이상)
-uv run pywrangler deploy
+uv run python tools/build_worker.py      # 앱 코드·데이터를 worker/src 로 복사
+cd worker; npm ci; uv sync
+uv run pywrangler deploy                 # 처음 한 번 npx wrangler login
 uv run python ../tools/smoke_api.py https://city-walk-planner-api.currentjob.workers.dev
 ```
 
-- 로컬 확인: `worker` 에서 `uv run pywrangler dev` 후 `tools/smoke_api.py http://127.0.0.1:8787`.
-- 테스트: `CWP_TEST_STORAGE=durable-object` 로 API 테스트를 Durable Object 어댑터 위에서 다시 돌릴 수 있다.
-- 무료 요금제는 요청당 CPU 10ms 한도가 있다. 실측(2026-09-29)은 요청당 6~31ms라 가끔 넘으며,
-  Cloudflare 가 일시 초과를 허용해 현재는 정상 응답한다. 계속 넘으면 1102 오류가 날 수 있다.
-
-아래는 이전 방식(PC 백엔드 + 터널)이다. Worker 를 쓰면 필요 없다.
-
-### 이전 방식: PC 백엔드
-
-화면만 Pages 에 올리고 API·DB 는 PC 에서 돌린다. **브라우저가 PC 의 백엔드로 직접 요청한다** —
-Pages 는 정적 파일만 준다.
-
-**화면 배포는 자동이다.** `main` 에 push 하면 `.github/workflows/pages.yml` 이
-`src/city_walk_planner/web` 을 그대로 올린다.
-
-**백엔드는 PC 에서 띄운다.**
+## 테스트
 
 ```powershell
-uv run python -m city_walk_planner                                    # 로컬 API
-powershell -ExecutionPolicy Bypass -File tools/start-tunnel.ps1    # .local/cloudflared.exe 필요
-$env:CWP_ALLOWED_ORIGINS = "https://<사용자>.github.io"             # CORS 허용 (필수)
+uv run pytest -q
+uv run ruff check .
+uv run python tools/vendor_check.py      # Leaflet 벤더 파일 SHA256 대조
 ```
 
-**주소는 배포 설정으로 넣는다.** 화면에는 서버 주소를 바꾸는 칸이 없다(사용자에게 필요 없는 개발자
-설정이고, `?api=` 링크로 요청이 다른 서버로 새는 문제가 있어 없앴다). 터널 주소를 저장소 변수
-`CWP_API_BASE` 에 넣고 Pages 를 다시 배포한다. 터널 주소는 재시작마다 바뀌므로 그때마다 다시 넣어야
-한다 — 그래서 지금은 Cloudflare Worker 방식을 쓴다.
+테스트는 네트워크 없이 돌며, 외부 공급자는 가짜로 대체됩니다. `CWP_TEST_STORAGE=durable-object` 로 API 테스트를 Durable Object 어댑터 위에서 다시 돌릴 수 있습니다.
 
-PC 가 꺼지거나 절전으로 들어가면 조회·수정이 연결되지 않는다. 프로세스 ID·로그·실제 DB 는
-`.local/` 에 두고 Git 에 넣지 않는다.
+## 알아 둘 점
 
-## 알려진 제약
-
-- **초대코드를 아는 사람은 전체 편집 권한을 갖는다.** 권한 등급도 소유자 개념도 없다 — 코드
-  공유 범위가 곧 접근 통제다. 화면에도 같은 문구를 띄운다.
-- **이동시간·도착 예상시각은 추정치다.** 실제 경로탐색이 아니라 직선거리 × 우회계수 ÷ 평균속도이며,
-  응답과 화면 모두 "예상"으로 표시한다.
-- **영업시간은 근사치이고, 파서가 못 읽는 문자열은 `unknown` 으로 남는다.** 한 스팟 안에 주체가
-  둘인 문자열("단지 상시 · 상점 11:00–20:00")은 의도적으로 판정하지 않는다 —
-  거짓 경고 하나가 진짜 경고 전부를 무시하게 만들기 때문이다.
-- **브라우저의 유일한 런타임 외부 요청은 지도 타일이다.** 날씨·환율·근처 장소는 **서버가**
-  부른다. 타일이 실패해도 목록·타임라인·경고·정산은 그대로 동작한다(지도 자리에 안내가 뜬다).
-- **근처 장소는 OpenStreetMap 데이터다.** 지역·가게마다 품질 편차가 있고 평점·사진은 없다.
-  이름이 없는 항목은 아예 나오지 않는다. 결과는 30분 캐시되며, 조회에 실패하면 마지막
-  성공 목록과 **그 시각**을 함께 보여 준다. 지금 노출하는 카테고리는 음식점·카페·간편식뿐이고,
-  관광명소는 `config.NEARBY_CATEGORIES` 에서 한 줄로 켤 수 있다.
-- **위치를 켜지 않으면 근처 찾기가 동작하지 않는다.** 좌표 없이는 서버가 422로 거절하므로,
-  화면이 먼저 "내 위치를 켜 주세요"로 안내한다.
-- 통화는 HKD 고정이다. 원화 표시는 환산일 뿐이고, 환율이 없으면 HKD 만 보인다.
-- 단일 인스턴스 SQLite 전제다(동행 2~5명 규모). 다중 프로세스 배포는 대상이 아니다.
-- 위치 권한을 거부하면 거리·가까운 순 정렬만 비활성화되고 나머지는 정상 동작한다.
-
-**도시 가이드(구운 29곳)의 제약**
-
-- **사람이 쓴 홍콩 가이드와 같아지지 않는다.** 구운 도시의 설명은 그 장소가 *무엇인지*를 말하고,
-  홍콩 가이드는 사람이 *왜 가는지*를 썼다 — 근접하지만 동일해지지 않는다. 화면이 등급으로 그
-  차이를 밝힌다.
-- **한국어 문서가 없거나 좌표가 없는 장소는 잡히지 않는다.** 그래서 후보를 영어 위키백과 검색과
-  **합집합**으로 모은다(프라하는 수록 51곳 중 34곳이 영어 경로로 발견됐다). 그래도 구멍은 줄 뿐
-  없어지지 않으니, 도시별 스팟 수를 "그 도시의 전부"로 읽으면 안 된다.
-- **오피스 타워·경기장 같은 잡음이 남는다.** 분류로 더 지우려 하면 **콜로세움이 지워진다** —
-  콜로세움이 경기장 분류를 직접 달고 있다(실측). 그래서 사람 검토 목록으로 걸러 내는데,
-  **검토를 거친 도시는 홍콩 하나뿐**이다.
-- **영업시간이 있는 스팟이 적다.** 프라하는 51곳 중 6곳뿐이라, 영업시간 경고 기능이 구운 도시에는
-  거의 적용되지 않는다. 원천에 값이 없는 것이므로 채우지 않는다.
-- **구운 데이터는 스냅샷이다.** 조사 시점이 화면에 뜨고 자동 갱신은 없다 — 사람이 다시 굽는다.
-- **발리·나트랑·푸꾸옥 같은 리조트 목적지는 이 방식으로 채워지지 않는다.** 위키데이터에 걸릴
-  '명소'가 애초에 적다. 기준 미달 도시는 **싣지 않고**, 조사했다는 사실과 지표는
-  `seed/city-guides/harvest-report.json` 에 남는다.
-- 굽지 않은 도시는 예전의 휴리스틱 추천이며 화면에 **"제한된 자동 추천"** 으로 표시된다.
+- 초대코드를 아는 사람은 공유 여행 전체를 편집할 수 있습니다.
+- 이동시간·도착 시각은 직선거리 기반 추정치이고, 영업시간은 근사치입니다. 공휴일·임시 휴업은 반영하지 않습니다.
+- 도시 가이드와 평점은 조사 시점의 스냅샷이며 자동으로 갱신되지 않습니다.
+- 공유 여행의 통화는 HKD 입니다.
 
 ## 라이선스
 
-코드는 **MIT** — [`LICENSE`](LICENSE) 참조.
-
-구운 도시 가이드의 **스팟 설명은 위키백과 본문**이며 **CC BY-SA 4.0** 이다
-(<https://creativecommons.org/licenses/by-sa/4.0/>). 설명이 붙은 스팟은 전부 출처 URL·라이선스
-식별자·조회일을 함께 저장하고 화면에 출처 링크를 표시한다. 영업시간은 OpenStreetMap(**ODbL 1.0**)에서
-온다. 지도 타일·근처 장소도 OpenStreetMap 기여자의 자료다.
-
-### SNS·트렌드 맛집
-
-`주변 맛집 → 맛집 모아보기 → SNS·트렌드 맛집만`에서 공개 소개 기사로 조사한 장소를 볼 수 있습니다.
-현재 홍콩 8곳(자료 확인 2026-09-19)을 제공하며 SNS 화제, 식사·브런치, 감성 카페로 좁힙니다.
-선택 도시 전체와 검색 반경 내를 구분하고, 내 위치 버튼을 누르면 반경 검색으로 전환합니다.
-목록과 지도는 같은 필터를 쓰며 `지도에서 보기`로 선택한 지점에 이동합니다.
-기사 출처·수정일·자료 확인일·추천 메뉴·방문 팁을 표시합니다. 미조사 도시는 빈 결과로 안내합니다.
-실시간 Instagram 순위나 방문객 연령 통계가 아니며, 없는 평점과 리뷰 수는 만들어 넣지 않습니다.
-정적 자료는 `src/city_walk_planner/web/data/trending-food.json`에 있으며 별도 유료 API를 호출하지 않습니다.
-
-브라우저 확인: 서버 실행 후 `uv run --no-project --with playwright --python .venv/Scripts/python.exe tools/check_trend_food.py`.
-`CHECK_URL`로 배포 주소, `CHROME_PATH`로 설치된 Chromium 실행 파일을 지정할 수 있습니다.
-일반 주변 맛집 API만 테스트 응답으로 대체하며, 트렌드 목록은 실제 배포 파일을 읽습니다.
+코드는 MIT([`LICENSE`](LICENSE)). 도시 가이드의 스팟 설명은 위키백과 본문으로 CC BY-SA 4.0 이며, 화면에 출처 링크를 표시합니다. 영업시간·지도·주변 장소는 OpenStreetMap(ODbL 1.0) 기여자의 자료입니다.
