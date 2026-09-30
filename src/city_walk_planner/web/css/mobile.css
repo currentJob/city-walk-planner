@@ -151,3 +151,15 @@ summary{min-height:var(--tap);display:flex;align-items:center}
 
 /* Theme switch: thumb-sized on phones */
 .theme-toggle{width:var(--tap);height:var(--tap);min-height:var(--tap)}
+
+/* Accent picker: thumb-sized, and its palette opens toward the screen edge */
+.platform-header .cj-accent{--cj-ctl:var(--tap)}
+.platform-header{gap:8px}
+
+/* Narrow phones: logo, accent, theme and "동행" must share one row. */
+@media (max-width:430px){
+  .shared-link{width:var(--tap);padding:0;justify-content:center}
+  .shared-link .nav-short,.shared-link .nav-full{display:none}
+  .shared-link .icon{width:20px;height:20px}
+}
+@media (max-width:380px){.platform-header .brand{font-size:15px}.platform-header .brand-mark{width:26px;height:26px}}
