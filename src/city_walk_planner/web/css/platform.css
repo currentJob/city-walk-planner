@@ -80,7 +80,7 @@ html{scroll-behavior:smooth;scroll-padding-top:95px}body,.shared-page{margin:0;b
 .cj-projects a[aria-current=page]{font-weight:700;color:var(--green)}
 .cj-home{font-family:Georgia,"Noto Serif KR",serif;font-size:13px}
 .cj-list{display:flex;align-items:center;gap:14px}
-@media (max-width:560px){.cj-long{display:none}}
+@media (max-width:560px){.cj-long{display:none}.cj-projects{gap:8px;padding:0 12px}.cj-list{gap:12px}}
 /* Light/dark switch in the header */
 .theme-toggle{display:inline-grid;place-items:center;flex:none;width:40px;min-height:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink)}
 .theme-toggle .icon{width:18px;height:18px}
@@ -88,7 +88,7 @@ html{scroll-behavior:smooth;scroll-padding-top:95px}body,.shared-page{margin:0;b
 .platform-header .cj-accent{margin-left:auto}.platform-header .theme-toggle+.shared-link{margin-left:0}
 
 /* Accent colour picker in the header (next to the theme switch) */
-.cj-accent{position:relative;display:inline-block}
+.cj-accent{position:relative;display:inline-flex;vertical-align:middle}
 .cj-accent>summary{list-style:none;display:inline-grid;place-items:center;width:var(--cj-ctl,26px);height:var(--cj-ctl,26px);border:1px solid var(--cj-line);border-radius:999px;background:var(--cj-surface);cursor:pointer}
 .cj-accent>summary::-webkit-details-marker{display:none}
 .cj-dot{width:12px;height:12px;border-radius:50%;background:var(--cj-accent)}
