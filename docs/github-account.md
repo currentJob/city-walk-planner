@@ -77,3 +77,25 @@ Cloudflare 로그인/권한이 이미 준비되어 있어야 합니다. `secret 
 
 공식 참고: [GitHub OAuth 웹 흐름](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps),
 [OAuth App 등록](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
+
+## `/account/`가 404일 때: API 배포
+
+GitHub Pages 배포와 API Worker 배포는 별개입니다. Pages만 배포하면
+링크는 보여도 이전 Worker에는 `/account/` 경로가 없어 404가 납니다.
+OAuth 앱 설정 누락은 새 Worker에서 **503**으로 표시됩니다. 404와 원인이 다릅니다.
+
+GitHub에서 배포하려면:
+
+1. Cloudflare에서 이 Worker의 계정에 한정한 **Edit Cloudflare Workers** API Token을 발급합니다.
+2. 저장소 **Settings → Secrets and variables → Actions → New repository secret**에
+   `CLOUDFLARE_API_TOKEN`과 `CLOUDFLARE_ACCOUNT_ID`를 등록합니다.
+   토큰은 채팅이나 코드에 붙여넣지 않습니다.
+3. **Actions → Deploy API Worker → Run workflow → main**을 실행합니다.
+4. CI 성공 후 기존 Worker에 배포하고, 마지막 단계에서 `/account/`와 자산이 200인지,
+   익명 개인 데이터 접근이 거부되는지 검사합니다. OAuth 미설정은 경고로 구분합니다.
+5. OAuth 설정은 이 문서의 1~3단계를 따릅니다. 배포 자체는 로그인 활성화와 별도입니다.
+
+로컬에서 이미 Cloudflare 로그인이 되어 있다면 기존 2단계의 배포 명령을 실행해도 됩니다.
+이 워크플로는 수동 실행이며 Pages 배포나 저장소 push만으로 API가 갱신되지는 않습니다.
+
+공식 배포 인증 안내: https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/
