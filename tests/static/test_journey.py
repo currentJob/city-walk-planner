@@ -15,4 +15,10 @@ def test_private_itinerary_not_in_public_data():
 def test_public_trend_links_to_account():
     js = (WEB / 'js/render/trend.js').read_text()
     assert '/account/' in js
-    assert 'GitHub로 내 여행 관리' in js
+    assert '내 계정의 홍콩·마카오 일정 열기' in js
+
+
+def test_trend_tab_enters_same_origin_account_application():
+    js = (WEB / 'js/platform.js').read_text()
+    assert "if (hash === 'trend') { location.assign(apiBase() + '/account/'); return; }" in js
+    assert "hash !== 'trend-guide'" in js

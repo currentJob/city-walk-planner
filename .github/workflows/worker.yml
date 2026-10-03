@@ -1,6 +1,14 @@
 name: Deploy API Worker
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/city_walk_planner/**'
+      - 'worker/**'
+      - 'tools/build_worker.py'
+      - 'tools/smoke_account.py'
+      - '.github/workflows/worker.yml'
   workflow_dispatch:
 
 permissions:

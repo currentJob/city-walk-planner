@@ -1,19 +1,23 @@
 """Check that the deployed Worker actually includes the account application."""
 
 import json
-from urllib.error import HTTPError
-from urllib.request import Request, urlopen
+from http.client import HTTPSConnection
 
-ORIGIN = 'https://city-walk-planner-api.currentjob.workers.dev'
+HOST = 'city-walk-planner-api.currentjob.workers.dev'
+PATHS = {'/account/', '/account/assets/account.js', '/account/assets/account.css',
+         '/auth/me', '/api/private/journey'}
 
 
 def read(path):
-    request = Request(ORIGIN + path, headers={'User-Agent': 'CityWalkPlanner-DeploymentCheck/1.0'})
+    if path not in PATHS:
+        raise ValueError('Unexpected account check path')
+    connection = HTTPSConnection(HOST, timeout=30)
     try:
-        with urlopen(request, timeout=30) as response:
-            return response.status, response.read().decode()
-    except HTTPError as exc:
-        return exc.code, exc.read().decode()
+        connection.request('GET', path, headers={'User-Agent': 'CityWalkPlanner-DeploymentCheck/1.0'})
+        response = connection.getresponse()
+        return response.status, response.read().decode()
+    finally:
+        connection.close()
 
 
 def main():

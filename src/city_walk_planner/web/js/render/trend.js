@@ -194,7 +194,7 @@ export function trendHtml(data, accountBase = '') {
     <p>${esc(data.summary)}</p><p class="hint">조사일 ${esc(data.checked_at)}. ${esc(data.rating_note)}</p></div>
     <nav class="trend-tabs" aria-label="트렌드 코스 보기">${TREND_TABS.map(([id, label]) =>
       `<button type="button" data-trend-tab="${id}" aria-pressed="${id === 'plan'}">${label}</button>`).join('')}</nav>
-    <section class="journey-private"><h2>나만의 여행수첩</h2><p>개인 일정은 GitHub 로그인 후 별도 계정 페이지에서 관리합니다.</p><a class="btn" href="${esc(accountBase)}/account/">GitHub로 내 여행 관리</a></section>
+    <section class="journey-private"><h2>나만의 여행수첩</h2><p>개인 일정·숙소·준비물·메모는 GitHub 계정에 저장됩니다. 아래는 누구나 볼 수 있는 추천 코스와 리뷰입니다.</p><a class="btn" href="${esc(accountBase)}/account/">내 계정의 홍콩·마카오 일정 열기</a></section>
     <section class="section" data-trend-section="plan"><h2>${icon('calendar', 'title-icon')}날짜별 일정</h2>
       <form id="trendRange"><div class="tools"><label>방문 시작일<input type="date" name="start" value="${esc(start)}" required></label>
         <label>방문 종료일<input type="date" name="end" value="${esc(end)}" required></label></div>

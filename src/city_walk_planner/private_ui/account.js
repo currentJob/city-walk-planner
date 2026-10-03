@@ -14,7 +14,7 @@ async function api(path, options = {}) {
   return response.status === 204 ? null : response.json();
 }
 function clearPrivate() {
-  payload = null; csrf = ''; revision = 0; dirty = false;
+  payload = null; csrf = ''; revision = 0; dirty = false; editingDays = null; $('editor').hidden = true; $('editDays').replaceChildren(); $('editTitle').value = ''; $('editSummary').value = '';
   $('workspace').hidden = true; $('notebook').hidden = true; $('identity').textContent = ''; $('notes').value = '';
   ['days','checklist','activities','extras','title','summary','dayNav'].forEach(id => $(id).replaceChildren());
   $('import').value = ''; $('hotel').value = ''; $('flightTime').value = ''; $('variant').replaceChildren(); $('airportTiming').textContent = ''; $('hotelMap').replaceChildren();
@@ -90,7 +90,8 @@ function renderSettings() {
   $('hotelMap').replaceChildren();if(s.hotel)$('hotelMap').append(map(s.hotel));
 }
 function flightTiming(time=state().flightTime) {
-  const date=arr(payload.journey.days).at(-1)?.date;
+  const j=payload.journey;
+  const date=arr(arr(j.variants).find(v=>v.id===state().variant)?.days||j.days).at(-1)?.date;
   if(!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time||'') || !/^\d{4}-\d{2}-\d{2}$/.test(date||''))return null;
   const ms=Date.parse(`${date}T${time}:00+08:00`);if(!Number.isFinite(ms))return null;
   const fmt=n=>new Date(n+8*3600000).toISOString().slice(5,16).replace('T',' ');
@@ -136,6 +137,66 @@ $('logout').addEventListener('click',async()=>{
 });
 window.addEventListener('beforeunload',e=>{if(dirty||busy){e.preventDefault();e.returnValue='';}});
 window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
+let editingDays = null;
+function field(label, value='', type='text') {
+  const wrap=el('label',label), input=el(type==='textarea'?'textarea':'input');
+  if(type!=='textarea')input.type=type;input.value=value;input.maxLength=type==='textarea'?3000:300;
+  input.addEventListener('input',()=>{dirty=true;});wrap.append(input);return {wrap,input};
+}
+function collectEdits() {
+  return [...$('editDays').children].map((node,i)=>{
+    const fields=node.querySelectorAll(':scope > .editor-grid input');
+    return {...editingDays[i],date:fields[0].value,label:fields[0].value,theme:fields[1].value,
+      stops:[...node.querySelectorAll('.editor-stop')].map(row=>{
+        const inputs=row.querySelectorAll('input,textarea');
+        return {...editingDays[i].stops[Number(row.dataset.index)],time:inputs[0].value,name:inputs[1].value,note:inputs[2].value,query:inputs[3].value};
+      })};
+  });
+}
+function drawEditor() {
+  $('editDays').replaceChildren();
+  editingDays.forEach((day,i)=>{
+    const n=el('section',null,'editor-day'), grid=el('div',null,'editor-grid');
+    const date=field('날짜',day.date,'date');date.input.required=true;
+    grid.append(date.wrap,field('하루의 주제',day.theme).wrap);n.append(grid);
+    arr(day.stops).forEach((stop,k)=>{
+      const row=el('div',null,'editor-stop');row.dataset.index=k;
+      row.append(field('시간',stop.time).wrap,field('장소·활동',stop.name).wrap,field('메모',stop.note,'textarea').wrap,field('지도 검색어',stop.query).wrap);
+      const remove=el('button','장소 삭제','danger');remove.type='button';remove.onclick=()=>{editingDays=collectEdits();editingDays[i].stops.splice(k,1);dirty=true;drawEditor();};row.append(remove);n.append(row);
+    });
+    const add=el('button','장소 추가');add.type='button';add.onclick=()=>{editingDays=collectEdits();editingDays[i].stops.push({id:crypto.randomUUID(),time:'',name:'',note:'',query:''});dirty=true;drawEditor();};
+    const remove=el('button','날짜 삭제','danger');remove.type='button';remove.onclick=()=>{if(confirm('이 날짜의 장소도 함께 삭제할까요?')){editingDays=collectEdits();editingDays.splice(i,1);dirty=true;drawEditor();}};
+    n.append(add,remove);$('editDays').append(n);
+  });
+}
+['editTitle','editSummary'].forEach(id=>$(id).addEventListener('input',()=>{dirty=true;}));
+$('editJourney').onclick=()=>{
+  if(dirty){message('여행 설정·메모를 먼저 저장하세요.');return;}
+  const j=payload.journey;editingDays=structuredClone(arr(j.variants).find(v=>v.id===state().variant)?.days||j.days);
+  $('editTitle').value=j.title;$('editSummary').value=j.summary||'';$('editor').hidden=false;$('notebook').hidden=true;drawEditor();$('editor').scrollIntoView?.();
+};
+$('addDay').onclick=()=>{
+  editingDays=collectEdits();if(editingDays.length>=31)return message('최대 31일까지 추가할 수 있습니다.');
+  editingDays.push({date:'',theme:'',notes:[],stops:[]});dirty=true;drawEditor();
+};
+$('cancelEdit').onclick=()=>{if(dirty&&!confirm('편집 내용을 취소할까요?'))return;editingDays=null;dirty=false;$('editor').hidden=true;render();};
+$('editForm').onsubmit=async e=>{
+  e.preventDefault();const days=collectEdits();
+  if(!days.length || days.some(d=>!/^\d{4}-\d{2}-\d{2}$/.test(d.date)))return message('날짜를 하나 이상 입력하세요.');
+  if(new Set(days.map(d=>d.date)).size!==days.length)return message('중복된 날짜가 있습니다.');
+  if(!days.every((d,i)=>!i||d.date>days[i-1].date))return message('날짜를 빠른 순서대로 입력하세요.');
+  const j=structuredClone(payload.journey);j.title=$('editTitle').value.trim();j.summary=$('editSummary').value;
+  if(!j.title)return message('여행 이름을 입력하세요.');
+  const v=arr(j.variants).find(v=>v.id===state().variant);if(v)v.days=days;else j.days=days;
+  if(await save({...payload,journey:j})){editingDays=null;$('editor').hidden=true;render();}
+};
+$('createJourney').onclick=async()=>{
+  if(await save({journey:{title:'나의 홍콩·마카오 여행',summary:'',days:[],checklist:[],activities:[],tips:[],sources:[]},state:{}})){render();$('editJourney').click();}
+};
+$('refresh').onclick=async()=>{
+  if(dirty&&!confirm('저장하지 않은 내용을 버리고 최신 내용을 불러올까요?'))return;
+  try{const result=await api('/api/private/journey');payload=result.payload;revision=result.revision;dirty=false;editingDays=null;$('editor').hidden=true;render();message('내 계정의 최신 내용을 불러왔습니다.');}catch(e){message(e.message);}
+};
 async function init() {
   try { const user=await api('/auth/me');csrf=user.csrf;$('identity').textContent=`@${user.login} · 비공개`; const result=await api('/api/private/journey');payload=result.payload;revision=result.revision;$('workspace').hidden=false;render();message('본인 계정만 접근할 수 있는 여행수첩입니다.'); }
   catch(e){message(e.message);$('login').hidden=false;}

@@ -31,11 +31,12 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
   const go = view => { show(view); if (location.hash !== '#'+view) location.hash = view; };
   function route() {
     const hash = location.hash.slice(1) || 'discover';
+    if (hash === 'trend') { location.assign(apiBase() + '/account/'); return; }
     if (!hash.startsWith('trend-')) window.scrollTo(0,0);
     if (hash === 'itinerary' && !getPlan()) { show('saved'); return; }
     if (hash.startsWith('city/')) { show('city'); openCity(hash.slice(5)); }
     else if (hash === 'cities') show('discover');
-    else if (hash === 'trend' || hash.startsWith('trend-')) { show('trend'); loadTrend().then(() => { if (hash !== 'trend') { trendView?.showTab('shops'); $(hash)?.scrollIntoView(); } }); }
+    else if (hash === 'trend' || hash.startsWith('trend-')) { show('trend'); loadTrend().then(() => { if (hash !== 'trend-guide') { trendView?.showTab('shops'); $(hash)?.scrollIntoView(); } }); }
     else show(['discover','planner','food','saved','itinerary'].includes(hash) ? hash : 'discover');
   }
   let trend = null, trendView = null;
