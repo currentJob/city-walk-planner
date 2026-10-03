@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from city_walk_planner.api.errors import install_error_handlers
-from city_walk_planner.api.routes import expenses, explore, external, meta, spots, trips
+from city_walk_planner.api.routes import account, expenses, explore, external, meta, spots, trips
 from city_walk_planner.clock import Clock, SystemClock
 from city_walk_planner.config import Settings, env_value, load_settings
 from city_walk_planner.services.external.cache import CachedProvider
@@ -53,13 +53,19 @@ def create_app(*, settings: Settings | None = None, clock: Clock | None = None,
         started = perf_counter()
         response = await call_next(request)
         response.headers["X-Process-Time"] = f"{(perf_counter() - started) * 1000:.3f}"
-        if request.url.path.startswith("/api/"):
+        if request.url.path.startswith(("/api/", "/auth/", "/account/")):
             response.headers["Cache-Control"] = "no-store"
+        if request.url.path.startswith(("/auth/", "/account/", "/api/private/")):
+            response.headers["Content-Security-Policy"] = (
+                "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; "
+                "base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
+            response.headers["X-Frame-Options"] = "DENY"
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
         return response
 
-    for router in (trips.router, spots.router, expenses.router, external.router, meta.router, explore.router):
+    for router in (account.router, trips.router, spots.router, expenses.router,
+                   external.router, meta.router, explore.router):
         app.include_router(router)
     web = Path(__file__).resolve().parents[1] / "web"
     if web.is_dir():  # Worker 번들에는 화면이 없다 — 화면은 GitHub Pages 가 준다

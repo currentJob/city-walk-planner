@@ -6,6 +6,7 @@ edit src/city_walk_planner and seed/, then run this again before `pywrangler dev
 
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
 
@@ -19,6 +20,10 @@ def main() -> None:
     # The Worker serves only the API; GitHub Pages serves the web front end.
     shutil.copytree(ROOT / "src" / "city_walk_planner", TARGET,
                     ignore=shutil.ignore_patterns("web", "__pycache__", "*.pyc"))
+    assets = ROOT / "src" / "city_walk_planner" / "private_ui"
+    (TARGET / "_account_assets.json").write_text(json.dumps({
+        p.name: p.read_text() for p in assets.iterdir() if p.is_file()
+    }, ensure_ascii=False))
     shutil.copytree(ROOT / "seed", TARGET / "_seed")
     files = sum(1 for path in TARGET.rglob("*") if path.is_file())
     size = sum(path.stat().st_size for path in TARGET.rglob("*") if path.is_file())

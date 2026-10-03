@@ -118,3 +118,16 @@ CREATE TABLE IF NOT EXISTS join_attempt (
   attempted_at TEXT NOT NULL                         -- UTC
 );
 CREATE INDEX IF NOT EXISTS ix_join_attempt ON join_attempt(ip, attempted_at);
+
+-- Account sessions and personal journeys are separate from shareable participant trips.
+CREATE TABLE IF NOT EXISTS github_oauth_states (
+    digest TEXT PRIMARY KEY, verifier TEXT NOT NULL, expires INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS github_sessions (
+    digest TEXT PRIMARY KEY, github_id TEXT NOT NULL, login TEXT NOT NULL,
+    csrf TEXT NOT NULL, expires INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS github_sessions_expiry ON github_sessions(expires);
+CREATE TABLE IF NOT EXISTS private_journeys (
+    github_id TEXT PRIMARY KEY, payload TEXT NOT NULL, revision INTEGER NOT NULL DEFAULT 1
+);

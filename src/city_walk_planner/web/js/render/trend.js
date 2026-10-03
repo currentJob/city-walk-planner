@@ -1,6 +1,5 @@
 import { escapeHtml as esc, link } from '../format.js';
 import { icon } from '../icons.js';
-import { journeyHtml, bindJourney } from './journey.js';
 
 const WEEKDAYS = '월화수목금토일';
 const MAX_DAYS = 14;
@@ -186,16 +185,16 @@ export function daysHtml(data, days) {
 }
 
 /** Phone-only section switcher (mobile.css hides the other sections; desktop shows everything). */
-const TREND_TABS = [['journey', '여행수첩'], ['plan', '일정'], ['map', '지도'], ['shops', '가게'], ['places', '명소'], ['tips', '팁']];
+const TREND_TABS = [['plan', '일정'], ['map', '지도'], ['shops', '가게'], ['places', '명소'], ['tips', '팁']];
 
 /** Whole page for the trend category; data comes from data/hk-macau-trend.json. */
-export function trendHtml(data) {
+export function trendHtml(data, accountBase = '') {
   const {start, end} = data.default_range;
   return `<div class="page-heading"><p class="eyebrow">${icon('spark')} HONG KONG · MACAO · TREND COURSE</p><h1>${esc(data.title)}</h1>
     <p>${esc(data.summary)}</p><p class="hint">조사일 ${esc(data.checked_at)}. ${esc(data.rating_note)}</p></div>
     <nav class="trend-tabs" aria-label="트렌드 코스 보기">${TREND_TABS.map(([id, label]) =>
-      `<button type="button" data-trend-tab="${id}" aria-pressed="${id === (data.journey ? 'journey' : 'plan')}">${label}</button>`).join('')}</nav>
-    ${journeyHtml(data.journey)}
+      `<button type="button" data-trend-tab="${id}" aria-pressed="${id === 'plan'}">${label}</button>`).join('')}</nav>
+    <section class="journey-private"><h2>나만의 여행수첩</h2><p>개인 일정은 GitHub 로그인 후 별도 계정 페이지에서 관리합니다.</p><a class="btn" href="${esc(accountBase)}/account/">GitHub로 내 여행 관리</a></section>
     <section class="section" data-trend-section="plan"><h2>${icon('calendar', 'title-icon')}날짜별 일정</h2>
       <form id="trendRange"><div class="tools"><label>방문 시작일<input type="date" name="start" value="${esc(start)}" required></label>
         <label>방문 종료일<input type="date" name="end" value="${esc(end)}" required></label></div>
@@ -236,7 +235,7 @@ export function bindTrendRange(root, data, {TripMap, LocationTracker, scrollToIt
   const list = form.querySelector('.stay-list'), daySelect = root.querySelector('#trendMapDay');
   const mapMsg = text => { const el = root.querySelector('#trendMapMsg'); el.textContent = text; el.hidden = !text; };
   let mapDays = [], me = null;
-  root.dataset.tab = data.journey ? 'journey' : 'plan';
+  root.dataset.tab = 'plan';
   if (matchMedia('(max-width: 760px)').matches) root.querySelectorAll('details.shop-more').forEach(d => { d.open = false; });
   function showTab(tab, refit = true) {
     root.dataset.tab = tab;
@@ -318,9 +317,5 @@ export function bindTrendRange(root, data, {TripMap, LocationTracker, scrollToIt
   });
   const {start, end} = data.default_range;
   showDays(schedule(data, start, end));
-  bindJourney(root, data.journey, {notice, onMap: (days, index) => {
-    showDays(days); daySelect.value = String(Math.max(0, index)); showTab('map');
-    scrollToItem(root.querySelector('#trendMapBlock'));
-  }});
   return {invalidate: () => { if (mapReady) { map.invalidate(); map.focusDay(mapDays[Number(daySelect.value)]); } }, showTab};
 }

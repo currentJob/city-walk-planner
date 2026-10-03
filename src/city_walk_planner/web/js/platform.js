@@ -1,3 +1,4 @@
+import { apiBase } from './api.js';
 import { escapeHtml as esc, link } from './format.js';
 import { spotBody, gradeSummary } from './render/guide.js';
 import { TripMap, scrollToItem } from './map.js';
@@ -40,7 +41,7 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
   let trend = null, trendView = null;
   function loadTrend() {
     trend ??= fetch('./data/hk-macau-trend.json').then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => { $('trendRoot').innerHTML = trendHtml(data); trendView = bindTrendRange($('trendRoot'), data, {TripMap, LocationTracker, scrollToItem, notice}); })
+      .then(data => { $('trendRoot').innerHTML = trendHtml(data, apiBase()); trendView = bindTrendRange($('trendRoot'), data, {TripMap, LocationTracker, scrollToItem, notice}); })
       .catch(() => { trend = null; $('trendRoot').innerHTML = '<p class="empty" role="status">트렌드 코스를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.</p>'; });
     return trend;
   }

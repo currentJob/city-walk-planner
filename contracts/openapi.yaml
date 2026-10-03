@@ -27,7 +27,7 @@ info:
     홍콩 3박4일 동적 여행 가이드. 무계정(초대코드) 공유 모델.
 
     **접근 통제 고지**: 초대코드를 아는 사람은 그 여행의 전체 편집 권한을 갖는다(가정 A4).
-    권한 등급·소유자 개념은 없다.
+    공유 여행에는 권한 등급·소유자 개념이 없다. /api/private/journey는 GitHub 세션으로 소유자를 분리한다.
   license:
     name: MIT
     identifier: MIT
@@ -52,6 +52,117 @@ security:
   - participantToken: []
 
 paths:
+  /auth/github/start:
+    get:
+      summary: Start
+      security: []
+      responses:
+        '303':
+          description: Redirect
+        '429':
+          description: Too many pending logins
+        '503':
+          description: OAuth not configured
+  /auth/github/callback:
+    get:
+      summary: Callback
+      security: []
+      responses:
+        '303':
+          description: Redirect
+        '400':
+          description: Invalid or expired OAuth request
+        '403':
+          description: Account or CSRF rejected
+        '502':
+          description: GitHub exchange failed
+        '503':
+          description: OAuth not configured
+        '422':
+          description: Invalid input
+  /auth/me:
+    get:
+      summary: Me
+      security: [{githubSession: []}]
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Login required
+        '503':
+          description: OAuth not configured
+  /auth/logout:
+    post:
+      summary: Logout
+      security: [{githubSession: []}]
+      description: Same-origin Origin and X-CSRF-Token are required.
+      responses:
+        '204':
+          description: Session revoked
+        '401':
+          description: Login required
+        '403':
+          description: Account or CSRF rejected
+        '503':
+          description: OAuth not configured
+  /api/private/journey:
+    get:
+      summary: Get Journey
+      security: [{githubSession: []}]
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Login required
+        '503':
+          description: OAuth not configured
+    put:
+      summary: Put Journey
+      security: [{githubSession: []}]
+      description: Same-origin Origin and X-CSRF-Token are required.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [payload, revision]
+              properties:
+                revision: {type: integer, minimum: 0}
+                payload: {type: object, description: "Private journey and state, up to 256 KB"}
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Login required
+        '403':
+          description: Account or CSRF rejected
+        '409':
+          description: Revision conflict
+        '413':
+          description: Payload too large
+        '422':
+          description: Invalid input
+        '503':
+          description: OAuth not configured
+  /account/:
+    get:
+      summary: Account Page
+      security: []
+      responses:
+        '200':
+          description: Success
+  /account/assets/{name}:
+    get:
+      summary: Account Asset
+      security: []
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+        '422':
+          description: Invalid input
   /api/explore/places/viewport:
     get:
       summary: 현재 지도 영역의 전 세계 장소와 확인된 평점 조회
@@ -983,6 +1094,10 @@ paths:
 components:
 
   securitySchemes:
+    githubSession:
+      type: apiKey
+      in: cookie
+      name: __Host-cwp_session
     participantToken:
       type: apiKey
       in: header

@@ -12,6 +12,8 @@
   // Ship the baked city guides / seed data (city_walk_planner/_seed/**.json) with the code.
   "rules": [{ "type": "Data", "globs": ["**/*.json"], "fallthrough": true }],
   "vars": {
+    "CWP_AUTH_ORIGIN": "https://city-walk-planner-api.currentjob.workers.dev",
+    "CWP_GITHUB_ALLOWED_IDS": "78770258",
     "CWP_ALLOWED_ORIGINS": "https://currentjob.github.io",
     // Cloudflare's edge sets this header itself, so the join rate limit sees each user, not the Worker.
     "CWP_CLIENT_IP_HEADER": "CF-Connecting-IP",
