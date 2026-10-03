@@ -1,7 +1,8 @@
 """Check that the deployed Worker actually includes the account application."""
 
 import json
-from http.client import HTTPSConnection
+
+import httpx
 
 HOST = 'city-walk-planner-api.currentjob.workers.dev'
 PATHS = {'/account/', '/account/assets/account.js', '/account/assets/account.css',
@@ -11,13 +12,9 @@ PATHS = {'/account/', '/account/assets/account.js', '/account/assets/account.css
 def read(path):
     if path not in PATHS:
         raise ValueError('Unexpected account check path')
-    connection = HTTPSConnection(HOST, timeout=30)
-    try:
-        connection.request('GET', path, headers={'User-Agent': 'CityWalkPlanner-DeploymentCheck/1.0'})
-        response = connection.getresponse()
-        return response.status, response.read().decode()
-    finally:
-        connection.close()
+    with httpx.Client(base_url='https://' + HOST, timeout=30, follow_redirects=False) as client:
+        response = client.get(path, headers={'User-Agent': 'CityWalkPlanner-DeploymentCheck/1.0'})
+        return response.status_code, response.text
 
 
 def main():

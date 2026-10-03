@@ -58,4 +58,4 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: uv run --frozen pywrangler deploy
       - name: Verify account routes on production
-        run: python tools/smoke_account.py
+        run: uv run --frozen --project worker python tools/smoke_account.py
