@@ -947,5 +947,767 @@
     "kowloon|macau": 90,
     "cotai|kowloon": 90
   },
-  "coord_note": "좌표는 OpenStreetMap(Nominatim)에서 2026-09-28에 조회한 가게·건물 위치입니다. 페리는 출발 터미널, 로드 스토우즈 베네시안점은 베네시안 건물 위치입니다."
+  "coord_note": "좌표는 OpenStreetMap(Nominatim)에서 2026-09-28에 조회한 가게·건물 위치입니다. 페리는 출발 터미널, 로드 스토우즈 베네시안점은 베네시안 건물 위치입니다.",
+  "journey": {
+    "checked_at": "2026-10-03",
+    "title": "10월 4~8일 홍콩·마카오 여행수첩",
+    "summary": "4일 16:25 동탄 출발 · 5~7일 관광 · 8일 새벽 02~05시 출발, 한국 아침 귀국. 마카오는 6일 추천.",
+    "assumptions": [
+      "숙소는 침사추이·조던을 임시 기준으로 잡았습니다. 실제 호텔 위치에 따라 출발 시간을 조정하세요.",
+      "버스 16:25는 사용자 제공 시간입니다. 운행·예약 확정 여부, 출국편 시각과 인천공항 터미널은 승차권·항공권에서 확인하세요.",
+      "5일 새벽 도착 직후 객실 사용은 보통 4일 체크인 예약과 늦은 도착 연락이 필요합니다. 5일 예약만 있으면 오후까지 입실이 안 될 수 있습니다.",
+      "7일 체크아웃 후 밤까지 짐 보관을 요청하세요. 샤워·휴식이 필요하면 레이트 체크아웃 또는 객실 유지 비용을 비교합니다.",
+      "중국 국경절 연휴가 7일까지입니다. 혼잡을 고려해 왕복 교통을 먼저 확보하고 대기·이동 시간을 넉넉히 잡으세요.",
+      "정보는 10월 3일 확인 스냅샷입니다. 실시간 날씨·좌석·운휴를 보장하지 않습니다. 날짜별 기온을 추측하지 않고 공식 예보로 연결합니다."
+    ],
+    "sources": [
+      {
+        "name": "홍콩 입경처 · 한국 여권 방문 요건",
+        "url": "https://www.immd.gov.hk/eng/services/visas/visit-transit/visit-visa-entry-permit.html"
+      },
+      {
+        "name": "마카오 정부 · 여권·무비자",
+        "url": "https://www.gov.mo/en/services/ps-1474/ps-1474b/"
+      },
+      {
+        "name": "TurboJET · 날짜별 운항표",
+        "url": "https://www2.turbojet.com.hk/travel-with-us-sea-ferry/"
+      },
+      {
+        "name": "강주아오대교 · 교통",
+        "url": "https://www.hzmb.gov.hk/en/transport.html"
+      },
+      {
+        "name": "홍콩천문대 · 9일 예보",
+        "url": "https://www.hko.gov.hk/en/wxinfo/currwx/fnd.htm"
+      },
+      {
+        "name": "마카오 기상국",
+        "url": "https://www.smg.gov.mo/"
+      },
+      {
+        "name": "홍콩관광청 · 심포니 오브 라이트",
+        "url": "https://www.discoverhongkong.com/eng/place-to-go/travel.guide-a-symphony-of-lights.html"
+      },
+      {
+        "name": "M+ · 운영일",
+        "url": "https://www.mplus.org.hk/en/plan-your-visit/"
+      },
+      {
+        "name": "홍콩 디즈니랜드 · 일정",
+        "url": "https://www.hongkongdisneyland.com/en-hk/calendars/day/"
+      },
+      {
+        "name": "피크 · 티켓과 운행",
+        "url": "https://www.thepeak.com.hk/"
+      },
+      {
+        "name": "옹핑 360",
+        "url": "https://www.np360.com.hk/"
+      },
+      {
+        "name": "MTR · 공항철도 시간표",
+        "url": "https://www.mtr.com.hk/en/customer/services/timetable_index.html"
+      },
+      {
+        "name": "마카오 · 현지 교통",
+        "url": "https://www.macaotourism.gov.mo/en/article/before-you-travel/local-transportation"
+      },
+      {
+        "name": "홍콩 세관 · 전자담배 반입 금지",
+        "url": "https://www.customs.gov.hk/en/service-enforcement-information/trade-facilitation/ASP/index.html"
+      },
+      {
+        "name": "중국 국경절 · 10월 1~7일",
+        "url": "https://english.beijing.gov.cn/workinginbeijing/laborrights/publicholidays/"
+      }
+    ],
+    "checklist": [
+      {
+        "id": "prep-0",
+        "text": "여권 원본·여권 만료일: 마카오 체류 종료 후 90일 이상"
+      },
+      {
+        "id": "prep-1",
+        "text": "4일 항공편 시각·T1/T2·영문 이름 확인"
+      },
+      {
+        "id": "prep-2",
+        "text": "다은마을 16:25 버스 예약·승차 위치·좌석 확인"
+      },
+      {
+        "id": "prep-3",
+        "text": "홍콩 첫날 호텔 체크인 날짜·새벽 도착 연락"
+      },
+      {
+        "id": "prep-4",
+        "text": "마카오 방문일 왕복 예약·출발 및 도착 터미널 저장"
+      },
+      {
+        "id": "prep-5",
+        "text": "8일 정확한 출발 시각·공항 도착 목표 확정"
+      },
+      {
+        "id": "prep-6",
+        "text": "홍콩+마카오 eSIM 또는 로밍 설치·사용 시작 조건 확인"
+      },
+      {
+        "id": "prep-7",
+        "text": "해외결제 카드 2장 분산·HKD 소액 현금"
+      },
+      {
+        "id": "prep-8",
+        "text": "보험의 홍콩·마카오 보장 확인·연락처 저장"
+      },
+      {
+        "id": "prep-9",
+        "text": "G형 3핀 어댑터·충전기·케이블·보조배터리"
+      },
+      {
+        "id": "prep-10",
+        "text": "반팔·얇은 겉옷·속옷·편한 운동화"
+      },
+      {
+        "id": "prep-11",
+        "text": "우산·모자·선크림·작은 물병·방수 파우치"
+      },
+      {
+        "id": "prep-12",
+        "text": "개인 처방약·상비약·필요 시 멀미약"
+      },
+      {
+        "id": "prep-13",
+        "text": "예약 QR·호텔 주소·여권 사본 오프라인 저장"
+      },
+      {
+        "id": "prep-14",
+        "text": "액체·보조배터리 항공사 규정 확인"
+      },
+      {
+        "id": "prep-15",
+        "text": "전자담배·가열담배 및 관련 제품 짐에서 제외"
+      },
+      {
+        "id": "prep-16",
+        "text": "7일 체크아웃 후 짐 보관·샤워 계획 확인"
+      },
+      {
+        "id": "prep-17",
+        "text": "한국 귀국 후 동탄 교통편 확인"
+      }
+    ],
+    "activities": [
+      {
+        "id": "activity-0",
+        "name": "스타페리",
+        "category": "바다·사진",
+        "when": "5일 오전",
+        "duration": "20~40분 블록",
+        "note": "적은 비용으로 홍콩 하버를 경험",
+        "query": "Star Ferry Central Pier",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-1",
+        "name": "피크·피크 트램",
+        "category": "야경",
+        "when": "5일 오후",
+        "duration": "2~3시간",
+        "note": "맑은 날 우선. 대기·유료 전망대 조건 확인",
+        "query": "The Peak Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-2",
+        "name": "딩딩 트램",
+        "category": "로컬 체험",
+        "when": "5일 오후",
+        "duration": "30~45분",
+        "note": "2층에서 거리 구경. 짧은 구간만",
+        "query": "Hong Kong Tramways Central",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-3",
+        "name": "PMQ·소호",
+        "category": "골목·디자인",
+        "when": "5일 오후",
+        "duration": "1~2시간",
+        "note": "독립 상점과 카페. 언덕 주의",
+        "query": "PMQ Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-4",
+        "name": "만모사",
+        "category": "문화",
+        "when": "5일 선택",
+        "duration": "30~45분",
+        "note": "조용히 관람, 내부 촬영 안내 준수",
+        "query": "Man Mo Temple Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-5",
+        "name": "하버 야경·빛의 쇼",
+        "category": "무료 야경",
+        "when": "7일 20시",
+        "duration": "30~45분",
+        "note": "식사 후 산책과 묶기. 취소 공지 확인",
+        "query": "Tsim Sha Tsui Promenade",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-6",
+        "name": "M+",
+        "category": "전시·비 오는 날",
+        "when": "7일 오전",
+        "duration": "2~3시간",
+        "note": "월요일 정규 휴관. 유료 전시 확인",
+        "query": "M+ Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-7",
+        "name": "서구룡 해변",
+        "category": "산책·사진",
+        "when": "7일 오전",
+        "duration": "30~60분",
+        "note": "M+와 묶기. 더우면 짧게",
+        "query": "West Kowloon Art Park",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-8",
+        "name": "몽콕 시장·스니커즈 거리",
+        "category": "쇼핑",
+        "when": "7일 오후",
+        "duration": "1~2시간",
+        "note": "가격과 정품·환불 조건 확인",
+        "query": "Sneakers Street Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-9",
+        "name": "삼수이포",
+        "category": "로컬·소품",
+        "when": "7일 대체",
+        "duration": "2~3시간",
+        "note": "몽콕 대신 선택. 시장·카페 탐방",
+        "query": "Sham Shui Po Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-10",
+        "name": "K11 MUSEA·하버시티",
+        "category": "쇼핑·실내",
+        "when": "7일 오후",
+        "duration": "1~2시간",
+        "note": "두 곳 중 하나만 골라 피로 줄이기",
+        "query": "K11 MUSEA",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-11",
+        "name": "템플스트리트",
+        "category": "저녁 시장",
+        "when": "5일 체력 여유",
+        "duration": "45~60분",
+        "note": "마카오 전날 늦어지면 생략",
+        "query": "Temple Street Night Market",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-12",
+        "name": "디즈니랜드",
+        "category": "놀이공원",
+        "when": "7일 전체 교체",
+        "duration": "하루",
+        "note": "날짜 티켓·입장예약·운영시간 확인. 야간쇼는 귀국편 우선",
+        "query": "Hong Kong Disneyland",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-13",
+        "name": "오션파크",
+        "category": "동물·놀이기구",
+        "when": "5일 또는 7일 교체",
+        "duration": "하루",
+        "note": "시내 코스와 교체. 날짜 운영·점검 확인",
+        "query": "Ocean Park Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-14",
+        "name": "옹핑 케이블카·빅 부다",
+        "category": "풍경·체험",
+        "when": "7일 대체",
+        "duration": "반나절 이상",
+        "note": "강풍·정비 운휴 확인. 피크와 중복 선택은 취향대로",
+        "query": "Ngong Ping 360",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-15",
+        "name": "하버 크루즈",
+        "category": "야경·유료",
+        "when": "5일 저녁 대체",
+        "duration": "1시간 안팎",
+        "note": "스타페리와 달리 별도 관광 상품. 승선장·취소 조건 확인",
+        "query": "Central Pier 9 Hong Kong",
+        "city": "홍콩"
+      },
+      {
+        "id": "activity-16",
+        "name": "세나도·성 바울",
+        "category": "역사·사진",
+        "when": "6일 오전",
+        "duration": "2시간",
+        "note": "마카오 구시가지 핵심 도보 구간",
+        "query": "Ruins of St. Paul Macau",
+        "city": "마카오"
+      },
+      {
+        "id": "activity-17",
+        "name": "몬테 요새",
+        "category": "전망·산책",
+        "when": "6일 선택",
+        "duration": "30~60분",
+        "note": "계단·더위를 감안해 체력 좋을 때",
+        "query": "Monte Fort Macau",
+        "city": "마카오"
+      },
+      {
+        "id": "activity-18",
+        "name": "타이파 빌리지·쿤하거리",
+        "category": "골목·간식",
+        "when": "6일 오후",
+        "duration": "1시간",
+        "note": "에그타르트·쿠키, 작은 골목 탐방",
+        "query": "Rua do Cunha Macau",
+        "city": "마카오"
+      },
+      {
+        "id": "activity-19",
+        "name": "베네시안 실내 운하",
+        "category": "실내·사진",
+        "when": "6일 오후",
+        "duration": "1~1.5시간",
+        "note": "운하 관람과 유료 곤돌라는 구분",
+        "query": "The Venetian Macao",
+        "city": "마카오"
+      },
+      {
+        "id": "activity-20",
+        "name": "런더너·파리지앵",
+        "category": "외관·리조트",
+        "when": "6일 오후 선택",
+        "duration": "45~60분",
+        "note": "둘 중 하나. 유료 시설은 별도",
+        "query": "The Londoner Macao",
+        "city": "마카오"
+      },
+      {
+        "id": "activity-21",
+        "name": "마카오 타워",
+        "category": "전망·액티비티",
+        "when": "6일 대체",
+        "duration": "1~2시간",
+        "note": "코타이 일부를 빼고 선택. 체험 제한·가격 사전 확인",
+        "query": "Macau Tower",
+        "city": "마카오"
+      }
+    ],
+    "tips": [
+      {
+        "title": "마카오 출입경",
+        "body": "여권 원본 필수. 대한민국 일반여권은 최대 90일 무비자 대상이며, 예정 체류 종료 후 90일 이상 유효해야 합니다. 홍콩 출국·마카오 입국·마카오 출국·홍콩 재입국을 모두 거칩니다. 체류 슬립과 귀국 항공권·호텔 예약을 보관하세요."
+      },
+      {
+        "title": "페리 예약과 터미널",
+        "body": "셩완 Hong Kong Macau Ferry Terminal → Macau Outer Harbour 왕복을 기본안으로 잡습니다. 08:30 출발·19:30 복귀는 9월 1일 적용 공식 시간표 기준 후보로, 이용일 잔여석·운항·변경 조건을 재확인하세요. 터미널에는 45~60분 전 도착 권장. 외항·타이파·대교 포트는 각각 다른 장소입니다."
+      },
+      {
+        "title": "대교 버스 대안",
+        "body": "홍콩 시내 → Hong Kong Port → 출국 → Macau행 셔틀 → 입국 → 마카오 시내. 셔틀 운임 외에 양쪽 포트 접근 비용·시간이 듭니다. 주하이행과 구분하세요. 페리 결항 때 대교도 실제 운행 확인이 필요합니다."
+      },
+      {
+        "title": "통신·전기",
+        "body": "홍콩과 마카오 모두 지원하는 eSIM·로밍인지 확인하세요. 한국 회선 데이터 로밍은 요금제에 맞게 설정합니다. G형 3핀 어댑터, 보조배터리·케이블을 준비하고 배터리의 기내 반입·용량 규정은 이용 항공사를 따릅니다."
+      },
+      {
+        "title": "결제·현지 교통",
+        "body": "카드 결제는 원화 대신 현지 통화를 선택합니다. 홍콩은 옥토퍼스와 HKD 소액권을 함께 준비. 마카오 버스 현금 요금은 MOP 6이며 거스름돈이 없습니다. HKD 수납·거스름돈 통화는 가게별 확인. 일반 옥토퍼스의 마카오 호환을 가정하지 마세요."
+      },
+      {
+        "title": "식사·간식",
+        "body": "홍콩: 딤섬(하가우·시우마이), 완탕면, 차슈, 밀크티·파인애플번. 마카오: 민치·포르투갈 요리, 에그타르트·아몬드 쿠키. 차값·서비스료·현금 결제를 확인하고 알레르기는 번체 중국어·영어 메모로 준비하세요. 30분 이상 대기면 근처 대안으로 이동합니다."
+      },
+      {
+        "title": "비·안개·강풍 대안",
+        "body": "피크는 맑은 날로 변경. M+는 정규 월요일 휴관이라 7일에 배치합니다. 5일 비가 오면 PMQ·쇼핑몰 등 실내로 전환. 페리가 중단되면 대교 운행부터 확인하세요. 귀국 전날 마카오 이동보다 홍콩 실내 일정이 여유롭습니다."
+      },
+      {
+        "title": "3일 현지 예산",
+        "body": "항공·숙박·쇼핑 제외 1인 계획값: 식사 HKD 750~1,200 / 홍콩·공항 교통 250~450 / 마카오 왕복·현지 교통 400~700 / 관광 200~500. 합계 1,600~2,850에 예비비를 더합니다. 실제 견적이 아니며 테마파크·특별 체험은 별도입니다."
+      },
+      {
+        "title": "안전·귀국",
+        "body": "홍콩·마카오 긴급 도움 999. 여권 분실 시 경찰 신고 후 대한민국 공관 안내를 받으세요. 전자담배·가열담배 관련 제품은 홍콩 반입 금지 대상입니다. 육류·동식물 제품과 면세 초과 물품은 한국 세관·검역 기준을 확인합니다."
+      },
+      {
+        "title": "7일 테마파크를 원하면",
+        "body": "디즈니랜드·오션파크는 낮 일정을 통째로 교체합니다. 날짜별 입장·운영 조건 확인, 18~19시 퇴장 계획을 우선하고 야간 쇼는 귀국편에 맞춰 생략할 수 있습니다. 호텔 짐 회수 시간을 포함하세요. 란타우는 케이블카 운휴를 확인하고 반나절 이상 배정합니다."
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-04",
+        "label": "4일 · 일 · 한국 시간",
+        "theme": "동탄 출발 · 홍콩 이동",
+        "notes": [
+          "국제선 공항 도착은 출발 약 3시간 전을 목표로 하되 항공사 안내가 우선입니다. 버스 도착 시각을 단정하지 않습니다."
+        ],
+        "stops": [
+          {
+            "id": "documents",
+            "time": "출발 전",
+            "name": "예약과 여권 점검",
+            "note": "버스·항공편·호텔 예약을 캡처. 항공편 시각과 T1/T2를 확인하고 예상 버스 도착에 수속 여유가 충분한지 비교하세요.",
+            "query": "",
+            "lat": null,
+            "lng": null,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "bus",
+            "time": "16:10 / 16:25",
+            "name": "다은마을 승차",
+            "note": "16:10까지 정류장 도착, 16:25 출발은 예약내역으로 최종 확인. 여권·휴대폰은 직접 소지.",
+            "query": "다은마을 공항버스 정류장 동탄",
+            "lat": null,
+            "lng": null,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "icn",
+            "time": "항공편에 맞춰",
+            "name": "인천공항 수속",
+            "note": "위탁 → 보안·출국 → 식사 → 탑승구. 액체·보조배터리 규정 확인.",
+            "query": "Incheon International Airport",
+            "lat": 37.4602,
+            "lng": 126.4407,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "arrival",
+            "time": "홍콩 도착 후",
+            "name": "숙소 이동·수면",
+            "note": "현지는 한국보다 1시간 느립니다. 늦으면 열차·버스 운행 확인, 공식 택시 대안. 새벽 체크인 날짜를 호텔에 확인.",
+            "query": "Hong Kong International Airport",
+            "lat": 22.308,
+            "lng": 113.9185,
+            "kind": "visit",
+            "ref": null
+          }
+        ]
+      },
+      {
+        "date": "2026-10-05",
+        "label": "5일 · 월 · 홍콩 시간",
+        "theme": "하버 · 센트럴 · 피크",
+        "notes": [
+          "새벽 도착으로 피곤하면 11시에 시작하고 PMQ·소호 중 한 곳을 줄이세요. M+는 월요일 기본 일정에서 제외했습니다."
+        ],
+        "stops": [
+          {
+            "id": "breakfast",
+            "time": "09:30",
+            "name": "차찬텡 조식·스타의 거리",
+            "note": "밀크티·번·토스트 후 하버 산책.",
+            "query": "Avenue of Stars Hong Kong",
+            "lat": 22.293,
+            "lng": 114.174,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "starferry",
+            "time": "10:30",
+            "name": "스타페리 → 센트럴",
+            "note": "바다와 스카이라인을 즐기는 짧은 승선. 하차 후 도보 이동도 포함하세요.",
+            "query": "Star Ferry Tsim Sha Tsui",
+            "lat": 22.2937,
+            "lng": 114.168,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "dimsum",
+            "time": "11:30",
+            "name": "딤섬 점심",
+            "note": "하가우·시우마이·차슈바오. 차값·서비스료 확인, 후보 두 곳 준비.",
+            "query": "Central Hong Kong dim sum",
+            "lat": 22.282,
+            "lng": 114.157,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "soho",
+            "time": "13:00",
+            "name": "소호·미드레벨·PMQ",
+            "note": "골목·디자인 숍·카페 중 두 곳 선택. 만모사는 체력 여유 시 추가.",
+            "query": "PMQ Hong Kong",
+            "lat": 22.2834,
+            "lng": 114.1515,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "tram",
+            "time": "15:30",
+            "name": "카페 또는 딩딩 트램",
+            "note": "짧은 탑승으로 거리를 구경하고 피크 이동시간 확보.",
+            "query": "Sheung Wan Hong Kong",
+            "lat": 22.286,
+            "lng": 114.15,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "peak",
+            "time": "16:15~19:00",
+            "name": "피크 낮 풍경과 야경",
+            "note": "날씨·예약·대기를 확인. 유료 전망대 포함 여부 확인. 낮은 구름이면 7일로 교체.",
+            "query": "Peak Tram Lower Terminus",
+            "lat": 22.2777,
+            "lng": 114.1594,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "dinner",
+            "time": "19:30",
+            "name": "완탕면·차슈 저녁",
+            "note": "내일 마카오를 위해 늦지 않게 숙소 복귀.",
+            "query": "Tsim Sha Tsui Hong Kong",
+            "lat": 22.298,
+            "lng": 114.172,
+            "kind": "visit",
+            "ref": null
+          }
+        ]
+      },
+      {
+        "date": "2026-10-06",
+        "label": "6일 · 화 · 마카오 시간",
+        "theme": "마카오 당일치기",
+        "notes": [
+          "08:30 출발 / 19:30 외항 복귀편은 예약 후보이며 실제 판매·잔여석 확인이 필요합니다. 양쪽 터미널을 예약 화면에서 확인하세요."
+        ],
+        "stops": [
+          {
+            "id": "ferry-out",
+            "time": "07:30 / 08:30",
+            "name": "셩완 터미널·페리 출발",
+            "note": "07:30~07:45 도착 목표. 여권 원본·QR·귀국편 지참. 스타페리 선착장과 다릅니다.",
+            "query": "Hong Kong Macau Ferry Terminal",
+            "lat": 22.2885,
+            "lng": 114.1523,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "macau-entry",
+            "time": "09:30~10:15",
+            "name": "외항 도착·입국",
+            "note": "항해 약 60분, 입국·시내 이동은 별도. 체류 슬립 보관.",
+            "query": "Macau Outer Harbour Ferry Terminal",
+            "lat": 22.197,
+            "lng": 113.559,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "senado",
+            "time": "10:15~12:30",
+            "name": "세나도·성 도미니크·성 바울",
+            "note": "구시가지 도보 사진 코스. 몬테 요새는 체력 여유 시 추가.",
+            "query": "Senado Square Macau",
+            "lat": 22.1935,
+            "lng": 113.5398,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "macau-lunch",
+            "time": "12:30",
+            "name": "마카오·포르투갈 요리",
+            "note": "민치·포르투갈식 한 끼 또는 간단한 완탕면.",
+            "query": "Senado Square Macau",
+            "lat": 22.1935,
+            "lng": 113.5398,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "taipa",
+            "time": "13:30~15:00",
+            "name": "타이파 빌리지·쿤하거리",
+            "note": "버스·택시로 이동. 에그타르트·쿠키·골목 산책.",
+            "query": "Rua do Cunha Macau",
+            "lat": 22.1535,
+            "lng": 113.556,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "cotai",
+            "time": "15:00~17:15",
+            "name": "베네시안·코타이",
+            "note": "리조트 1~2곳만. 곤돌라·전망대·공연은 별도 요금·운영 확인.",
+            "query": "The Venetian Macao",
+            "lat": 22.147,
+            "lng": 113.56,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "ferry-back",
+            "time": "18:30 / 19:30",
+            "name": "외항 도착·홍콩 복귀",
+            "note": "18:30 터미널 도착 목표. 타이파 터미널과 혼동 금지. 복귀 후 숙소 휴식.",
+            "query": "Macau Outer Harbour Ferry Terminal",
+            "lat": 22.197,
+            "lng": 113.559,
+            "kind": "visit",
+            "ref": null
+          }
+        ]
+      },
+      {
+        "date": "2026-10-07",
+        "label": "7일 · 수 · 홍콩 시간",
+        "theme": "구룡 · 하버 · 공항",
+        "notes": [
+          "숙소 짐 보관·샤워 계획을 먼저 정하세요. 귀국 항공편의 정확한 시각에 따라 저녁 일정은 줄입니다."
+        ],
+        "stops": [
+          {
+            "id": "checkout",
+            "time": "09:00",
+            "name": "체크아웃·짐 보관",
+            "note": "7일 퇴실이면 밤까지 보관 확인. 레이트 체크아웃·데이유스는 별도 문의.",
+            "query": "",
+            "lat": null,
+            "lng": null,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "mplus",
+            "time": "10:30~13:00",
+            "name": "M+·서구룡 해변",
+            "note": "전시 1~2개와 해변 산책. 티켓·당일 운영 확인.",
+            "query": "M+ Hong Kong",
+            "lat": 22.3004,
+            "lng": 114.1601,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "kowloon",
+            "time": "13:00~16:30",
+            "name": "조던·몽콕 로컬 점심과 쇼핑",
+            "note": "구룡 1~2개 동네만. 쇼핑보다 휴식이 좋으면 카페·마사지로 변경.",
+            "query": "Mong Kok Hong Kong",
+            "lat": 22.3193,
+            "lng": 114.1694,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "k11",
+            "time": "16:30~19:15",
+            "name": "침사추이·이른 저녁",
+            "note": "K11 MUSEA 또는 하버시티 한 곳만. 짐 회수 이동 확인.",
+            "query": "K11 MUSEA",
+            "lat": 22.2935,
+            "lng": 114.1738,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "lights",
+            "time": "19:30 / 20:00",
+            "name": "하버 조명쇼",
+            "note": "통상 20시 무료 감상. 악천후 취소 가능, 시간 부족 시 생략.",
+            "query": "Tsim Sha Tsui Promenade",
+            "lat": 22.294,
+            "lng": 114.171,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "bags",
+            "time": "20:15~21:15",
+            "name": "짐 회수·출국 준비",
+            "note": "쇼핑 종료. 여권·탑승권·수하물 무게 확인.",
+            "query": "",
+            "lat": null,
+            "lng": null,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "airport",
+            "time": "21:30 출발 목표",
+            "name": "홍콩공항 이동",
+            "note": "기본안 공항 22:30~23:00 도착 목표. 8일 02시 출발을 고려한 보수적 계획값. 숙소·교통·정확한 편명에 따라 조정.",
+            "query": "Hong Kong International Airport",
+            "lat": 22.308,
+            "lng": 113.9185,
+            "kind": "visit",
+            "ref": null
+          }
+        ]
+      },
+      {
+        "date": "2026-10-08",
+        "label": "8일 · 목 · 홍콩 출발 / 한국 도착",
+        "theme": "새벽 출국 · 한국 귀국",
+        "notes": [
+          "한국은 홍콩보다 1시간 빠릅니다. 한국 도착 시각은 항공권 기준."
+        ],
+        "stops": [
+          {
+            "id": "flight",
+            "time": "02~05시 중",
+            "name": "홍콩 출발",
+            "note": "정확한 출발 시각 미확인. 탑승 마감은 더 빠르며 카운터 개장 시각도 확인.",
+            "query": "",
+            "lat": null,
+            "lng": null,
+            "kind": "visit",
+            "ref": null
+          },
+          {
+            "id": "home",
+            "time": "한국 아침",
+            "name": "입국·수하물·동탄 복귀",
+            "note": "귀국 버스는 입국·짐 찾는 여유를 두고 예약. 검역·세관 신고 대상 확인.",
+            "query": "Incheon International Airport",
+            "lat": 37.4602,
+            "lng": 126.4407,
+            "kind": "visit",
+            "ref": null
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -1,4 +1,3 @@
-import { apiBase } from './api.js';
 import { escapeHtml as esc, link } from './format.js';
 import { spotBody, gradeSummary } from './render/guide.js';
 import { TripMap, scrollToItem } from './map.js';
@@ -31,18 +30,26 @@ export function initPlatform({apiRequest, selectCity, getPlan, renderPlan, saveP
   const go = view => { show(view); if (location.hash !== '#'+view) location.hash = view; };
   function route() {
     const hash = location.hash.slice(1) || 'discover';
-    if (hash === 'trend') { location.assign(apiBase() + '/account/'); return; }
     if (!hash.startsWith('trend-')) window.scrollTo(0,0);
     if (hash === 'itinerary' && !getPlan()) { show('saved'); return; }
     if (hash.startsWith('city/')) { show('city'); openCity(hash.slice(5)); }
     else if (hash === 'cities') show('discover');
-    else if (hash === 'trend' || hash.startsWith('trend-')) { show('trend'); loadTrend().then(() => { if (hash !== 'trend-guide') { trendView?.showTab('shops'); $(hash)?.scrollIntoView(); } }); }
+    else if (hash === 'trend' || hash.startsWith('trend-')) {
+      show('trend');
+      loadTrend().then(() => {
+        // A delayed load must not override newer navigation or a Back/Forward action.
+        if (location.hash.slice(1) !== hash) return;
+        if (hash === 'trend') trendView?.showTab('journey');
+        else if (hash === 'trend-guide') trendView?.showTab('plan');
+        else { trendView?.showTab('shops'); $(hash)?.scrollIntoView(); }
+      });
+    }
     else show(['discover','planner','food','saved','itinerary'].includes(hash) ? hash : 'discover');
   }
   let trend = null, trendView = null;
   function loadTrend() {
     trend ??= fetch('./data/hk-macau-trend.json').then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => { $('trendRoot').innerHTML = trendHtml(data, apiBase()); trendView = bindTrendRange($('trendRoot'), data, {TripMap, LocationTracker, scrollToItem, notice}); })
+      .then(data => { $('trendRoot').innerHTML = trendHtml(data); trendView = bindTrendRange($('trendRoot'), data, {TripMap, LocationTracker, scrollToItem, notice}); })
       .catch(() => { trend = null; $('trendRoot').innerHTML = '<p class="empty" role="status">트렌드 코스를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.</p>'; });
     return trend;
   }

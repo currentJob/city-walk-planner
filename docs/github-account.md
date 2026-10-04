@@ -1,6 +1,6 @@
 # GitHub 로그인 활성화
 
-공개 사이트: https://currentjob.github.io/city-walk-planner/#trend
+공개 사이트(로그인 불필요): https://currentjob.github.io/city-walk-planner/#trend
 
 개인 페이지(아래 배포 완료 후): https://city-walk-planner-api.currentjob.workers.dev/account/
 
@@ -100,8 +100,13 @@ GitHub에서 배포하려면:
 
 공식 배포 인증 안내: https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/
 
-## 계정 단위 트렌드 탭
+## 공개 트렌드 탭과 별도 계정 페이지
 
-`#trend`는 동일한 서버 출처의 `/account/`로 바로 연결됩니다. 로그인 쿠키가 없는 기기는 GitHub 로그인 안내를 보고, 로그인 후에는 해당 숫자 GitHub ID의 개인 일정만 읽고 저장합니다. 공개 추천 코스·맛집·명소는 `#trend-guide`에 남아 있으며 개인 페이지 상단에서 열 수 있습니다.
+`#trend`는 소유자가 공개를 승인한 2026년 10월 4~8일 홍콩·마카오 여행수첩을 Pages에서 바로 표시합니다.
+GitHub 로그인이나 Worker 배포 없이 볼 수 있습니다. 체크·숙소·귀국편 설정은 방문자별 브라우저에만 저장됩니다.
+공개 추천 코스·맛집·명소는 `#trend-guide`로 바로 열 수 있습니다.
+
+`/account/`의 로그인과 계정별 데이터 보호는 유지합니다. 해당 숫자 GitHub ID의 개인 일정만 읽고 저장하며,
+서버 계정 데이터는 공개 여행수첩에 자동 반영되지 않습니다.
 
 개인 페이지에서 날짜·장소·시간·메모를 편집하고, 기존 JSON을 가져오거나 새 일정을 만들 수 있습니다. 최신 내용 불러오기는 서버의 현재 revision을 다시 읽습니다. 저장하지 않은 변경은 버리기 전에 확인하고, 동시 편집 충돌은 기존 409 보호를 유지합니다. 개인 데이터를 공개 페이지나 localStorage로 옮기지 않습니다.
