@@ -1,6 +1,6 @@
 import { escapeHtml as esc, link } from '../format.js';
 
-const STORAGE_KEY = 'cwp.hk-macau.journey.2026.v1';
+const STORAGE_NAMESPACE = 'cwp.hk-macau.journey.2026.v1';
 const TIME = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
 const SECTIONS = [['days', '날짜별'], ['prepare', '준비물'], ['activities', '놀거리'], ['info', '교통·팁']];
 const maps = query => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
@@ -102,10 +102,10 @@ export function bindJourney(root, data, {onMap = () => {}, notice = () => {}} = 
   if (!data) return;
   const host = root.querySelector('.journey'), body = host.querySelector('[data-journey-body]');
   let stored, storage;
-  try { storage = window.localStorage; stored = JSON.parse(storage.getItem(STORAGE_KEY) || 'null'); } catch { /* Private-mode and corrupt storage use safe defaults. */ }
+  try { storage = window.localStorage; stored = JSON.parse(storage.getItem(STORAGE_NAMESPACE) || 'null'); } catch { /* Private-mode and corrupt storage use safe defaults. */ }
   let state = normalizeJourneyState(stored, data), section = 'days', selected = '2026-10-04', city = 'all', onlySaved = false;
   const status = text => { host.querySelector('[data-journey-status]').textContent = text; };
-  const save = () => { try { if (!storage) throw new Error(); storage.setItem(STORAGE_KEY, JSON.stringify(state)); status('이 기기에 저장했습니다.'); }
+  const save = () => { try { if (!storage) throw new Error(); storage.setItem(STORAGE_NAMESPACE, JSON.stringify(state)); status('이 기기에 저장했습니다.'); }
     catch { status('이 브라우저에 저장할 수 없습니다. 화면에서는 계속 사용할 수 있고 오프라인 수첩으로 보관할 수 있습니다.'); } };
   const form = host.querySelector('[data-journey-settings]');
   form.elements.macauDate.value = state.macauDate;
