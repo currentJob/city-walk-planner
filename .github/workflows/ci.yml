@@ -57,7 +57,7 @@ jobs:
           ./gitleaks dir . --redact --exit-code 1 --no-banner
 
       - name: 취약점 스캔 (OSV-Scanner)
-        uses: google/osv-scanner-action/osv-scanner-action@v2.5.1
+        uses: google/osv-scanner-action/osv-scanner-action@v2.6.0
         with:
           scan-args: |-
             --recursive
