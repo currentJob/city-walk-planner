@@ -101,3 +101,35 @@ def test_public_trend_routes_stay_on_pages_and_reset_requested_section():
     notebook = (web / 'js/render/journey.js').read_text()
     assert '/api/private/' not in notebook and '/auth/' not in notebook
     assert 'fetch(' not in notebook
+
+@node_only
+def test_confirmed_last_day_keeps_both_ferries_and_ten_minute_bag_pickup():
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/render/journey.js').as_uri()
+    result = _run_node(f"""
+      import {{readFileSync}} from 'node:fs';
+      import {{journeyDays,journeyHtml}} from {module!r};
+      const data=JSON.parse(readFileSync('src/city_walk_planner/web/data/hk-macau-trend.json','utf8')).journey;
+      const variants=[{{}},{{flightTime:'01:10'}},{{flightTime:'01:10',macauDate:'2026-10-06'}}];
+      console.log(JSON.stringify({{
+        variants:variants.map(options=>{{
+          const days=journeyDays(data,options), stops=days[3].stops;
+          return {{
+            checkout:stops.find(s=>s.id==='checkout').time,
+            bags:stops.find(s=>s.id==='bags').time,
+            airport:stops.find(s=>s.id==='airport').time,
+            flight:days[4].stops[0].time,
+            ferries:['wanchai-ferry','tst-ferry-return'].every(id=>stops.some(s=>s.id===id)),
+            lights:stops.some(s=>s.id==='lights')
+          }};
+        }}),
+        currentCopy:!journeyHtml(data).includes('02~05')
+      }}));
+    """)
+    for variant in result['variants']:
+        assert variant['checkout'].startswith('12:00')
+        assert variant['bags'] == '21:45~21:55'
+        assert variant['airport'].startswith('22:00')
+        assert variant['flight'] == '01:10'
+        assert variant['ferries'] and variant['lights']
+    assert result['currentCopy']
+

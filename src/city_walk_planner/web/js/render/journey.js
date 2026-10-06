@@ -41,7 +41,12 @@ export function journeyDays(data, options = {}) {
         time: '16:30 / 17:30', note: '16:30 외항 도착·17:30편 홍콩 복귀 후보. 실제 운항·예약 확인. 이후 홍콩 호텔 짐 회수와 공항 이동.'} : s),
         ...hk.stops.filter(s => ['bags', 'airport'].includes(s.id))]};
   }
-  const timing = airportTiming(options.flightTime);
+  // Preserve the confirmed last-day ferry plan for its exact flight and Macau date.
+  // Other flight times still use the conservative generic airport calculation.
+  const confirmed = data.departure_plan &&
+    (!options.flightTime || options.flightTime === data.departure_plan.flight_time) &&
+    (!options.macauDate || options.macauDate === data.departure_plan.macau_date);
+  const timing = confirmed ? null : airportTiming(options.flightTime);
   if (timing) {
     const stop = days[3].stops.find(s => s.id === 'airport');
     stop.time = `${timing.leave}까지 출발 계획`;
@@ -64,7 +69,7 @@ export function journeyHtml(data) {
     <div class="journey-alert"><b>관광은 5·6·7일, 총 3일</b><p>4일은 한국 출국, 8일은 새벽 귀국편입니다. 마카오는 6일이 여유롭습니다. 홍콩·마카오는 한국보다 1시간 느립니다.</p></div>
     <details class="journey-settings"><summary>마카오 날짜 · 귀국편 · 숙소 설정</summary>
     <form data-journey-settings class="tools"><label>마카오 방문일<select name="macauDate"><option value="2026-10-06">10월 6일 (추천)</option><option value="2026-10-07">10월 7일 (일찍 복귀)</option></select></label>
-      <label>8일 홍콩 출발 시각<input type="time" name="flightTime"><small>미확인 시 비워 두세요. 현재 02~05시 범위만 확인.</small></label>
+      <label>8일 홍콩 출발 시각<input type="time" name="flightTime"><small>기본 일정은 8일 01:10편·7일 22:00 호텔 출발. 다른 시각 입력 시 여유 기준으로 재계산합니다.</small></label>
       <label>숙소 이름·주소<input name="hotel" maxlength="120" placeholder="지도 검색에 사용할 숙소"></label><button>설정 적용</button></form>
       <p class="hint">숙소와 체크 상태는 이 기기에만 저장됩니다. 호텔 입력은 지도 검색용이며 이동시간을 자동 계산하지 않습니다.</p></details>
     <div data-journey-timing class="journey-alert"></div><p data-journey-status role="status" aria-live="polite" class="hint"></p>
@@ -112,9 +117,14 @@ export function bindJourney(root, data, {onMap = () => {}, notice = () => {}} = 
   form.elements.flightTime.value = state.flightTime;
   form.elements.hotel.value = state.hotel;
   function timingHtml() {
+    const plan = data.departure_plan;
+    if (plan && (!state.flightTime || state.flightTime === plan.flight_time) && state.macauDate === plan.macau_date) {
+      host.querySelector('[data-journey-timing]').innerHTML = `<b>7일 ${esc(plan.leave_time)} 호텔 출발 · 공항 ${esc(plan.airport_window)} 도착 목표</b><p>8일 ${esc(plan.flight_time)} 인천행 항공편 기준. 퇴실 전 짐 정리, 저녁에는 21:45~21:55 짐 회수만 합니다. 도착 시각은 이동·열차 대기를 포함한 계획값이며 항공사 수속 마감을 우선하세요.</p>`;
+      return;
+    }
     const timing = airportTiming(state.flightTime);
     host.querySelector('[data-journey-timing]').innerHTML = timing ? `<b>공항 ${esc(timing.airport)} 도착 목표</b><p>숙소 ${esc(timing.leave)} 출발 계획 · ${esc(timing.departure)} 항공편 기준. 이동 90분은 임시 여유값이며 실측 교통시간이 아닙니다. 심야 열차·버스 운행과 카운터 개장 확인.</p>` :
-      '<b>7일 밤에 공항으로 이동합니다</b><p>기본안: 21:30 숙소 출발, 22:30~23:00 공항 도착 목표. 8일 02~05시편 중 정확한 시각을 입력하면 3시간 전 공항 도착 기준을 계산합니다.</p>';
+      '<b>귀국편에 맞춰 공항으로 이동합니다</b><p>정확한 항공편 시각을 입력하면 3시간 전 공항 도착과 이동 90분의 여유 기준을 계산합니다.</p>';
   }
   function render() {
     const days = journeyDays(data, state);
@@ -170,3 +180,4 @@ export function bindJourney(root, data, {onMap = () => {}, notice = () => {}} = 
   });
   timingHtml(); render();
 }
+
