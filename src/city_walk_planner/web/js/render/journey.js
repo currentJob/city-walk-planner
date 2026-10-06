@@ -108,7 +108,7 @@ export function bindJourney(root, data, {onMap = () => {}, notice = () => {}} = 
   const host = root.querySelector('.journey'), body = host.querySelector('[data-journey-body]');
   let stored, storage;
   try { storage = window.localStorage; stored = JSON.parse(storage.getItem(STORAGE_NAMESPACE) || 'null'); } catch { /* Private-mode and corrupt storage use safe defaults. */ }
-  let state = normalizeJourneyState(stored, data), section = 'days', selected = '2026-10-04', city = 'all', onlySaved = false;
+  let state = normalizeJourneyState(stored, data), section = 'days', selected = data.departure_plan ? '2026-10-07' : '2026-10-04', city = 'all', onlySaved = false;
   const status = text => { host.querySelector('[data-journey-status]').textContent = text; };
   const save = () => { try { if (!storage) throw new Error(); storage.setItem(STORAGE_NAMESPACE, JSON.stringify(state)); status('이 기기에 저장했습니다.'); }
     catch { status('이 브라우저에 저장할 수 없습니다. 화면에서는 계속 사용할 수 있고 오프라인 수첩으로 보관할 수 있습니다.'); } };

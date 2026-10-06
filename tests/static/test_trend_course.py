@@ -111,3 +111,26 @@ def test_trend_map_pins_every_stop_with_matching_rows():
     # The Macau day starts at the Sheung Wan terminal and ends at Taipa.
     assert result['ferryEnds'] == [True, True]
     assert result['summaries'] and result['cards'] and result['refs'] > 0
+
+@node_only
+def test_displayed_plan_uses_confirmed_notebook_and_preserves_generic_scheduler():
+    module = (PROJECT_ROOT / 'src/city_walk_planner/web/js/render/trend.js').as_uri()
+    result = _run_node(f"""
+      import {{readFileSync}} from 'node:fs';
+      import {{displayedSchedule,trendHtml}} from {module!r};
+      const data=JSON.parse(readFileSync('src/city_walk_planner/web/data/hk-macau-trend.json','utf8'));
+      const days=displayedSchedule(data,'2026-10-05','2026-10-08');
+      const last=days.find(d=>d.date==='2026-10-07');
+      console.log(JSON.stringify({{
+        ids:last.stops.map(s=>s.id),
+        airport:last.stops.find(s=>s.id==='airport').time,
+        flight:days.at(-1).stops[0].time,
+        html:trendHtml(data).includes('침사추이 스타페리 → 센트럴 → 호텔'),
+        single:displayedSchedule(data,'2026-10-07','2026-10-07')[0].stops.map(s=>s.id),
+        generic:displayedSchedule(data,'2026-10-10','2026-10-12').length
+      }}));
+    """)
+    assert 'wanchai-ferry' in result['ids'] and 'tst-ferry-return' in result['ids']
+    assert result['airport'].startswith('22:00') and result['flight'] == '01:10'
+    assert result['html'] and result['single'] == result['ids']
+    assert result['generic'] == 3

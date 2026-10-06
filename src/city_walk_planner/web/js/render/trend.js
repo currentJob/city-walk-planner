@@ -1,6 +1,6 @@
 import { escapeHtml as esc, link } from '../format.js';
 import { icon } from '../icons.js';
-import { journeyHtml, bindJourney } from './journey.js';
+import { journeyHtml, bindJourney, journeyDays } from './journey.js';
 
 const WEEKDAYS = '월화수목금토일';
 const MAX_DAYS = 14;
@@ -188,6 +188,16 @@ export function daysHtml(data, days) {
 /** Phone-only section switcher (mobile.css hides the other sections; desktop shows everything). */
 const TREND_TABS = [['journey', '여행수첩'], ['plan', '일정'], ['map', '지도'], ['shops', '가게'], ['places', '명소'], ['tips', '팁']];
 
+/** Use the confirmed travel notebook throughout the plan and map for its dates. */
+export function displayedSchedule(data, start, end, stays = []) {
+  const dates = datesBetween(start, end);
+  if (!stays.length && data.journey?.departure_plan &&
+      dates.every(date => data.journey.days.some(day => day.date === date))) {
+    return journeyDays(data.journey).filter(day => dates.includes(day.date));
+  }
+  return schedule(data, start, end, stays);
+}
+
 /** Whole page for the trend category; data comes from data/hk-macau-trend.json. */
 export function trendHtml(data) {
   const {start, end} = data.default_range;
@@ -197,7 +207,7 @@ export function trendHtml(data) {
       `<button type="button" data-trend-tab="${id}" aria-pressed="${id === (data.journey ? 'journey' : 'plan')}">${label}</button>`).join('')}</nav>
     ${journeyHtml(data.journey)}
     <section class="section" data-trend-section="plan"><h2>${icon('calendar', 'title-icon')}날짜별 일정</h2>
-      <form id="trendRange"><div class="tools"><label>방문 시작일<input type="date" name="start" value="${esc(start)}" required></label>
+      <p class="hint">10월 4~8일 기본 일정과 지도는 여행수첩의 확정 동선입니다. 7일 12시 체크아웃·완차이↔침사추이 페리·22시 공항 출발을 반영했습니다. 다른 날짜 또는 별도 숙소를 입력하면 일반 추천 코스를 생성합니다.</p><form id="trendRange"><div class="tools"><label>방문 시작일<input type="date" name="start" value="${esc(start)}" required></label>
         <label>방문 종료일<input type="date" name="end" value="${esc(end)}" required></label></div>
         <fieldset class="stay-box"><legend>숙소 (선택 · 여러 곳 가능)</legend><div class="stay-list"></div>
           <button type="button" class="secondary" data-add-stay>+ 숙소 추가</button></fieldset>
@@ -208,7 +218,7 @@ export function trendHtml(data) {
           <button type="button" class="secondary" id="trendLocate">${icon('locate')} 내 위치 보기</button></div>
         <div id="trendMap" aria-label="트렌드 코스 지도"></div><p class="mapmsg" id="trendMapMsg" role="status" hidden></p>
         <p class="hint">핀 번호는 그날 방문 순서입니다. 숙소는 지역만 입력받아 지도에 표시하지 않습니다. 내 위치는 버튼을 누를 때만 요청하며 이 브라우저 밖으로 보내지 않습니다. ${esc(data.coord_note)}</p></div>
-        <div id="trendDays" class="itinerary-list">${daysHtml(data, schedule(data, start, end))}</div></div></section>
+        <div id="trendDays" class="itinerary-list">${daysHtml(data, displayedSchedule(data, start, end))}</div></div></section>
     <section class="section" data-trend-section="shops"><h2>${icon('store', 'title-icon')}가게별 평점·리뷰 요약</h2><p class="hint">일정에 넣은 곳과 대안으로 둔 곳입니다.</p>
       <div class="place-grid">${data.shops.map(shopCard).join('')}</div></section>
     <section class="section" data-trend-section="places"><h2>${icon('landmark', 'title-icon')}명소 영업시간</h2><div class="place-grid">${data.places.map(p => `<article class="place-card" data-trend-ref="${esc(p.id)}"><h3>${esc(p.name)}</h3>
@@ -310,14 +320,14 @@ export function bindTrendRange(root, data, {TripMap, LocationTracker, scrollToIt
   form.addEventListener('submit', event => {
     event.preventDefault();
     try {
-      showDays(schedule(data, form.start.value, form.end.value, rows()));
+      showDays(displayedSchedule(data, form.start.value, form.end.value, rows()));
       error.hidden = true;
     } catch (e) {
       error.textContent = e.message; error.hidden = false;
     }
   });
   const {start, end} = data.default_range;
-  showDays(schedule(data, start, end));
+  showDays(displayedSchedule(data, start, end));
   bindJourney(root, data.journey, {notice, onMap: (days, index) => {
     showDays(days); daySelect.value = String(Math.max(0, index)); showTab('map');
     scrollToItem(root.querySelector('#trendMapBlock'));
