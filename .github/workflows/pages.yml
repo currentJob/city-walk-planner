@@ -60,6 +60,21 @@ jobs:
           Path('_site/config.js').write_text('window.CWP_CONFIG = Object.freeze(' + json.dumps({'apiBase': base, 'ocrModule': ocr}) + ');\n')
           PY
 
+      - name: 배포 버전별 정적 자산 캐시 갱신
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, pathlib, re
+          version = os.environ['GITHUB_SHA']
+          relative_asset = re.compile(r"""(["'])(\.\.?/[^"'?#\s]+\.(?:js|css|json))\1""")
+          for path in pathlib.Path('_site').rglob('*'):
+              if path.suffix not in {'.html', '.js', '.css'} or 'vendor' in path.parts:
+                  continue
+              text = path.read_text(encoding='utf-8')
+              text = relative_asset.sub(lambda m: m[1] + m[2] + '?v=' + version + m[1], text)
+              path.write_text(text, encoding='utf-8')
+          PY
+
       - name: 외부 도메인 참조 재확인
         # AC-042 는 저장소에서 검사하지만, **배포되는 물건**에서 한 번 더 본다.
         # 배포 산출물이 검사 대상과 다르면 검사는 자기 자신을 검사한 것이다.
